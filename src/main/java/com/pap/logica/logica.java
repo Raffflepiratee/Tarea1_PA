@@ -1,4 +1,4 @@
-package logica;
+package com.pap.logica;
 
 public class logica {
     
