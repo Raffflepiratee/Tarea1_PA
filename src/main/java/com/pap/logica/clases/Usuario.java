@@ -1,4 +1,4 @@
-package com.pap.logica;
+package com.pap.logica.clases;
 
 public abstract class Usuario {
     private String nombre;

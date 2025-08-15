@@ -1,5 +1,4 @@
-package com.pap.logica;
-import com.pap.logica.Material;
+package com.pap.logica.clases;
 import java.util.Date;
 
 public class ArticuloEspecial extends Material {

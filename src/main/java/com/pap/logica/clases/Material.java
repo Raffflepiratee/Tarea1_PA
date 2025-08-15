@@ -1,4 +1,4 @@
-package com.pap.logica;
+package com.pap.logica.clases;
 import java.util.Date;
 
 public abstract class Material {
