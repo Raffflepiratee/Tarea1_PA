@@ -1,12 +1,14 @@
 package com.pap.logica.controladores;
 
+import com.pap.interfaces.IMaterialController;
+
 import java.util.List;
 import java.util.ArrayList;
 
 import com.pap.logica.clases.Material;
 import com.pap.logica.clases.Libro;
 
-public class MaterialController {
+public class MaterialController implements IMaterialController {
 
     private List<Material> materiales;
 
@@ -32,10 +34,10 @@ public class MaterialController {
                 return material;
             }
         }
-        return null; 
+        return null;
     }
 
-    //libros
+    // libros
     public List<Material> buscarLibros() {
         List<Material> libros = new ArrayList<>();
         for (Material material : materiales) {

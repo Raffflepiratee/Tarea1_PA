@@ -1,4 +1,5 @@
-package com.pap.gui;
+package com.pap.presentacion;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -51,7 +52,7 @@ public class BibliotecaGUI extends JFrame {
         panelForm.add(txtDireccion);
 
         panelForm.add(new JLabel("Zona:"));
-        JComboBox<String> comboZona = new JComboBox<>(new String[]{
+        JComboBox<String> comboZona = new JComboBox<>(new String[] {
                 "BIBLIOTECA CENTRAL",
                 "SUCURSAL ESTE",
                 "SUCURSAL OESTE",
@@ -61,7 +62,7 @@ public class BibliotecaGUI extends JFrame {
         panelForm.add(comboZona);
 
         panelForm.add(new JLabel("Estado:"));
-        JComboBox<String> comboEstado = new JComboBox<>(new String[]{"ACTIVO", "SUSPENDIDO"});
+        JComboBox<String> comboEstado = new JComboBox<>(new String[] { "ACTIVO", "SUSPENDIDO" });
         panelForm.add(comboEstado);
 
         frame.add(panelForm, BorderLayout.CENTER);
@@ -79,8 +80,7 @@ public class BibliotecaGUI extends JFrame {
                             "Email: " + txtEmail.getText() + "\n" +
                             "Dirección: " + txtDireccion.getText() + "\n" +
                             "Zona: " + comboZona.getSelectedItem() + "\n" +
-                            "Estado: " + comboEstado.getSelectedItem()
-            );
+                            "Estado: " + comboEstado.getSelectedItem());
             frame.dispose();
         });
 

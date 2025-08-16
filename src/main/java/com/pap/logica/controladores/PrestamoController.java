@@ -1,10 +1,12 @@
 package com.pap.logica.controladores;
 
+import com.pap.interfaces.IPrestamoController;
+
 import java.util.ArrayList;
 import java.util.List;
 import com.pap.logica.clases.Prestamo;
 
-public class PrestamoController {
+public class PrestamoController implements IPrestamoController {
 
     private List<Prestamo> prestamos;
 

@@ -1,5 +1,8 @@
 package com.pap.logica.clases;
 
+import com.pap.logica.clases.Lector;
+import com.pap.logica.clases.Bibliotecario;
+
 public abstract class Usuario {
     private String nombre;
     private String correo;
