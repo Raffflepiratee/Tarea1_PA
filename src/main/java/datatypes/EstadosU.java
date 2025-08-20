@@ -1,4 +1,4 @@
-package com.pap.datatypes;
+package datatypes;
 
 public enum EstadosU {
     ACTIVO,

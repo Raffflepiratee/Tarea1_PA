@@ -1,7 +1,7 @@
-package com.pap.logica.clases;
+package logica.clases;
 import java.util.Date;
-import com.pap.datatypes.EstadosU;
-import com.pap.datatypes.Zonas;
+import datatypes.EstadosU;
+import datatypes.Zonas;
 
 
 public class Lector extends Usuario {

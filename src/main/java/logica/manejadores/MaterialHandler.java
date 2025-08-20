@@ -1,4 +1,4 @@
-package com.pap.logica.manejadores;
+package logica.manejadores;
 
 public class MaterialHandler {
 

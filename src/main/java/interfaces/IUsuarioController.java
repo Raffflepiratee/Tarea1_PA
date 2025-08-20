@@ -1,4 +1,4 @@
-package com.pap.interfaces;
+package interfaces;
 
 public interface IUsuarioController {
 }

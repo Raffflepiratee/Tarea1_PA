@@ -1,6 +1,6 @@
-package com.pap.logica.clases;
+package logica.clases;
 import java.util.Date;
-import com.pap.datatypes.EstadosP;
+import datatypes.EstadosP;
 
 public class Prestamo {
     private int idPrestamo;

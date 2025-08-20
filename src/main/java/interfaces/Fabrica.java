@@ -1,8 +1,8 @@
-package com.pap.interfaces;
+package interfaces;
 
-import com.pap.logica.controladores.*;
+import logica.controladores.*;
 
-import com.pap.logica.controladores.UsuarioController;
+import logica.controladores.UsuarioController;
 
 public class Fabrica {
     private static Fabrica instancia = null;

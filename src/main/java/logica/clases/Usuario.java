@@ -1,7 +1,7 @@
-package com.pap.logica.clases;
+package logica.clases;
 
-import com.pap.logica.clases.Lector;
-import com.pap.logica.clases.Bibliotecario;
+import logica.clases.Bibliotecario;
+import logica.clases.Lector;
 
 public abstract class Usuario {
     private String nombre;

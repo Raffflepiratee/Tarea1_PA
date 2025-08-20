@@ -1,10 +1,10 @@
-package com.pap.logica.controladores;
+package logica.controladores;
 
-import com.pap.interfaces.IUsuarioController;
+import interfaces.IUsuarioController;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.pap.logica.clases.Usuario;
+import logica.clases.Usuario;
 
 public class UsuarioController implements IUsuarioController {
 

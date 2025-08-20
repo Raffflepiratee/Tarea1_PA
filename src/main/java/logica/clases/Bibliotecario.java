@@ -1,4 +1,4 @@
-package com.pap.logica.clases;
+package logica.clases;
 
 public class Bibliotecario extends Usuario{
     private int idEmp; 

@@ -1,4 +1,4 @@
-package com.pap.presentacion;
+package presentacion;
 
 public class principal {
     

@@ -1,12 +1,12 @@
-package com.pap.logica.controladores;
+package logica.controladores;
 
-import com.pap.interfaces.IMaterialController;
+import interfaces.IMaterialController;
 
 import java.util.List;
 import java.util.ArrayList;
 
-import com.pap.logica.clases.Material;
-import com.pap.logica.clases.Libro;
+import logica.clases.Material;
+import logica.clases.Libro;
 
 public class MaterialController implements IMaterialController {
 
