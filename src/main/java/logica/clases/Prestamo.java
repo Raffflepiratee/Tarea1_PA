@@ -8,6 +8,10 @@ public class Prestamo {
     private EstadosP estadoPres;
     private Date fechaDev;
 
+    private Lector lector;
+    private Material material;
+    private Bibliotecario bibliotecario;
+
     public Prestamo(int idPrestamo, Date fechaSol, EstadosP estadoPres, Date fechaDev) {
         this.idPrestamo = idPrestamo;
         this.fechaSol = fechaSol;

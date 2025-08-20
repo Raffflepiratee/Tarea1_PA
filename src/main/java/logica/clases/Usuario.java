@@ -1,8 +1,5 @@
 package logica.clases;
 
-import logica.clases.Bibliotecario;
-import logica.clases.Lector;
-
 public abstract class Usuario {
     private String nombre;
     private String correo;
