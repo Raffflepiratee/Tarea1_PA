@@ -35,6 +35,8 @@ La Biblioteca Comunitaria está digitalizando su sistema de préstamos. Este MVP
 - Estados: `PENDIENTE`, `EN CURSO`, `DEVUELTO`
 - Fechas de solicitud y devolución
 
+![diagrama](./img/diagrama.png)
+
 ---
 
 ## 🖥️ Requerimientos de GUI
