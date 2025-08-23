@@ -19,8 +19,9 @@ public class Bibliotecario extends Usuario {
         super();
     }
 
-    public Bibliotecario(String nombre, String correo) {
+    public Bibliotecario(String nombre, String correo, int idEmp) {
         super(nombre, correo);
+        this.idEmp = idEmp;
     }
 
     public int getIdEmp() {
