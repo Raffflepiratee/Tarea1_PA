@@ -1,6 +1,9 @@
 package logica.clases;
 import java.util.Date;
 
+import javax.persistence.Entity;
+
+@Entity
 public class ArticuloEspecial extends Material {
     private String descripcion; 
     private float peso;

@@ -3,8 +3,12 @@ package logica.clases;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Bibliotecario extends Usuario{
+import javax.persistence.*;
+
+@Entity
+public class Bibliotecario extends Usuario {
     private int idEmp; 
+    @OneToMany(mappedBy = "bibliotecario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Prestamo> prestamos = new ArrayList<Prestamo>();
 
     public Bibliotecario(String nombre, String correo, int idEmp) {
@@ -19,5 +23,4 @@ public class Bibliotecario extends Usuario{
     public void setIdEmp(int idEmp) {
         this.idEmp = idEmp;
     }
-
 }

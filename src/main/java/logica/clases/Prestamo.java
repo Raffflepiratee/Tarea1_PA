@@ -1,16 +1,27 @@
 package logica.clases;
 import java.util.Date;
 import datatypes.EstadosP;
+import javax.persistence.*;
 
+@Entity
 public class Prestamo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idPrestamo;
     private Date fechaSol;
     private EstadosP estadoPres;
     private Date fechaDev;
 
+    @ManyToOne
     private Lector lector;
+
+    @ManyToOne
     private Material material;
+
+    @ManyToOne
     private Bibliotecario bibliotecario;
+
+    public Prestamo() {} 
 
     public Prestamo(int idPrestamo, Date fechaSol, EstadosP estadoPres, Date fechaDev) {
         this.idPrestamo = idPrestamo;

@@ -1,6 +1,9 @@
 package logica.clases;
 import java.util.Date;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Libro extends Material{
     private String titulo;
     private int cantPag;

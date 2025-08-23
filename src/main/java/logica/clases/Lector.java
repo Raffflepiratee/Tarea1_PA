@@ -2,17 +2,19 @@ package logica.clases;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
+
+import javax.persistence.*;
 import datatypes.EstadosU;
 import datatypes.Zonas;
 
-
+@Entity
 public class Lector extends Usuario {
    private Date fechaIngreso;
    private EstadosU estadoUsuario;
    private Zonas zona;
    private String direccion;
-   
-   private List<Prestamo> Prestamos = new ArrayList<Prestamo>();
+   @OneToMany(mappedBy = "lector", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<Prestamo> prestamos = new ArrayList<Prestamo>();
 
    public Lector(String nombre, String correo, Date fechaIngreso, EstadosU estadoUsuario, Zonas zona, String direccion) {
        super(nombre, correo);
