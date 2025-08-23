@@ -1,19 +1,24 @@
 package logica.clases;
+
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "articuloEspecial")
+@PrimaryKeyJoinColumn(name = "idMaterial")
 public class ArticuloEspecial extends Material {
-    private String descripcion; 
+    private String descripcion;
     private float peso;
-    private float dimFisicas;
-    
-    public ArticuloEspecial(int idMaterial, Date fechaRegistro, String descripcion, float peso, float dimFisicas) {
-        super(idMaterial, fechaRegistro);
+    private float dimFisica;
+
+    public ArticuloEspecial(Date fechaRegistro, String descripcion, float peso, float dimFisica) {
+        super(fechaRegistro);
         this.descripcion = descripcion;
         this.peso = peso;
-        this.dimFisicas = dimFisicas;
+        this.dimFisica = dimFisica;
     }
 
     public String getDescripcion() {
@@ -24,8 +29,8 @@ public class ArticuloEspecial extends Material {
         return peso;
     }
 
-    public float getDimFisicas() {
-        return dimFisicas;
+    public float getdimFisica() {
+        return dimFisica;
     }
 
     public void setDescripcion(String descripcion) {
@@ -36,9 +41,8 @@ public class ArticuloEspecial extends Material {
         this.peso = peso;
     }
 
-    public void setDimFisicas(float dimFisicas) {
-        this.dimFisicas = dimFisicas;
+    public void setDimFisica(float dimFisica) {
+        this.dimFisica = dimFisica;
     }
-    
-    
+
 }

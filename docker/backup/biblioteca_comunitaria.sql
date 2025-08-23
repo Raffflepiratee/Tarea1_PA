@@ -24,201 +24,65 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `articulo`
---
-
-CREATE TABLE `articulo` (
-  `idMaterial` int(11) NOT NULL,
-  `descripcion` varchar(255) NOT NULL,
-  `pesoKg` float NOT NULL,
-  `dimensiones` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `bibliotecario`
---
-
-CREATE TABLE `bibliotecario` (
-  `idBibliotecario` int(11) NOT NULL,
-  `numeroEmpleado` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `lector`
---
-
-CREATE TABLE `lector` (
-  `idLector` int(11) NOT NULL,
-  `direccion` varchar(255) NOT NULL,
-  `fechaRegistro` date NOT NULL,
-  `estado` enum('ACTIVO','SUSPENDIDO') NOT NULL,
-  `zona` enum('BIBLIOTECA_CENTRAL','SUCURSAL_ESTE','SUCURSAL_OESTE','BIBLIOTECA_INFANTIL','ARCHIVO_GENERAL') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `libro`
---
-
-CREATE TABLE `libro` (
-  `idMaterial` int(11) NOT NULL,
-  `titulo` varchar(255) NOT NULL,
-  `cantidadPaginas` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `material`
---
-
-CREATE TABLE `material` (
-  `idMaterial` int(11) NOT NULL,
-  `fechaIngreso` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `prestamo`
---
-
-CREATE TABLE `prestamo` (
-  `idPrestamo` int(11) NOT NULL,
-  `fechaSolicitud` date NOT NULL,
-  `fechaDevolucion` date DEFAULT NULL,
-  `estado` enum('PENDIENTE','EN_CURSO','DEVUELTO') NOT NULL,
-  `idLector` int(11) NOT NULL,
-  `idBibliotecario` int(11) NOT NULL,
-  `idMaterial` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `usuario`
 --
 
-CREATE TABLE `usuario` (
-  `idUsuario` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Tabla base: Usuario
+CREATE TABLE usuario (
+  correo VARCHAR(100) NOT NULL PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL
+) ;
 
---
--- Índices para tablas volcadas
---
+-- Tabla hija: Lector
+CREATE TABLE lector (
+  correo VARCHAR(100) NOT NULL PRIMARY KEY,
+  fechaIngreso DATE NOT NULL,
+  estadoUsuario ENUM('ACTIVO','SUSPENDIDO') NOT NULL,
+  zona ENUM('BIBLIOTECA_CENTRAL','SUCURSAL_ESTE','SUCURSAL_OESTE','BIBLIOTECA_INFANTIL','ARCHIVO_GENERAL') NOT NULL,
+  direccion VARCHAR(255) NOT NULL,
+  FOREIGN KEY (correo) REFERENCES usuario(correo)
+) ;
 
---
--- Indices de la tabla `articulo`
---
-ALTER TABLE `articulo`
-  ADD PRIMARY KEY (`idMaterial`);
+-- Tabla hija: Bibliotecario
+CREATE TABLE bibliotecario (
+  correo VARCHAR(100) NOT NULL PRIMARY KEY,
+  idEmp INT NOT NULL UNIQUE AUTO_INCREMENT,
+  FOREIGN KEY (correo) REFERENCES usuario(correo)
+) ;
 
---
--- Indices de la tabla `bibliotecario`
---
-ALTER TABLE `bibliotecario`
-  ADD PRIMARY KEY (`idBibliotecario`);
+-- Tabla: Material
+CREATE TABLE material (
+  idMaterial INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  fechaRegistro DATE NOT NULL
+) ;
 
---
--- Indices de la tabla `lector`
---
-ALTER TABLE `lector`
-  ADD PRIMARY KEY (`idLector`);
+-- Tabla hija: Libro
+CREATE TABLE libro (
+  idMaterial INT NOT NULL PRIMARY KEY,
+  titulo VARCHAR(255) NOT NULL,
+  cantPag INT NOT NULL,
+  FOREIGN KEY (idMaterial) REFERENCES material(idMaterial)
+) ;
 
---
--- Indices de la tabla `libro`
---
-ALTER TABLE `libro`
-  ADD PRIMARY KEY (`idMaterial`);
+-- Tabla hija: ArticuloEspecial
+CREATE TABLE articuloEspecial (
+  idMaterial INT NOT NULL PRIMARY KEY,
+  descripcion VARCHAR(255) NOT NULL,
+  peso FLOAT NOT NULL,
+  dimFisica VARCHAR(100),
+  FOREIGN KEY (idMaterial) REFERENCES material(idMaterial)
+) ;
 
---
--- Indices de la tabla `material`
---
-ALTER TABLE `material`
-  ADD PRIMARY KEY (`idMaterial`);
-
---
--- Indices de la tabla `prestamo`
---
-ALTER TABLE `prestamo`
-  ADD PRIMARY KEY (`idPrestamo`),
-  ADD KEY `idLector` (`idLector`),
-  ADD KEY `idBibliotecario` (`idBibliotecario`),
-  ADD KEY `idMaterial` (`idMaterial`);
-
---
--- Indices de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  ADD PRIMARY KEY (`idUsuario`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `material`
---
-ALTER TABLE `material`
-  MODIFY `idMaterial` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `prestamo`
---
-ALTER TABLE `prestamo`
-  MODIFY `idPrestamo` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `articulo`
---
-ALTER TABLE `articulo`
-  ADD CONSTRAINT `articulo_ibfk_1` FOREIGN KEY (`idMaterial`) REFERENCES `material` (`idMaterial`);
-
---
--- Filtros para la tabla `bibliotecario`
---
-ALTER TABLE `bibliotecario`
-  ADD CONSTRAINT `bibliotecario_ibfk_1` FOREIGN KEY (`idBibliotecario`) REFERENCES `usuario` (`idUsuario`);
-
---
--- Filtros para la tabla `lector`
---
-ALTER TABLE `lector`
-  ADD CONSTRAINT `lector_ibfk_1` FOREIGN KEY (`idLector`) REFERENCES `usuario` (`idUsuario`);
-
---
--- Filtros para la tabla `libro`
---
-ALTER TABLE `libro`
-  ADD CONSTRAINT `libro_ibfk_1` FOREIGN KEY (`idMaterial`) REFERENCES `material` (`idMaterial`);
-
---
--- Filtros para la tabla `prestamo`
---
-ALTER TABLE `prestamo`
-  ADD CONSTRAINT `prestamo_ibfk_1` FOREIGN KEY (`idLector`) REFERENCES `lector` (`idLector`),
-  ADD CONSTRAINT `prestamo_ibfk_2` FOREIGN KEY (`idBibliotecario`) REFERENCES `bibliotecario` (`idBibliotecario`),
-  ADD CONSTRAINT `prestamo_ibfk_3` FOREIGN KEY (`idMaterial`) REFERENCES `material` (`idMaterial`);
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- Tabla: Prestamo
+CREATE TABLE prestamo (
+  idPrestamo INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  fechaSoli DATE NOT NULL,
+  fechaDev DATE,
+  estadoPres ENUM('PENDIENTE','EN_CURSO','DEVUELTO') NOT NULL,
+  correoL VARCHAR(100) NOT NULL,
+  idMaterial INT NOT NULL,
+  correoB VARCHAR(100) NOT NULL,
+  FOREIGN KEY (correoL) REFERENCES lector(correo),
+  FOREIGN KEY (idMaterial) REFERENCES material(idMaterial),
+  FOREIGN KEY (correoB) REFERENCES bibliotecario(correo)
+) ;

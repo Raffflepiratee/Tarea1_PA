@@ -1,15 +1,20 @@
 package logica.clases;
+
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
 @Entity
-public class Libro extends Material{
+@Table(name = "Libro")
+@PrimaryKeyJoinColumn(name = "idMaterial")
+public class Libro extends Material {
     private String titulo;
     private int cantPag;
 
-    public Libro(int idMaterial, Date fechaRegistro, String titulo, int cantPag) {
-        super(idMaterial, fechaRegistro);
+    public Libro(Date fechaRegistro, String titulo, int cantPag) {
+        super(fechaRegistro);
         this.titulo = titulo;
         this.cantPag = cantPag;
     }

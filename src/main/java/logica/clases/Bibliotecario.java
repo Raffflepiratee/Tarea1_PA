@@ -6,14 +6,21 @@ import java.util.List;
 import javax.persistence.*;
 
 @Entity
+@DiscriminatorValue("Bibliotecario")
+@PrimaryKeyJoinColumn(name = "correo")
 public class Bibliotecario extends Usuario {
-    private int idEmp; 
+    @Column(name = "idEmp", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idEmp;
     @OneToMany(mappedBy = "bibliotecario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Prestamo> prestamos = new ArrayList<Prestamo>();
 
-    public Bibliotecario(String nombre, String correo, int idEmp) {
+    public Bibliotecario() {
+        super();
+    }
+
+    public Bibliotecario(String nombre, String correo) {
         super(nombre, correo);
-        this.idEmp = idEmp;
     }
 
     public int getIdEmp() {

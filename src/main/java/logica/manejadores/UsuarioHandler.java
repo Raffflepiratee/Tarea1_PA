@@ -8,7 +8,8 @@ import javax.persistence.EntityManager;
 public class UsuarioHandler {
     private static UsuarioHandler instancia = null;
 
-    private UsuarioHandler(){}
+    private UsuarioHandler() {
+    }
 
     public static UsuarioHandler getInstancia() {
         if (instancia == null)
