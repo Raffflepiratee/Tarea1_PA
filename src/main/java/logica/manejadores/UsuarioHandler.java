@@ -1,7 +1,7 @@
 package logica.manejadores;
 
 import logica.clases.Usuario;
-
+import java.util.*;
 import persistencia.Conexion;
 import javax.persistence.EntityManager;
 
@@ -29,6 +29,12 @@ public class UsuarioHandler {
         Conexion c = Conexion.getInstancia();
         EntityManager em = c.getEntityManager();
         return em.find(Usuario.class, correo);
+    }
+
+    public List<Usuario> obtenerTodosLosUsuarios() {
+        Conexion c = Conexion.getInstancia();
+        EntityManager em = c.getEntityManager();
+        return em.createQuery("SELECT u FROM Usuario u", Usuario.class).getResultList();
     }
 
 }

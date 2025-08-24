@@ -48,7 +48,8 @@ public class UsuarioController implements IUsuarioController {
 
     @Override
     public List<Usuario> obtenerUsuarios() {
-        return new ArrayList<>(usuarios);
+        UsuarioHandler uh = UsuarioHandler.getInstancia();
+        return uh.obtenerTodosLosUsuarios();
     }
 
     @Override
