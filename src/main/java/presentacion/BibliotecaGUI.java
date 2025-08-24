@@ -6,6 +6,14 @@ import logica.clases.Bibliotecario;
 import logica.clases.Lector;
 import logica.clases.Usuario;
 import logica.manejadores.UsuarioHandler;
+import logica.controladores.*;
+import logica.clases.Material;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import datatypes.*;
 
 public class BibliotecaGUI extends JFrame {
 
@@ -29,8 +37,20 @@ public class BibliotecaGUI extends JFrame {
 
         menuUsuarios.add(registrarLector);
         menuBar.add(menuUsuarios);
-        setJMenuBar(menuBar);
 
+        // Menu Materiales
+        JMenu menuMateriales = new JMenu("Materiales");
+        JMenuItem registrarMaterial = new JMenuItem("Registrar Material");
+        JMenuItem listarMateriales = new JMenuItem("Listar Materiales");
+
+        registrarMaterial.addActionListener(e -> abrirFormularioRegistroMaterial());
+        listarMateriales.addActionListener(e -> abrirListadoMateriales());
+
+        menuMateriales.add(registrarMaterial);
+        menuMateriales.add(listarMateriales);
+        menuBar.add(menuMateriales);
+
+        setJMenuBar(menuBar);
         setVisible(true);
     }
 
@@ -138,6 +158,96 @@ public class BibliotecaGUI extends JFrame {
 
         desktop.add(frame);
         frame.setVisible(true);
+    }
+
+    private void abrirFormularioRegistroMaterial() {
+        JInternalFrame frame = new JInternalFrame("Registro de Material", true, true, true, true);
+        frame.setSize(400, 300);
+        frame.setLayout(new BorderLayout());
+
+        JPanel panelForm = new JPanel(new GridLayout(5, 2, 10, 10));
+
+        panelForm.add(new JLabel("Tipo de material:"));
+        JComboBox<String> comboTipo = new JComboBox<>(new String[] { "Libro", "Artículo Especial" });
+        panelForm.add(comboTipo);
+
+        panelForm.add(new JLabel("Fecha de Registro (dd/mm/yyyy):"));
+        JTextField txtFecha = new JTextField();
+        panelForm.add(txtFecha);
+
+        panelForm.add(new JLabel("Título / Descripción:"));
+        JTextField txtTitulo = new JTextField();
+        panelForm.add(txtTitulo);
+
+        panelForm.add(new JLabel("Cantidad de Páginas / Peso (kg):"));
+        JTextField txtCantPag = new JTextField();
+        panelForm.add(txtCantPag);
+
+        panelForm.add(new JLabel("Dimensiones Físicas (LxAxH) - solo Artículo:"));
+        JTextField txtDimensiones = new JTextField();
+        txtDimensiones.setEnabled(false);
+        panelForm.add(txtDimensiones);
+
+        // Habilitar campo dimensiones solo para Artículo Especial
+        comboTipo.addActionListener(e -> {
+            boolean esArticulo = comboTipo.getSelectedItem().equals("Artículo Especial");
+            txtDimensiones.setEnabled(esArticulo);
+        });
+        comboTipo.setSelectedIndex(0); // Inicializa
+
+        frame.add(panelForm, BorderLayout.CENTER);
+
+        JPanel panelBotones = new JPanel();
+        JButton btnAceptar = new JButton("Aceptar");
+        JButton btnCancelar = new JButton("Cancelar");
+
+        btnAceptar.addActionListener(e -> {
+            try {
+                String fechaStr = txtFecha.getText();
+                String tituloDesc = txtTitulo.getText();
+                String cantPagPesoStr = txtCantPag.getText();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                Date fechaRegistro = sdf.parse(fechaStr);
+
+                if (comboTipo.getSelectedItem().equals("Libro")) {
+                    int cantPag = Integer.parseInt(cantPagPesoStr);
+
+                    DtLibro libro = new DtLibro(
+                            fechaRegistro,
+                            tituloDesc,
+                            cantPag);
+                    MaterialController mc = new MaterialController();
+                    mc.agregarMaterial(libro);
+                    JOptionPane.showMessageDialog(frame, "Libro registrado correctamente.");
+                } else {
+                    float peso = Float.parseFloat(cantPagPesoStr);
+                    String dimensionesStr = txtDimensiones.getText();
+                    float dimensiones = Float.parseFloat(dimensionesStr);
+                    DtArticuloEspecial articulo = new DtArticuloEspecial(
+                            fechaRegistro,
+                            tituloDesc,
+                            peso,
+                            dimensiones);
+
+                    MaterialController mc = new MaterialController();
+                    mc.agregarMaterial(articulo);
+                    JOptionPane.showMessageDialog(frame, "Artículo Especial registrado correctamente.");
+                }
+                frame.dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error al registrar material: " + ex.getMessage());
+            }
+        });
+        btnCancelar.addActionListener(e -> frame.dispose());
+        panelBotones.add(btnAceptar);
+        panelBotones.add(btnCancelar);
+
+        frame.add(panelBotones, BorderLayout.SOUTH);
+        desktop.add(frame);
+        frame.setVisible(true);
+    }
+
+    private void abrirListadoMateriales() {
     }
 
     public static void main(String[] args) {

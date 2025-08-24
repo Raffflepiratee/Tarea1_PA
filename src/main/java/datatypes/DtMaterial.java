@@ -7,8 +7,7 @@ public class DtMaterial {
     private int idMaterial;
     private Date fechaRegistro;
 
-    public DtMaterial(int idMaterial, Date fechaRegistro) {
-        this.idMaterial = idMaterial;
+    public DtMaterial(Date fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
 
@@ -21,8 +20,8 @@ public class DtMaterial {
     }
 
     @Override
-    public String toString() {  
+    public String toString() {
         return "DtMaterial [idMaterial=" + idMaterial + ", fechaRegistro=" + fechaRegistro + "]";
     }
-    
+
 }
