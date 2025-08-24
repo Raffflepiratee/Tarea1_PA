@@ -1,14 +1,34 @@
 package logica.manejadores;
 
+import logica.clases.Prestamo;
+
+import persistencia.Conexion;
+import javax.persistence.EntityManager;
+
 public class PrestamoHandler {
     private static PrestamoHandler instancia = null;
 
-    private PrestamoHandler(){}
+    private PrestamoHandler() {
+    }
 
     public static PrestamoHandler getInstancia() {
         if (instancia == null)
             instancia = new PrestamoHandler();
         return instancia;
     }
-    
+
+    public void agregarPrestamoH(Prestamo p) {
+        Conexion c = Conexion.getInstancia();
+        EntityManager em = c.getEntityManager();
+        em.getTransaction().begin();
+        em.persist(p);
+        em.getTransaction().commit();
+    }
+
+    public Prestamo buscarPrestamoPorId(int id) {
+        Conexion c = Conexion.getInstancia();
+        EntityManager em = c.getEntityManager();
+        return em.find(Prestamo.class, id);
+    }
+
 }

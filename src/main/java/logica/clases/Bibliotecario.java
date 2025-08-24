@@ -3,9 +3,21 @@ package logica.clases;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Bibliotecario extends Usuario{
-    private int idEmp; 
+import javax.persistence.*;
+
+@Entity
+@DiscriminatorValue("Bibliotecario")
+@PrimaryKeyJoinColumn(name = "correo")
+public class Bibliotecario extends Usuario {
+    @Column(name = "idEmp", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idEmp;
+    @OneToMany(mappedBy = "bibliotecario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Prestamo> prestamos = new ArrayList<Prestamo>();
+
+    public Bibliotecario() {
+        super();
+    }
 
     public Bibliotecario(String nombre, String correo, int idEmp) {
         super(nombre, correo);
@@ -19,5 +31,4 @@ public class Bibliotecario extends Usuario{
     public void setIdEmp(int idEmp) {
         this.idEmp = idEmp;
     }
-
 }

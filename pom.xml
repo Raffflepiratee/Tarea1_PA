@@ -1,55 +1,70 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
-         http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
-    <!-- Información del proyecto -->
-    <groupId>com.pap</groupId>
-    <artifactId>tarea1</artifactId>
+
+    <groupId>com.BiblotecaComunitaria</groupId>
+    <artifactId>BiblotecaComunitariaUY</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    
-    <name>Tarea 1 - Programación de Aplicaciones</name>
-    <description>Proyecto Maven para Tarea 1 de Programación de Aplicaciones</description>
-    
-    <!-- Propiedades del proyecto -->
+
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hibernate.version>5.4.21.Final</hibernate.version>
     </properties>
 
     <dependencies>
-
+        <!-- JPA API -->
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>${hibernate.version}</version>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>2.2</version>
         </dependency>
 
+        <!-- Hibernate ORM -->
         <dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>${hibernate.version}</version>
-		</dependency>
-    
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.6.15.Final</version>
+        </dependency>
+
+        <!-- Driver de PostgreSQL (cambia si usas otro) -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+        </dependency>
+
+        <!-- Logger (opcional, pero recomendable) -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.36</version>
+        </dependency>
     </dependencies>
 
-    <!-- Configuración básica de build -->
     <build>
+        <resources>
+            <resource>
+                <!-- Directorio donde tienes persistence.xml -->
+                <directory>src/main/java/META-INF</directory>
+                <includes>
+                    <include>**/Persistence.xml</include>
+                </includes>
+                <!-- Lo copia a META-INF en target -->
+                <targetPath>META-INF</targetPath>
+            </resource>
+        </resources>
+
         <plugins>
-            <!-- Plugin del compilador (esencial) -->
+            <!-- Plugin para ejecutar clases Java -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <mainClass>presentacion.principal</mainClass>
                 </configuration>
             </plugin>
         </plugins>

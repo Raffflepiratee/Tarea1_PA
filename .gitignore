@@ -4,3 +4,5 @@
 # Ignorar carpetas de salida comunes
 /target/
 /build/
+
+docker/.env
