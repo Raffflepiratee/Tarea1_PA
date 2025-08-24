@@ -5,4 +5,7 @@
 /target/
 /build/
 
+# Ignorar archivo de configuración de persistencia
+Persistence.xml
+
 docker/.env
