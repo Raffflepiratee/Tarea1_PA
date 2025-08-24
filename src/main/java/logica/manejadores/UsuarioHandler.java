@@ -37,4 +37,12 @@ public class UsuarioHandler {
         return em.createQuery("SELECT u FROM Usuario u", Usuario.class).getResultList();
     }
 
+    public void actualizarUsuario(Usuario u) {
+        Conexion c = Conexion.getInstancia();
+        EntityManager em = c.getEntityManager();
+        em.getTransaction().begin();
+        em.merge(u);
+        em.getTransaction().commit();
+    }
+
 }

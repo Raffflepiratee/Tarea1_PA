@@ -227,6 +227,7 @@ private void abrirListadoUsuarios() {
                 );
                 if (nuevaZona != null) {
                     lector.setZona(nuevaZona);
+                    controller.actualizarUsuario(lector);
                     JOptionPane.showMessageDialog(frame, "Zona cambiada a: " + nuevaZona);
                 }
             } else if (choice == 1) { // Cambiar Estado
@@ -242,14 +243,16 @@ private void abrirListadoUsuarios() {
                 );
                 if (nuevoEstado != null) {
                     lector.setEstadoUsuario(nuevoEstado);
+                    controller.actualizarUsuario(lector);
                     JOptionPane.showMessageDialog(frame, "Estado cambiado a: " + nuevoEstado);
                 }
             }
         } else {
             // Solo mostrar info para Bibliotecario
+            logica.clases.Bibliotecario biblio = (logica.clases.Bibliotecario) u;
             JOptionPane.showMessageDialog(
                 frame,
-                "Bibliotecario\nNombre: " + u.getNombre() + "\nCorreo: " + u.getCorreo(),
+                "Bibliotecario\nNombre: " + biblio.getNombre() + "\nID empleado: " + biblio.getIdEmp() + "\nCorreo: " + biblio.getCorreo(),
                 "Información",
                 JOptionPane.INFORMATION_MESSAGE
             );

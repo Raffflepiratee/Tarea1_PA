@@ -90,4 +90,10 @@ public class UsuarioController implements IUsuarioController {
         }
     }
 
+  
+    public void actualizarUsuario(Usuario usuario) {
+        UsuarioHandler uh = UsuarioHandler.getInstancia();
+        uh.actualizarUsuario(usuario);
+    }
+
 }
