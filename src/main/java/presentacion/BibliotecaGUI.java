@@ -20,10 +20,13 @@ public class BibliotecaGUI extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         JMenu menuUsuarios = new JMenu("Usuarios");
         JMenuItem registrarUsuario = new JMenuItem("Registrar Usuario");
+        JMenuItem listarUsuarios = new JMenuItem("Listar Usuarios");
 
         registrarUsuario.addActionListener(e -> abrirFormularioRegistro());
+        listarUsuarios.addActionListener(e -> abrirListadoUsuarios());
 
         menuUsuarios.add(registrarUsuario);
+        menuUsuarios.add(listarUsuarios); 
         menuBar.add(menuUsuarios);
         setJMenuBar(menuBar);
 
@@ -162,6 +165,147 @@ public class BibliotecaGUI extends JFrame {
         desktop.add(frame);
         frame.setVisible(true);
     }
+
+//OJO EL PIOJO AQUI
+private void abrirListadoUsuarios() {
+    JInternalFrame frame = new JInternalFrame("Listado de Usuarios", true, true, true, true);
+    frame.setSize(500, 400);
+    frame.setLayout(new BorderLayout());
+
+    // Obtener usuarios
+    logica.controladores.UsuarioController controller = new logica.controladores.UsuarioController();
+    java.util.List<logica.clases.Usuario> usuarios = controller.obtenerUsuarios();
+
+    // Columnas
+    String[] columnas = {"Nombre", "Correo", "Opciones"};
+    Object[][] data = new Object[usuarios.size()][columnas.length];
+
+    for (int i = 0; i < usuarios.size(); i++) {
+        logica.clases.Usuario u = usuarios.get(i);
+        data[i][0] = u.getNombre();
+        data[i][1] = u.getCorreo();
+        data[i][2] = "Opciones";
+    }
+
+    javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(data, columnas) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            // Solo el botón es editable
+            return column == 2;
+        }
+    };
+
+    JTable table = new JTable(model);
+
+    // Botón para opciones
+    table.getColumn("Opciones").setCellRenderer(new ButtonRenderer());
+    table.getColumn("Opciones").setCellEditor(new ButtonEditor(new JCheckBox(), (row) -> {
+        logica.clases.Usuario u = usuarios.get(row);
+        if (u instanceof logica.clases.Lector) {
+            // Mostrar opciones para Lector
+            Object[] options = {"Cambiar Zona", "Cambiar Estado", "Cancelar"};
+            int choice = JOptionPane.showOptionDialog(
+                frame,
+                "Opciones para el lector " + u.getNombre(),
+                "Opciones de Lector",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options,
+                options[0]
+            );
+            if (choice == 0) { // Cambiar Zona
+                logica.clases.Lector lector = (logica.clases.Lector) u;
+                datatypes.Zonas nuevaZona = (datatypes.Zonas) JOptionPane.showInputDialog(
+                    frame,
+                    "Selecciona nueva zona:",
+                    "Cambiar Zona",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    datatypes.Zonas.values(),
+                    lector.getZona()
+                );
+                if (nuevaZona != null) {
+                    lector.setZona(nuevaZona);
+                    JOptionPane.showMessageDialog(frame, "Zona cambiada a: " + nuevaZona);
+                }
+            } else if (choice == 1) { // Cambiar Estado
+                logica.clases.Lector lector = (logica.clases.Lector) u;
+                datatypes.EstadosU nuevoEstado = (datatypes.EstadosU) JOptionPane.showInputDialog(
+                    frame,
+                    "Selecciona nuevo estado:",
+                    "Cambiar Estado",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    datatypes.EstadosU.values(),
+                    lector.getEstadoUsuario()
+                );
+                if (nuevoEstado != null) {
+                    lector.setEstadoUsuario(nuevoEstado);
+                    JOptionPane.showMessageDialog(frame, "Estado cambiado a: " + nuevoEstado);
+                }
+            }
+        } else {
+            // Solo mostrar info para Bibliotecario
+            JOptionPane.showMessageDialog(
+                frame,
+                "Bibliotecario\nNombre: " + u.getNombre() + "\nCorreo: " + u.getCorreo(),
+                "Información",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+        }
+    }));
+
+    JScrollPane scroll = new JScrollPane(table);
+    frame.add(scroll, BorderLayout.CENTER);
+
+    desktop.add(frame);
+    frame.setVisible(true);
+}
+
+// Renderizador y editor de botón para JTable
+class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
+    public ButtonRenderer() { setOpaque(true); }
+    public java.awt.Component getTableCellRendererComponent(JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int column) {
+        setText((value == null) ? "" : value.toString());
+        return this;
+    }
+}
+
+class ButtonEditor extends DefaultCellEditor {
+    private JButton button;
+    private String label;
+    private boolean isPushed;
+    private java.util.function.IntConsumer onClick;
+    private int row;
+
+    public ButtonEditor(JCheckBox checkBox, java.util.function.IntConsumer onClick) {
+        super(checkBox);
+        this.onClick = onClick;
+        button = new JButton();
+        button.setOpaque(true);
+        button.addActionListener(e -> fireEditingStopped());
+    }
+
+    public java.awt.Component getTableCellEditorComponent(JTable table, Object value,
+            boolean isSelected, int row, int column) {
+        this.row = row;
+        label = (value == null) ? "" : value.toString();
+        button.setText(label);
+        isPushed = true;
+        return button;
+    }
+
+    public Object getCellEditorValue() {
+        if (isPushed) {
+            onClick.accept(row);
+        }
+        isPushed = false;
+        return label;
+    }
+}
+//HASTA ACA VA LO NUEVO
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(BibliotecaGUI::new);

@@ -3,7 +3,7 @@ package interfaces;
 import java.util.List;
 import logica.clases.Usuario;
 import excepciones.UsuarioRepetidoException;
-import datatypes.DtUsuario;
+import datatypes.*;
 
 public interface IUsuarioController {
     void agregarUsuario(DtUsuario usuario) throws UsuarioRepetidoException;
@@ -13,4 +13,8 @@ public interface IUsuarioController {
     List<Usuario> obtenerUsuarios();
 
     Usuario buscarUsuarioPorCorreo(String correo);
+
+    void cambiarEstadoLector(DtUsuario usuario);
+
+    void cambiarZonaLector(DtUsuario usuario);
 }

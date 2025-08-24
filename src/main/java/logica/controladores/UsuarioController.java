@@ -10,9 +10,7 @@ import logica.clases.Bibliotecario;
 import logica.clases.Lector;
 import logica.manejadores.UsuarioHandler;
 import excepciones.UsuarioRepetidoException;
-import datatypes.DtUsuario;
-import datatypes.DtLector;
-import datatypes.DtBibliotecario;
+import datatypes.*;
 import persistencia.*;
 
 public class UsuarioController implements IUsuarioController {
@@ -61,6 +59,34 @@ public class UsuarioController implements IUsuarioController {
             }
         }
         return null;
+    }
+
+    @Override
+    //Cambiar el estado del lector
+    public void cambiarEstadoLector(DtUsuario usuario){
+        UsuarioHandler uh = UsuarioHandler.getInstancia();
+        Usuario existe = uh.buscarUsuarioPorCorreo(usuario.getCorreo());
+        if (existe != null && existe instanceof Lector) {
+            Lector lector = (Lector) existe;
+            lector.setEstadoUsuario(((DtLector) usuario).getEstadoUsuario());
+        }
+        else {
+            System.out.println("El usuario no existe o no es un lector.");
+        }
+    }
+
+    @Override
+    //Cambiar la zona del lector
+    public void cambiarZonaLector(DtUsuario usuario){
+        UsuarioHandler uh = UsuarioHandler.getInstancia();
+        Usuario existe = uh.buscarUsuarioPorCorreo(usuario.getCorreo());
+        if (existe != null && existe instanceof Lector) {
+            Lector lector = (Lector) existe;
+            lector.setZona(((DtLector) usuario).getZona());
+        }
+        else {
+            System.out.println("El usuario no existe o no es un lector.");
+        }
     }
 
 }
