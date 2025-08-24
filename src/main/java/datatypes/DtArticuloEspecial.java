@@ -1,5 +1,7 @@
 package datatypes;
 
+import java.util.Date;
+
 public class DtArticuloEspecial extends DtMaterial {
     
     private String descripcion;

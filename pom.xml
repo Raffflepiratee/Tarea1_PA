@@ -50,7 +50,7 @@
                 <!-- Directorio donde tienes persistence.xml -->
                 <directory>src/main/java/META-INF</directory>
                 <includes>
-                    <include>**/persistence.xml</include>
+                    <include>**/Persistence.xml</include>
                 </includes>
                 <!-- Lo copia a META-INF en target -->
                 <targetPath>META-INF</targetPath>

@@ -1,5 +1,7 @@
 package datatypes;
 
+import java.util.Date;
+
 public class DtMaterial {
 
     private int idMaterial;

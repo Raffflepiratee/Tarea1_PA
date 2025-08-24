@@ -22,12 +22,23 @@ public class MaterialController implements IMaterialController {
 
     @Override
     public void agregarMaterial(int idMaterial, Date fechaRegistro) {
-        MaterialHandler mh = MaterialHandler.getInstancia();
-        Material m = mh.buscarMaterialPorId(idMaterial);
-        if (m == null) {
-            // m = new Libro(idMaterial, fechaRegistro);
+        /* MaterialHandler mh = MaterialHandler.getInstancia();
+        Material existente = mh.buscarMaterialPorId(idMaterial);
+        if (existente != null) {
+            System.out.println("El material con ID " + idMaterial + " ya existe en el sistema");
+            return;
         }
-        mh.agregarMaterialH(m);
+        if (existente instanceof Libro) {
+            existente = new Libro(idMaterial, fechaRegistro, ((Libro) existente).getTitulo(),
+                    ((Libro) existente).getAutor(), ((Libro) existente).getEditorial(), ((Libro) existente).getIsbn());
+        } else if (existente instanceof ArticuloEspecial) {
+            existente = new ArticuloEspecial(idMaterial, fechaRegistro, ((ArticuloEspecial) existente).getDescripcion(),
+                    ((ArticuloEspecial) existente).getPeso(), ((ArticuloEspecial) existente).getDimFisicas());
+        } else {
+            System.out.println("Tipo de material no reconocido.");
+            return;
+        }
+        mh.agregarMaterialH(nuevoMaterial); */
     }
 
     @Override

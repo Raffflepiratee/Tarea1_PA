@@ -1,12 +1,14 @@
 package datatypes;
 
+import java.util.Date;
+
 public class DtPrestamo {
     private int idPrestamo;
     private Date fechaSoli;
-    private EstadoP estadoPres;
+    private EstadosP estadoPres;
     private Date fechaDev;
     
-    public DtPrestamo(int idPrestamo, Date fechaSoli, EstadoP estadoPres, Date fechaDev) {
+    public DtPrestamo(int idPrestamo, Date fechaSoli, EstadosP estadoPres, Date fechaDev) {
         this.idPrestamo = idPrestamo;
         this.fechaSoli = fechaSoli;
         this.estadoPres = estadoPres;
@@ -21,7 +23,7 @@ public class DtPrestamo {
         return fechaSoli;
     }
 
-    public EstadoP getEstadoPres() {
+    public EstadosP getEstadoPres() {
         return estadoPres;
     }
 

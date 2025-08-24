@@ -4,12 +4,15 @@ import interfaces.IUsuarioController;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
+
 import logica.clases.Usuario;
 import logica.clases.Bibliotecario;
 import logica.clases.Lector;
 import logica.manejadores.UsuarioHandler;
-import datatypes.*;
-import interfaces.*;
+import excepciones.UsuarioRepetidoException;
+import datatypes.DtUsuario;
+import datatypes.DtLector;
+import datatypes.DtBibliotecario;
 import persistencia.*;
 
 public class UsuarioController implements IUsuarioController {
@@ -23,36 +26,21 @@ public class UsuarioController implements IUsuarioController {
 
     // ARREGLAR
     @Override
-    public void agregarUsuario(DtUsuario usuario) /* throws UsuarioRepetidoException */ {
+    public void agregarUsuario(DtUsuario usuario) throws UsuarioRepetidoException{
         UsuarioHandler uh = UsuarioHandler.getInstancia();
-        Usuario existente = uh.buscarUsuarioPorCorreo(usuario.getCorreo());
-        if (existente != null)
-            /*
-             * throw new UsuarioRepetidoException(
-             * "El usuario con correo " + usuario.getCorreo() + " ya existe en el sistema");
-             */
-            System.out.println("El usuario con correo " + usuario.getCorreo() + " ya existe en el sistema");
-        Usuario nuevoUsuario = null;
+        Usuario nuevoUsuario = uh.buscarUsuarioPorCorreo(usuario.getCorreo());
+        if (nuevoUsuario != null)
+            throw new UsuarioRepetidoException(
+                "El usuario con correo " + usuario.getCorreo() + " ya existe en el sistema");
         if (usuario instanceof DtLector) {
-            DtLector dtLector = (DtLector) usuario;
-            nuevoUsuario = new Lector(
-                    dtLector.getNombre(),
-                    dtLector.getCorreo(),
-                    dtLector.getDireccion(),
-                    dtLector.getZona(),
-                    dtLector.getEstadoUsuario(),
-                    dtLector.getFechaIngreso());
-        } else if (usuario instanceof DtBibliotecario) {
-            DtBibliotecario dtBiblio = (DtBibliotecario) usuario;
-            nuevoUsuario = new Bibliotecario(
-                    dtBiblio.getNombre(),
-                    dtBiblio.getCorreo(),
-                    dtBiblio.getIdEmp());
+            nuevoUsuario = new Lector(usuario.getNombre(), usuario.getCorreo(),
+                    ((DtLector) usuario).getFechaIngreso(), ((DtLector) usuario).getEstadoUsuario(),
+                    ((DtLector) usuario).getZona(), ((DtLector) usuario).getDireccion());
         }
-
-        if (nuevoUsuario != null) {
-            uh.agregarUsuarioH(nuevoUsuario);
+        else if (usuario instanceof DtBibliotecario) {
+            nuevoUsuario = new Bibliotecario(usuario.getNombre(), usuario.getCorreo(),((DtBibliotecario) usuario).getIdEmp());
         }
+        uh.agregarUsuarioH(nuevoUsuario);
     }
 
     @Override

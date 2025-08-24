@@ -1,5 +1,7 @@
 package datatypes;
 
+import java.util.Date;
+
 public class DtLector extends DtUsuario {
     private Date fechaIngreso;
     private EstadosU estadoUsuario;

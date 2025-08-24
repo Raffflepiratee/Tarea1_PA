@@ -1,6 +1,8 @@
 package datatypes;
 
-public class DtLibro {
+import java.util.Date;
+
+public class DtLibro extends DtMaterial {
     private String titulo;
     private int cantPag;
 
