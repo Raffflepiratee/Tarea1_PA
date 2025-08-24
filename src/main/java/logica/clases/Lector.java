@@ -16,6 +16,7 @@ public class Lector extends Usuario {
     @Enumerated(EnumType.STRING)
     @Column(name = "estadoUsuario")
     private EstadosU estadoUsuario;
+    @Enumerated(EnumType.STRING)
     private Zonas zona;
     private String direccion;
     @OneToMany(mappedBy = "lector", cascade = CascadeType.ALL, orphanRemoval = true)
