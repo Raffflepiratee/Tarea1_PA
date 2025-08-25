@@ -56,8 +56,30 @@ public class MaterialController implements IMaterialController {
     }
 
     @Override
-    public List<Material> obtenerMateriales() {
-        return new ArrayList<>(materiales);
+    public List<DtMaterial> obtenerMateriales() {
+        List<Material> materiales = MaterialHandler.getInstancia().obtenerTodosLosMateriales();
+        List<DtMaterial> dtMateriales = new ArrayList<>();
+        for (Material m : materiales) {
+            if (m instanceof Libro) {
+                Libro libro = (Libro) m;
+                DtLibro dtLibro = new DtLibro(
+                        libro.getIdMaterial(),
+                        libro.getFechaRegistro(),
+                        libro.getTitulo(),
+                        libro.getCantPag());
+                dtMateriales.add(dtLibro);
+            } else if (m instanceof ArticuloEspecial) {
+                ArticuloEspecial art = (ArticuloEspecial) m;
+                DtArticuloEspecial dtArt = new DtArticuloEspecial(
+                        art.getIdMaterial(),
+                        art.getFechaRegistro(),
+                        art.getDescripcion(),
+                        art.getPeso(),
+                        art.getDimFisica());
+                dtMateriales.add(dtArt);
+            }
+        }
+        return dtMateriales;
     }
 
     @Override

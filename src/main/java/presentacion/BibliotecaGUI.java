@@ -2,12 +2,10 @@ package presentacion;
 
 import javax.swing.*;
 import java.awt.*;
-import logica.clases.Bibliotecario;
-import logica.clases.Lector;
-import logica.clases.Usuario;
+import logica.clases.*;
 import logica.manejadores.UsuarioHandler;
 import logica.controladores.*;
-import logica.clases.Material;
+import javax.swing.table.DefaultTableModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -162,38 +160,63 @@ public class BibliotecaGUI extends JFrame {
 
     private void abrirFormularioRegistroMaterial() {
         JInternalFrame frame = new JInternalFrame("Registro de Material", true, true, true, true);
-        frame.setSize(400, 300);
+        frame.setSize(500, 300);
         frame.setLayout(new BorderLayout());
 
-        JPanel panelForm = new JPanel(new GridLayout(5, 2, 10, 10));
+        JPanel panelForm = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2, 8, 2, 8);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
 
-        panelForm.add(new JLabel("Tipo de material:"));
-        JComboBox<String> comboTipo = new JComboBox<>(new String[] { "Libro", "Artículo Especial" });
-        panelForm.add(comboTipo);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panelForm.add(new JLabel("Tipo de material:"), gbc);
+        gbc.gridx = 1;
+        JComboBox<String> comboTipo = new JComboBox<>(new String[] { "Libro", "Articulo Especial" });
+        panelForm.add(comboTipo, gbc);
 
-        panelForm.add(new JLabel("Fecha de Registro (dd/mm/yyyy):"));
-        JTextField txtFecha = new JTextField();
-        panelForm.add(txtFecha);
-
-        panelForm.add(new JLabel("Título / Descripción:"));
+        // Panel para libros
+        JPanel panelLibro = new JPanel(new GridLayout(3, 2, 5, 5));
         JTextField txtTitulo = new JTextField();
-        panelForm.add(txtTitulo);
+        panelLibro.add(new JLabel("Título:"));
+        panelLibro.add(txtTitulo);
 
-        panelForm.add(new JLabel("Cantidad de Páginas / Peso (kg):"));
         JTextField txtCantPag = new JTextField();
-        panelForm.add(txtCantPag);
+        panelLibro.add(new JLabel("Cantidad de Páginas:"));
+        panelLibro.add(txtCantPag);
 
-        panelForm.add(new JLabel("Dimensiones Físicas (LxAxH) - solo Artículo:"));
+        // Panel para articulos
+        JPanel panelArticulo = new JPanel(new GridLayout(3, 2, 5, 5));
+        JTextField txtDescripcion = new JTextField();
+        panelArticulo.add(new JLabel("Descripcion:"));
+        panelArticulo.add(txtDescripcion);
+
+        JTextField txtPeso = new JTextField();
+        panelArticulo.add(new JLabel("Peso (kg):"));
+        panelArticulo.add(txtPeso);
+
         JTextField txtDimensiones = new JTextField();
-        txtDimensiones.setEnabled(false);
-        panelForm.add(txtDimensiones);
+        panelArticulo.add(new JLabel("Dimensiones Físicas:"));
+        panelArticulo.add(txtDimensiones);
 
-        // Habilitar campo dimensiones solo para Artículo Especial
+        // Panel dinamico
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(2, 8, 2, 8);
+        JPanel panelDinamico = new JPanel(new CardLayout());
+        panelDinamico.add(panelLibro, "Libro");
+        panelDinamico.add(panelArticulo, "Articulo Especial");
+        panelForm.add(panelDinamico, gbc);
+
         comboTipo.addActionListener(e -> {
-            boolean esArticulo = comboTipo.getSelectedItem().equals("Artículo Especial");
-            txtDimensiones.setEnabled(esArticulo);
+            CardLayout cl = (CardLayout) (panelDinamico.getLayout());
+            cl.show(panelDinamico, (String) comboTipo.getSelectedItem());
         });
-        comboTipo.setSelectedIndex(0); // Inicializa
+
+        ((CardLayout) panelDinamico.getLayout()).show(panelDinamico, "Libro");
 
         frame.add(panelForm, BorderLayout.CENTER);
 
@@ -203,33 +226,22 @@ public class BibliotecaGUI extends JFrame {
 
         btnAceptar.addActionListener(e -> {
             try {
-                String fechaStr = txtFecha.getText();
-                String tituloDesc = txtTitulo.getText();
-                String cantPagPesoStr = txtCantPag.getText();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                Date fechaRegistro = sdf.parse(fechaStr);
+                Date fechaRegistro = new Date();
+                MaterialController mc = new MaterialController();
 
                 if (comboTipo.getSelectedItem().equals("Libro")) {
-                    int cantPag = Integer.parseInt(cantPagPesoStr);
+                    String titulo = txtTitulo.getText();
+                    int cantPag = Integer.parseInt(txtCantPag.getText());
 
-                    DtLibro libro = new DtLibro(
-                            fechaRegistro,
-                            tituloDesc,
-                            cantPag);
-                    MaterialController mc = new MaterialController();
+                    DtLibro libro = new DtLibro(fechaRegistro, titulo, cantPag);
                     mc.agregarMaterial(libro);
                     JOptionPane.showMessageDialog(frame, "Libro registrado correctamente.");
                 } else {
-                    float peso = Float.parseFloat(cantPagPesoStr);
-                    String dimensionesStr = txtDimensiones.getText();
-                    float dimensiones = Float.parseFloat(dimensionesStr);
-                    DtArticuloEspecial articulo = new DtArticuloEspecial(
-                            fechaRegistro,
-                            tituloDesc,
-                            peso,
-                            dimensiones);
+                    String descripcion = txtDescripcion.getText();
+                    float peso = Float.parseFloat(txtPeso.getText());
+                    float dimensiones = Float.parseFloat(txtDimensiones.getText());
 
-                    MaterialController mc = new MaterialController();
+                    DtArticuloEspecial articulo = new DtArticuloEspecial(fechaRegistro, descripcion, peso, dimensiones);
                     mc.agregarMaterial(articulo);
                     JOptionPane.showMessageDialog(frame, "Artículo Especial registrado correctamente.");
                 }
@@ -248,6 +260,56 @@ public class BibliotecaGUI extends JFrame {
     }
 
     private void abrirListadoMateriales() {
+        JInternalFrame frame = new JInternalFrame("Listado de Materiales", true, true, true, true);
+        frame.setSize(700, 400);
+        frame.setLayout(new BorderLayout());
+
+        // Obtener materiales
+        MaterialController mC = new MaterialController();
+        List<DtMaterial> materiales = mC.obtenerMateriales();
+
+        System.out.println("Materiales obtenidos: " + materiales.size());
+
+        // Columnas
+        String[] columnas = { "ID", "Fecha Registro", "Titulo", "Cantidad Pag", "Descripcion", "Peso", "DimFisica" };
+        Object[][] data = new Object[materiales.size()][columnas.length];
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        for (int i = 0; i < materiales.size(); i++) {
+            DtMaterial m = materiales.get(i);
+            data[i][0] = m.getIdMaterial();
+            data[i][1] = sdf.format(m.getFechaRegistro());
+            if (m instanceof DtLibro) {
+                DtLibro libro = (DtLibro) m;
+                data[i][2] = libro.getTitulo();
+                data[i][3] = libro.getCantPag();
+                data[i][4] = "N/A";
+                data[i][5] = "N/A";
+                data[i][6] = "N/A";
+            } else {
+                DtArticuloEspecial art = (DtArticuloEspecial) m;
+                data[i][2] = "N/A";
+                data[i][3] = "N/A";
+                data[i][4] = art.getDescripcion();
+                data[i][5] = art.getPeso();
+                data[i][6] = art.getDimFisica();
+            }
+        }
+
+        DefaultTableModel model = new DefaultTableModel(data, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        JTable table = new JTable(model);
+        JScrollPane scroll = new JScrollPane(table);
+        frame.add(scroll, BorderLayout.CENTER);
+
+        desktop.add(frame);
+        frame.setVisible(true);
     }
 
     public static void main(String[] args) {

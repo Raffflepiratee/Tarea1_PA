@@ -18,6 +18,10 @@ public abstract class Material {
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Prestamo> prestamos = new ArrayList<Prestamo>();
 
+    public Material() {
+        super();
+    }
+
     public Material(Date fechaRegistro) {
         super();
         this.fechaRegistro = fechaRegistro;

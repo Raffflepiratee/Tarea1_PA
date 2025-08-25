@@ -8,12 +8,20 @@ public class DtArticuloEspecial extends DtMaterial {
     private float peso;
     private float dimFisica;
 
+    // Mostrar informacion
+    public DtArticuloEspecial(int idMaterial, Date fechaRegistro, String descripcion, float peso, float dimFisica) {
+        super(idMaterial, fechaRegistro);
+        this.descripcion = descripcion;
+        this.peso = peso;
+        this.dimFisica = dimFisica;
+    }
+
+    // Registrar nuevo
     public DtArticuloEspecial(Date fechaRegistro, String descripcion, float peso, float dimFisica) {
         super(fechaRegistro);
         this.descripcion = descripcion;
         this.peso = peso;
         this.dimFisica = dimFisica;
-
     }
 
     public String getDescripcion() {

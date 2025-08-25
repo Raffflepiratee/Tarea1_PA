@@ -4,6 +4,7 @@ import logica.clases.Material;
 
 import persistencia.Conexion;
 import javax.persistence.EntityManager;
+import java.util.List;
 
 public class MaterialHandler {
 
@@ -30,5 +31,11 @@ public class MaterialHandler {
         Conexion c = Conexion.getInstancia();
         EntityManager em = c.getEntityManager();
         return em.find(Material.class, id);
+    }
+
+    public List<Material> obtenerTodosLosMateriales() {
+        Conexion c = Conexion.getInstancia();
+        EntityManager em = c.getEntityManager();
+        return em.createQuery("SELECT m FROM Material m", Material.class).getResultList();
     }
 }

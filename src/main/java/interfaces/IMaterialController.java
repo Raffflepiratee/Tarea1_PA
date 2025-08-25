@@ -12,7 +12,7 @@ public interface IMaterialController {
 
     void eliminarMaterial(Material material);
 
-    List<Material> obtenerMateriales();
+    List<DtMaterial> obtenerMateriales();
 
     Material buscarMaterialPorId(int id);
 }

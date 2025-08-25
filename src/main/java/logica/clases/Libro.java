@@ -13,6 +13,10 @@ public class Libro extends Material {
     private String titulo;
     private int cantPag;
 
+    public Libro() {
+        super();
+    }
+
     public Libro(Date fechaRegistro, String titulo, int cantPag) {
         super(fechaRegistro);
         this.titulo = titulo;
