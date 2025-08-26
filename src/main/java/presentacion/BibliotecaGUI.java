@@ -211,11 +211,12 @@ private void abrirListadoUsuarios() {
     table.getColumn("Opciones").setCellEditor(new ButtonEditor(new JCheckBox(), (row) -> {
         DtUsuario u = usuarios.get(row);
         if (u instanceof DtLector) {
+            DtLector dtlector = (DtLector) u;
             // Mostrar opciones para Lector
             Object[] options = {"Cambiar Zona", "Cambiar Estado", "Cancelar"};
             int choice = JOptionPane.showOptionDialog(
                 frame,
-                "Opciones para el lector " + u.getNombre(),
+                "Información del lector: " + "\nNombre: "+ u.getNombre() + "\nZona: " + dtlector.getZona() + "\nEstado: " + dtlector.getEstadoUsuario() + "\nDirección: " + dtlector.getDireccion(),
                 "Opciones de Lector",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
@@ -224,7 +225,7 @@ private void abrirListadoUsuarios() {
                 options[0]
             );
             if (choice == 0) { // Cambiar Zona
-                DtLector dtlector = (DtLector) u;
+                
                 Zonas nuevaZona = (Zonas) JOptionPane.showInputDialog(
                     frame,
                     "Selecciona nueva zona:",
@@ -239,7 +240,6 @@ private void abrirListadoUsuarios() {
                     JOptionPane.showMessageDialog(frame, "Zona cambiada a: " + nuevaZona);
                 }
             } else if (choice == 1) { // Cambiar Estado
-                DtLector dtlector = (DtLector) u;
                 EstadosU nuevoEstado = (EstadosU) JOptionPane.showInputDialog(
                     frame,
                     "Selecciona nuevo estado:",
