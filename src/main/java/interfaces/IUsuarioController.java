@@ -10,11 +10,11 @@ public interface IUsuarioController {
 
     void eliminarUsuario(Usuario usuario);
 
-    List<Usuario> obtenerUsuarios();
+    List<DtUsuario> obtenerUsuarios();
 
     Usuario buscarUsuarioPorCorreo(String correo);
 
-    void cambiarEstadoLector(DtUsuario usuario);
+    void cambiarEstadoLector(DtLector dtlector, EstadosU nuevoEstado);
 
-    void cambiarZonaLector(DtUsuario usuario);
+    void cambiarZonaLector(DtLector dtlector, Zonas nuevaZona);
 }

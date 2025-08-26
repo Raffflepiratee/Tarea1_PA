@@ -2,6 +2,15 @@ package presentacion;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import java.awt.Component;
+import java.util.function.IntConsumer;
+
+import logica.controladores.*;
+import logica.clases.*;
+import datatypes.*;
 
 public class BibliotecaGUI extends JFrame {
 
@@ -173,21 +182,21 @@ private void abrirListadoUsuarios() {
     frame.setLayout(new BorderLayout());
 
     // Obtener usuarios
-    logica.controladores.UsuarioController controller = new logica.controladores.UsuarioController();
-    java.util.List<logica.clases.Usuario> usuarios = controller.obtenerUsuarios();
+    UsuarioController uC = new UsuarioController();
+    List<DtUsuario> usuarios = uC.obtenerUsuarios();
 
     // Columnas
     String[] columnas = {"Nombre", "Correo", "Opciones"};
     Object[][] data = new Object[usuarios.size()][columnas.length];
 
     for (int i = 0; i < usuarios.size(); i++) {
-        logica.clases.Usuario u = usuarios.get(i);
+        DtUsuario u = usuarios.get(i);
         data[i][0] = u.getNombre();
         data[i][1] = u.getCorreo();
         data[i][2] = "Opciones";
     }
 
-    javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(data, columnas) {
+    DefaultTableModel model = new DefaultTableModel(data, columnas) {
         @Override
         public boolean isCellEditable(int row, int column) {
             // Solo el botón es editable
@@ -200,8 +209,8 @@ private void abrirListadoUsuarios() {
     // Botón para opciones
     table.getColumn("Opciones").setCellRenderer(new ButtonRenderer());
     table.getColumn("Opciones").setCellEditor(new ButtonEditor(new JCheckBox(), (row) -> {
-        logica.clases.Usuario u = usuarios.get(row);
-        if (u instanceof logica.clases.Lector) {
+        DtUsuario u = usuarios.get(row);
+        if (u instanceof DtLector) {
             // Mostrar opciones para Lector
             Object[] options = {"Cambiar Zona", "Cambiar Estado", "Cancelar"};
             int choice = JOptionPane.showOptionDialog(
@@ -215,41 +224,39 @@ private void abrirListadoUsuarios() {
                 options[0]
             );
             if (choice == 0) { // Cambiar Zona
-                logica.clases.Lector lector = (logica.clases.Lector) u;
-                datatypes.Zonas nuevaZona = (datatypes.Zonas) JOptionPane.showInputDialog(
+                DtLector dtlector = (DtLector) u;
+                Zonas nuevaZona = (Zonas) JOptionPane.showInputDialog(
                     frame,
                     "Selecciona nueva zona:",
                     "Cambiar Zona",
                     JOptionPane.QUESTION_MESSAGE,
                     null,
                     datatypes.Zonas.values(),
-                    lector.getZona()
+                    dtlector.getZona()
                 );
                 if (nuevaZona != null) {
-                    lector.setZona(nuevaZona);
-                    controller.actualizarUsuario(lector);
+                    uC.cambiarZonaLector(dtlector,nuevaZona);
                     JOptionPane.showMessageDialog(frame, "Zona cambiada a: " + nuevaZona);
                 }
             } else if (choice == 1) { // Cambiar Estado
-                logica.clases.Lector lector = (logica.clases.Lector) u;
-                datatypes.EstadosU nuevoEstado = (datatypes.EstadosU) JOptionPane.showInputDialog(
+                DtLector dtlector = (DtLector) u;
+                EstadosU nuevoEstado = (EstadosU) JOptionPane.showInputDialog(
                     frame,
                     "Selecciona nuevo estado:",
                     "Cambiar Estado",
                     JOptionPane.QUESTION_MESSAGE,
                     null,
                     datatypes.EstadosU.values(),
-                    lector.getEstadoUsuario()
+                    dtlector.getEstadoUsuario()
                 );
                 if (nuevoEstado != null) {
-                    lector.setEstadoUsuario(nuevoEstado);
-                    controller.actualizarUsuario(lector);
+                    uC.cambiarEstadoLector(dtlector, nuevoEstado);
                     JOptionPane.showMessageDialog(frame, "Estado cambiado a: " + nuevoEstado);
                 }
             }
         } else {
             // Solo mostrar info para Bibliotecario
-            logica.clases.Bibliotecario biblio = (logica.clases.Bibliotecario) u;
+            DtBibliotecario biblio = (DtBibliotecario) u;
             JOptionPane.showMessageDialog(
                 frame,
                 "Bibliotecario\nNombre: " + biblio.getNombre() + "\nID empleado: " + biblio.getIdEmp() + "\nCorreo: " + biblio.getCorreo(),
@@ -269,7 +276,7 @@ private void abrirListadoUsuarios() {
 // Renderizador y editor de botón para JTable
 class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
     public ButtonRenderer() { setOpaque(true); }
-    public java.awt.Component getTableCellRendererComponent(JTable table, Object value,
+    public Component getTableCellRendererComponent(JTable table, Object value,
             boolean isSelected, boolean hasFocus, int row, int column) {
         setText((value == null) ? "" : value.toString());
         return this;
@@ -280,7 +287,7 @@ class ButtonEditor extends DefaultCellEditor {
     private JButton button;
     private String label;
     private boolean isPushed;
-    private java.util.function.IntConsumer onClick;
+    private IntConsumer onClick;
     private int row;
 
     public ButtonEditor(JCheckBox checkBox, java.util.function.IntConsumer onClick) {
@@ -291,7 +298,7 @@ class ButtonEditor extends DefaultCellEditor {
         button.addActionListener(e -> fireEditingStopped());
     }
 
-    public java.awt.Component getTableCellEditorComponent(JTable table, Object value,
+    public Component getTableCellEditorComponent(JTable table, Object value,
             boolean isSelected, int row, int column) {
         this.row = row;
         label = (value == null) ? "" : value.toString();

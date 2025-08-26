@@ -47,9 +47,23 @@ public class UsuarioController implements IUsuarioController {
     }
 
     @Override
-    public List<Usuario> obtenerUsuarios() {
-        UsuarioHandler uh = UsuarioHandler.getInstancia();
-        return uh.obtenerTodosLosUsuarios();
+    public List<DtUsuario> obtenerUsuarios() {
+        List<Usuario> listaUsuarios = UsuarioHandler.getInstancia().obtenerTodosLosUsuarios();
+        List<DtUsuario> dtUsuarios = new ArrayList<>();
+        for (Usuario usuario : listaUsuarios) {
+            if (usuario instanceof Lector) {
+                Lector lector = (Lector) usuario;
+                DtLector dtLector = new DtLector(lector.getNombre(), lector.getCorreo(), lector.getFechaIngreso(),
+                        lector.getEstadoUsuario(), lector.getZona(), lector.getDireccion());
+                dtUsuarios.add(dtLector);
+            } else if (usuario instanceof Bibliotecario) {
+                Bibliotecario bibliotecario = (Bibliotecario) usuario;
+                DtBibliotecario dtBibliotecario = new DtBibliotecario(bibliotecario.getNombre(),
+                        bibliotecario.getCorreo(), bibliotecario.getIdEmp());
+                dtUsuarios.add(dtBibliotecario);
+            }
+        }
+        return dtUsuarios;
     }
 
     @Override
@@ -62,14 +76,15 @@ public class UsuarioController implements IUsuarioController {
         return null;
     }
 
-    @Override
     //Cambiar el estado del lector
-    public void cambiarEstadoLector(DtUsuario usuario){
+    @Override
+    public void cambiarEstadoLector(DtLector dtLector, EstadosU nuevoEstado){
         UsuarioHandler uh = UsuarioHandler.getInstancia();
-        Usuario existe = uh.buscarUsuarioPorCorreo(usuario.getCorreo());
+        Usuario existe = uh.buscarUsuarioPorCorreo(dtLector.getCorreo());
         if (existe != null && existe instanceof Lector) {
             Lector lector = (Lector) existe;
-            lector.setEstadoUsuario(((DtLector) usuario).getEstadoUsuario());
+            lector.setEstadoUsuario(nuevoEstado);
+            actualizarUsuario(lector); 
         }
         else {
             System.out.println("El usuario no existe o no es un lector.");
@@ -78,12 +93,13 @@ public class UsuarioController implements IUsuarioController {
 
     @Override
     //Cambiar la zona del lector
-    public void cambiarZonaLector(DtUsuario usuario){
+    public void cambiarZonaLector(DtLector dtlector,Zonas nuevaZona){
         UsuarioHandler uh = UsuarioHandler.getInstancia();
-        Usuario existe = uh.buscarUsuarioPorCorreo(usuario.getCorreo());
+        Usuario existe = uh.buscarUsuarioPorCorreo(dtlector.getCorreo());
         if (existe != null && existe instanceof Lector) {
             Lector lector = (Lector) existe;
-            lector.setZona(((DtLector) usuario).getZona());
+            lector.setZona(nuevaZona);
+            actualizarUsuario(lector);
         }
         else {
             System.out.println("El usuario no existe o no es un lector.");
