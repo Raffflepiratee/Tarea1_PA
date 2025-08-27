@@ -8,6 +8,13 @@ public class DtPrestamo {
     private EstadosP estadoPres;
     private Date fechaDev;
     
+    public DtPrestamo(Date fechaSoli, EstadosP estadoPres, Date fechaDev) {
+        this.fechaSoli = fechaSoli;
+        this.estadoPres = estadoPres;
+        this.fechaDev = fechaDev;
+    }
+
+
     public DtPrestamo(int idPrestamo, Date fechaSoli, EstadosP estadoPres, Date fechaDev) {
         this.idPrestamo = idPrestamo;
         this.fechaSoli = fechaSoli;

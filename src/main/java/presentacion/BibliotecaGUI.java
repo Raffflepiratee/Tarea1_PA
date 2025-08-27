@@ -2,10 +2,14 @@ package presentacion;
 
 import javax.swing.*;
 import java.awt.*;
-import logica.clases.Bibliotecario;
-import logica.clases.Lector;
-import logica.clases.Usuario;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+import logica.clases.*;
 import logica.manejadores.UsuarioHandler;
+import logica.controladores.*;
+import datatypes.*;
+
 
 public class BibliotecaGUI extends JFrame {
 
@@ -24,11 +28,16 @@ public class BibliotecaGUI extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         JMenu menuUsuarios = new JMenu("Usuarios");
         JMenuItem registrarLector = new JMenuItem("Registrar Lector");
+        JMenu menuPrestamo = new JMenu("Préstamo");
+        JMenuItem registrarPrestamo = new JMenuItem("Registrar Préstamo");
 
         registrarLector.addActionListener(e -> abrirFormularioRegistro());
-
+        registrarPrestamo.addActionListener(e -> abrirFormularioPrestamo());
         menuUsuarios.add(registrarLector);
+        menuPrestamo.add(registrarPrestamo);
+        menuBar.add(menuPrestamo);
         menuBar.add(menuUsuarios);
+        
         setJMenuBar(menuBar);
 
         setVisible(true);
@@ -139,6 +148,81 @@ public class BibliotecaGUI extends JFrame {
         desktop.add(frame);
         frame.setVisible(true);
     }
+
+    public void abrirFormularioPrestamo() {
+        JInternalFrame frame = new JInternalFrame("Registro de Préstamo", true, true, true, true);
+        frame.setSize(400, 300);
+        frame.setLayout(new BorderLayout());
+
+        JPanel panelForm = new JPanel(new GridLayout(5, 2, 10, 10));
+
+        panelForm.add(new JLabel("ID Material:"));
+        JTextField txtIdMaterial = new JTextField();
+        panelForm.add(txtIdMaterial);
+
+        panelForm.add(new JLabel("Correo Lector:"));
+        JTextField txtCorreoLector = new JTextField();
+        panelForm.add(txtCorreoLector);
+
+        panelForm.add(new JLabel("Correo Bibliotecario:"));
+        JTextField txtCorreoBiblio = new JTextField();
+        panelForm.add(txtCorreoBiblio);
+
+        panelForm.add(new JLabel("Fecha Solicitud (dd/mm/yyyy):"));
+        JTextField txtFechaSoli = new JTextField();
+        panelForm.add(txtFechaSoli);
+
+        panelForm.add(new JLabel("Fecha Devolución (dd/mm/yyyy):"));
+        JTextField txtFechaDev = new JTextField();
+        panelForm.add(txtFechaDev);
+
+        frame.add(panelForm, BorderLayout.CENTER);
+
+        JPanel panelBotones = new JPanel();
+        JButton btnAceptar = new JButton("Aceptar");
+        JButton btnCancelar = new JButton("Cancelar");
+
+        btnAceptar.addActionListener(e -> {
+            try {
+                int idMaterial = Integer.parseInt(txtIdMaterial.getText());
+                String correoLector = txtCorreoLector.getText();
+                String correoBiblio = txtCorreoBiblio.getText();
+                String fechaSoliStr = txtFechaSoli.getText();
+                String fechaDevStr = txtFechaDev.getText();
+
+                panelForm.add(new JLabel("Estado:"));
+                JComboBox<String> comboEstado = new JComboBox<>(new String[] { "PENDIENTE", "EN_CURSO","DEVUELTO" });
+                panelForm.add(comboEstado);
+
+                String estadoStr = (String) comboEstado.getSelectedItem();
+                EstadosP estado = EstadosP.valueOf(estadoStr);
+
+                SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                Date fechaSoli = sdf.parse(fechaSoliStr);
+                Date fechaDev = sdf.parse(fechaDevStr);
+
+
+
+                DtPrestamo dtPrestamo = new DtPrestamo(fechaSoli,estado,fechaDev);
+                PrestamoController pc = new logica.controladores.PrestamoController();
+                pc.agregarPrestamo(dtPrestamo, correoLector, correoBiblio, idMaterial);
+        
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error al registrar préstamo: " + ex.getMessage());
+    }});
+        btnCancelar.addActionListener(e -> frame.dispose());
+
+        panelBotones.add(btnAceptar);
+        panelBotones.add(btnCancelar);
+
+        frame.add(panelBotones, BorderLayout.SOUTH);
+
+        desktop.add(frame);
+        frame.setVisible(true);
+    }
+
+        
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(BibliotecaGUI::new);

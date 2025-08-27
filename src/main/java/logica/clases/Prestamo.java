@@ -69,7 +69,7 @@ public class Prestamo {
         this.fechaSoli = fechaSoli;
     }
 
-    public void setEstadoP(EstadosP estadoPres) {
+    public void setEstadoPres(EstadosP estadoPres) {
         this.estadoPres = estadoPres;
     }
 

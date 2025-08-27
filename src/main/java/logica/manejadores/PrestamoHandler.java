@@ -31,4 +31,12 @@ public class PrestamoHandler {
         return em.find(Prestamo.class, id);
     }
 
+    public void actualizarPrestamoH(Prestamo p) {
+        Conexion c = Conexion.getInstancia();
+        EntityManager em = c.getEntityManager();
+        em.getTransaction().begin();
+        em.merge(p);
+        em.getTransaction().commit();
+    }
+
 }
