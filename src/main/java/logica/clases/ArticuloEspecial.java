@@ -14,6 +14,10 @@ public class ArticuloEspecial extends Material {
     private float peso;
     private float dimFisica;
 
+    public ArticuloEspecial() {
+        super();
+    }
+
     public ArticuloEspecial(Date fechaRegistro, String descripcion, float peso, float dimFisica) {
         super(fechaRegistro);
         this.descripcion = descripcion;

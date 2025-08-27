@@ -10,7 +10,6 @@ import logica.manejadores.UsuarioHandler;
 import logica.controladores.*;
 import datatypes.*;
 
-
 public class BibliotecaGUI extends JFrame {
 
     private JDesktopPane desktop; // donde van los internal frames
@@ -28,18 +27,20 @@ public class BibliotecaGUI extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         JMenu menuUsuarios = new JMenu("Usuarios");
         JMenuItem registrarLector = new JMenuItem("Registrar Lector");
+
+        registrarLector.addActionListener(e -> abrirFormularioRegistro());
+        menuUsuarios.add(registrarLector);
+        menuBar.add(menuUsuarios);
+
+        // Menu prestamo
         JMenu menuPrestamo = new JMenu("Préstamo");
         JMenuItem registrarPrestamo = new JMenuItem("Registrar Préstamo");
 
-        registrarLector.addActionListener(e -> abrirFormularioRegistro());
         registrarPrestamo.addActionListener(e -> abrirFormularioPrestamo());
-        menuUsuarios.add(registrarLector);
         menuPrestamo.add(registrarPrestamo);
         menuBar.add(menuPrestamo);
-        menuBar.add(menuUsuarios);
-        
-        setJMenuBar(menuBar);
 
+        setJMenuBar(menuBar);
         setVisible(true);
     }
 
@@ -154,27 +155,43 @@ public class BibliotecaGUI extends JFrame {
         frame.setSize(400, 300);
         frame.setLayout(new BorderLayout());
 
-        JPanel panelForm = new JPanel(new GridLayout(5, 2, 10, 10));
+        JPanel panelForm = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2, 8, 2, 8);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
 
-        panelForm.add(new JLabel("ID Material:"));
+        JPanel panelCampos = new JPanel(new GridLayout(6, 2, 5, 5));
+
         JTextField txtIdMaterial = new JTextField();
-        panelForm.add(txtIdMaterial);
+        panelCampos.add(new JLabel("ID Material:"));
+        panelCampos.add(txtIdMaterial);
 
-        panelForm.add(new JLabel("Correo Lector:"));
         JTextField txtCorreoLector = new JTextField();
-        panelForm.add(txtCorreoLector);
+        panelCampos.add(new JLabel("Correo Lector:"));
+        panelCampos.add(txtCorreoLector);
 
-        panelForm.add(new JLabel("Correo Bibliotecario:"));
         JTextField txtCorreoBiblio = new JTextField();
-        panelForm.add(txtCorreoBiblio);
+        panelCampos.add(new JLabel("Correo Bibliotecario:"));
+        panelCampos.add(txtCorreoBiblio);
 
-        panelForm.add(new JLabel("Fecha Solicitud (dd/mm/yyyy):"));
         JTextField txtFechaSoli = new JTextField();
-        panelForm.add(txtFechaSoli);
+        panelCampos.add(new JLabel("Fecha Solicitud (dd/mm/yyyy):"));
+        panelCampos.add(txtFechaSoli);
 
-        panelForm.add(new JLabel("Fecha Devolución (dd/mm/yyyy):"));
         JTextField txtFechaDev = new JTextField();
-        panelForm.add(txtFechaDev);
+        panelCampos.add(new JLabel("Fecha Devolución (dd/mm/yyyy):"));
+        panelCampos.add(txtFechaDev);
+
+        JComboBox<String> comboEstado = new JComboBox<>(new String[] { "PENDIENTE", "EN_CURSO", "DEVUELTO" });
+        panelCampos.add(new JLabel("Estado:"));
+        panelCampos.add(comboEstado);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        panelForm.add(panelCampos, gbc);
 
         frame.add(panelForm, BorderLayout.CENTER);
 
@@ -189,27 +206,21 @@ public class BibliotecaGUI extends JFrame {
                 String correoBiblio = txtCorreoBiblio.getText();
                 String fechaSoliStr = txtFechaSoli.getText();
                 String fechaDevStr = txtFechaDev.getText();
-
-                panelForm.add(new JLabel("Estado:"));
-                JComboBox<String> comboEstado = new JComboBox<>(new String[] { "PENDIENTE", "EN_CURSO","DEVUELTO" });
-                panelForm.add(comboEstado);
-
                 String estadoStr = (String) comboEstado.getSelectedItem();
                 EstadosP estado = EstadosP.valueOf(estadoStr);
 
-                SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 Date fechaSoli = sdf.parse(fechaSoliStr);
                 Date fechaDev = sdf.parse(fechaDevStr);
 
-
-
-                DtPrestamo dtPrestamo = new DtPrestamo(fechaSoli,estado,fechaDev);
-                PrestamoController pc = new logica.controladores.PrestamoController();
+                DtPrestamo dtPrestamo = new DtPrestamo(fechaSoli, estado, fechaDev);
+                PrestamoController pc = new PrestamoController();
                 pc.agregarPrestamo(dtPrestamo, correoLector, correoBiblio, idMaterial);
-        
+
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(frame, "Error al registrar préstamo: " + ex.getMessage());
-    }});
+            }
+        });
         btnCancelar.addActionListener(e -> frame.dispose());
 
         panelBotones.add(btnAceptar);
@@ -220,9 +231,6 @@ public class BibliotecaGUI extends JFrame {
         desktop.add(frame);
         frame.setVisible(true);
     }
-
-        
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(BibliotecaGUI::new);

@@ -22,33 +22,34 @@ public class PrestamoController implements IPrestamoController {
     }
 
     @Override
-    public void agregarPrestamo(DtPrestamo prestamo, String correoLector, String correoBiblio, int idMaterial) throws PrestamoRepetidoException { 
+    public void agregarPrestamo(DtPrestamo prestamo, String correoLector, String correoBiblio, int idMaterial)
+            throws PrestamoRepetidoException {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
+        // tenemos que buscar por otra cosa el prestamo, capaz que por idMaterial y
+        // estado
         Prestamo nuevoPrestamo = pH.buscarPrestamoPorId(prestamo.getIdPrestamo());
-        
+
         MaterialHandler mH = MaterialHandler.getInstancia();
         Material m = mH.buscarMaterialPorId(idMaterial);
 
         UsuarioHandler uH = UsuarioHandler.getInstancia();
         Lector uLector = (Lector) uH.buscarUsuarioPorCorreo(correoLector);
-        //Convertir de usario a lector
-
+        // Convertir de usario a lector
 
         UsuarioHandler uH2 = UsuarioHandler.getInstancia();
         Bibliotecario uBibliotecario = (Bibliotecario) uH2.buscarUsuarioPorCorreo(correoBiblio);
 
-        if(nuevoPrestamo != null){
+        if (nuevoPrestamo != null) {
             throw new PrestamoRepetidoException(
-                "El prestamo ya existe en el sistema"
-            );
-        }else { //Si el prestamo no existe
+                    "El prestamo ya existe en el sistema");
+        } else { // Si el prestamo no existe
             nuevoPrestamo = new Prestamo(
-                prestamo.getFechaSoli(),
-                prestamo.getEstadoPres(),
-                prestamo.getFechaDev(),
-                uLector,
-                uBibliotecario,
-                m);
+                    prestamo.getFechaSoli(),
+                    prestamo.getEstadoPres(),
+                    prestamo.getFechaDev(),
+                    uLector,
+                    uBibliotecario,
+                    m);
             pH.agregarPrestamoH(nuevoPrestamo);
         }
     }
@@ -77,17 +78,14 @@ public class PrestamoController implements IPrestamoController {
     public void cambiarEstadoPrestamo(DtPrestamo Prestamo, EstadosP nuevoEstado) throws PrestamoRepetidoException {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
-        if(prestamo != null){
+        if (prestamo != null) {
             prestamo.setEstadoPres(nuevoEstado);
             actualizarPrestamo(prestamo);
         } else {
             throw new PrestamoRepetidoException(
-                "El prestamo no existe en el sistema"
-            );
+                    "El prestamo no existe en el sistema");
         }
     }
-
-
 
     @Override
     public void actualizarPrestamo(Prestamo prestamo) {
