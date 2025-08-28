@@ -5,7 +5,11 @@ import java.awt.*;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.function.IntConsumer;
+
+/* import java.util.ArrayList; */
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import logica.clases.*;
 import logica.manejadores.UsuarioHandler;
@@ -221,9 +225,9 @@ public class BibliotecaGUI extends JFrame {
                 Date fechaSoli = sdf.parse(fechaSoliStr);
                 Date fechaDev = sdf.parse(fechaDevStr);
 
-                DtPrestamo dtPrestamo = new DtPrestamo(fechaSoli, estado, fechaDev);
+                
                 PrestamoController pc = new PrestamoController();
-                pc.agregarPrestamo(dtPrestamo, correoLector, correoBiblio, idMaterial);
+                pc.agregarPrestamo(fechaSoli, fechaDev, estado, correoLector, correoBiblio, idMaterial);
                 JOptionPane.showMessageDialog(frame, "Préstamo registrado correctamente.");
 
             } catch (Exception ex) {
@@ -241,50 +245,127 @@ public class BibliotecaGUI extends JFrame {
         frame.setVisible(true);
     }
 
-    public void abrirListadoPrestamos() {
+    private void abrirListadoPrestamos() {
         JInternalFrame frame = new JInternalFrame("Listado de Préstamos", true, true, true, true);
-        frame.setSize(600, 400);
+        frame.setSize(700, 400);
         frame.setLayout(new BorderLayout());
 
-        String[] columnas = { "ID Préstamo", "Fecha Solicitud", "Estado", "Fecha Devolución", "Lector", "Bibliotecario", "Material" };
-        Object[][] datos = {};
+        // Obtener préstamos
+        PrestamoController pC = new PrestamoController();
+        List<DtPrestamo> prestamos = pC.obtenerDtPrestamos();
 
-        JTable tablaPrestamos = new JTable(datos, columnas);
-        JScrollPane scrollPane = new JScrollPane(tablaPrestamos);
-        frame.add(scrollPane, BorderLayout.CENTER);
+        // Columnas
+        String[] columnas = {"ID", "Fecha Solicitud", "Estado", "Fecha Devolución", "Lector", "Bibliotecario", "Material", "Opciones"};
+        Object[][] data = new Object[prestamos.size()][columnas.length];
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-        JButton btnCerrar = new JButton("Cerrar");
-        btnCerrar.addActionListener(e -> frame.dispose());
-        JPanel panelBotones = new JPanel();
-        panelBotones.add(btnCerrar);
-        frame.add(panelBotones, BorderLayout.SOUTH);
-
-        // Cargar datos de préstamos
-        try {
-            PrestamoController pc = new PrestamoController();
-            List<Prestamo> prestamos = pc.obtenerPrestamos();
-            Object[][] datosPrestamos = new Object[prestamos.size()][7];
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
-            for (int i = 0; i < prestamos.size(); i++) {
-                Prestamo p = prestamos.get(i);
-                datosPrestamos[i][0] = p.getIdPrestamo();
-                datosPrestamos[i][1] = sdf.format(p.getFechaSoli());
-                datosPrestamos[i][2] = p.getEstadoPres().toString();
-                datosPrestamos[i][3] = sdf.format(p.getFechaDev());
-                datosPrestamos[i][4] = p.getLector().getCorreo();
-                datosPrestamos[i][5] = p.getBibliotecario().getCorreo();
-                datosPrestamos[i][6] = p.getMaterial().getIdMaterial();
-            }
-
-            tablaPrestamos.setModel(new javax.swing.table.DefaultTableModel(datosPrestamos, columnas));
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(frame, "Error al cargar préstamos: " + ex.getMessage());
+        for (int i = 0; i < prestamos.size(); i++) {
+            DtPrestamo p = prestamos.get(i);
+            data[i][0] = p.getIdPrestamo();
+            data[i][1] = sdf.format(p.getFechaSoli());
+            data[i][2] = p.getEstadoPres();
+            data[i][3] = sdf.format(p.getFechaDev());
+            data[i][4] = p.getLector();
+            data[i][5] = p.getBibliotecario();
+            data[i][6] = p.getMaterial();
+            data[i][7] = "Opciones";
         }
 
-        desktop.add(frame);
-        frame.setVisible(true);
+        DefaultTableModel model = new DefaultTableModel(data, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // Solo el botón es editable
+                return column == 7;
+            }
+        };
+
+        JTable table = new JTable(model);
+
+        // Botón para opciones
+        table.getColumn("Opciones").setCellRenderer(new ButtonRenderer());
+        table.getColumn("Opciones").setCellEditor(new ButtonEditor(new JCheckBox(), (row) -> {
+            DtPrestamo p = prestamos.get(row);
+            Object[] options = {"Cambiar Estado", "Ver Detalles", "Cancelar"};
+            int choice = JOptionPane.showOptionDialog(
+                frame,
+                "Préstamo ID: " + p.getIdPrestamo() +
+                "\nEstado: " + p.getEstadoPres() +
+                "\nFecha Solicitud: " + sdf.format(p.getFechaSoli()) +
+                "\nFecha Devolución: " + sdf.format(p.getFechaDev()),
+                "Opciones de Préstamo",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options,
+                options[0]
+            );
+            if (choice == 0) { // Cambiar Estado
+                EstadosP nuevoEstado = (EstadosP) JOptionPane.showInputDialog(
+                    frame,
+                    "Selecciona nuevo estado:",
+                    "Cambiar Estado",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    EstadosP.values(),
+                    p.getEstadoPres()
+                );
+                if (nuevoEstado != null) {
+                    pC.cambiarEstadoPrestamo(p, nuevoEstado);
+                    JOptionPane.showMessageDialog(frame, "Estado cambiado a: " + nuevoEstado);
+                    model.setValueAt(nuevoEstado, row, 2);
+                }
+            } 
+    }));
+
+    JScrollPane scroll = new JScrollPane(table);
+    frame.add(scroll, BorderLayout.CENTER);
+
+    desktop.add(frame);
+    frame.setVisible(true);
+}
+
+    class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
+    public ButtonRenderer() { setOpaque(true); }
+    public Component getTableCellRendererComponent(JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int column) {
+        setText((value == null) ? "" : value.toString());
+        return this;
     }
+}
+
+class ButtonEditor extends DefaultCellEditor {
+        private JButton button;
+        private String label;
+        private boolean isPushed;
+        private IntConsumer onClick;
+        private int row;
+
+        public ButtonEditor(JCheckBox checkBox, java.util.function.IntConsumer onClick) {
+            super(checkBox);
+            this.onClick = onClick;
+            button = new JButton();
+            button.setOpaque(true);
+            button.addActionListener(e -> fireEditingStopped());
+        }
+
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                boolean isSelected, int row, int column) {
+            this.row = row;
+            label = (value == null) ? "" : value.toString();
+            button.setText(label);
+            isPushed = true;
+            return button;
+        }
+
+        public Object getCellEditorValue() {
+            if (isPushed) {
+                onClick.accept(row);
+            }
+            isPushed = false;
+            return label;
+        }
+}
+        
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(BibliotecaGUI::new);

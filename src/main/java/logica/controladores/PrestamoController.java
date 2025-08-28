@@ -5,6 +5,7 @@ import interfaces.IPrestamoController;
 import java.util.ArrayList;
 import java.util.List;
 import logica.clases.*;
+import java.util.Date;
 
 import datatypes.*;
 import excepciones.PrestamoRepetidoException;
@@ -22,7 +23,7 @@ public class PrestamoController implements IPrestamoController {
     }
 
     @Override
-    public void agregarPrestamo(DtPrestamo prestamo, String correoLector, String correoBiblio, int idMaterial) throws PrestamoRepetidoException {
+    public void agregarPrestamo(Date fechaSoli, Date fechaDev, EstadosP estadoP, String correoLector, String correoBiblio, int idMaterial) throws PrestamoRepetidoException {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
 
         MaterialHandler mH = MaterialHandler.getInstancia();
@@ -40,9 +41,9 @@ public class PrestamoController implements IPrestamoController {
                     "Ya existe un prestamo activo para este material");
         }else { // Si el prestamo no existe
             Prestamo nuevoPrestamo = new Prestamo(
-                    prestamo.getFechaSoli(),
-                    prestamo.getEstadoPres(),
-                    prestamo.getFechaDev(),
+                    fechaSoli,
+                    estadoP,
+                    fechaDev,
                     uLector,
                     uBibliotecario,
                     m);
@@ -56,9 +57,22 @@ public class PrestamoController implements IPrestamoController {
     }
 
     @Override
-    public List<Prestamo> obtenerPrestamos() {
-        PrestamoHandler pH = PrestamoHandler.getInstancia();
-        return new ArrayList<>(pH.obtenerPrestamos());
+    public List<DtPrestamo> obtenerDtPrestamos() {
+        List<Prestamo> listaPrestamos = PrestamoHandler.getInstancia().obtenerPrestamos();
+        List<DtPrestamo> dtPrestamos = new ArrayList<>();
+        for(Prestamo prestamo : listaPrestamos){
+            DtPrestamo dtPrestamo = new DtPrestamo(
+                prestamo.getIdPrestamo(),
+                prestamo.getFechaSoli(),
+                prestamo.getEstadoPres(),
+                prestamo.getFechaDev(),
+                prestamo.getLector().getCorreo(),
+                prestamo.getBibliotecario().getCorreo(),
+                prestamo.getMaterial().getIdMaterial()
+            );
+            dtPrestamos.add(dtPrestamo);
+        }
+        return dtPrestamos;
     }
 
     @Override
@@ -72,16 +86,13 @@ public class PrestamoController implements IPrestamoController {
     }
 
     @Override
-    public void cambiarEstadoPrestamo(DtPrestamo Prestamo, EstadosP nuevoEstado) throws PrestamoRepetidoException {
+    public void cambiarEstadoPrestamo(DtPrestamo Prestamo, EstadosP nuevoEstado){
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
         if (prestamo != null) {
             prestamo.setEstadoPres(nuevoEstado);
             actualizarPrestamo(prestamo);
-        } else {
-            throw new PrestamoRepetidoException(
-                    "El prestamo no existe en el sistema");
-        }
+        } 
     }
 
     @Override
