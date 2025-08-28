@@ -57,7 +57,8 @@ public class PrestamoController implements IPrestamoController {
 
     @Override
     public List<Prestamo> obtenerPrestamos() {
-        return new ArrayList<>(prestamos);
+        PrestamoHandler pH = PrestamoHandler.getInstancia();
+        return new ArrayList<>(pH.obtenerPrestamos());
     }
 
     @Override

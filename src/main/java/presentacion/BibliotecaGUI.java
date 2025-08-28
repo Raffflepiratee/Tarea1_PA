@@ -4,11 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.ArrayList;
 
 import logica.clases.*;
 import logica.manejadores.UsuarioHandler;
 import logica.controladores.*;
 import datatypes.*;
+
+
 
 public class BibliotecaGUI extends JFrame {
 
@@ -35,9 +39,13 @@ public class BibliotecaGUI extends JFrame {
         // Menu prestamo
         JMenu menuPrestamo = new JMenu("Préstamo");
         JMenuItem registrarPrestamo = new JMenuItem("Registrar Préstamo");
+        JMenuItem listarPrestamos = new JMenuItem("Listar Préstamos");
 
         registrarPrestamo.addActionListener(e -> abrirFormularioPrestamo());
         menuPrestamo.add(registrarPrestamo);
+
+        listarPrestamos.addActionListener(e -> abrirListadoPrestamos());
+        menuPrestamo.add(listarPrestamos);
         menuBar.add(menuPrestamo);
 
         setJMenuBar(menuBar);
@@ -228,6 +236,51 @@ public class BibliotecaGUI extends JFrame {
         panelBotones.add(btnCancelar);
 
         frame.add(panelBotones, BorderLayout.SOUTH);
+
+        desktop.add(frame);
+        frame.setVisible(true);
+    }
+
+    public void abrirListadoPrestamos() {
+        JInternalFrame frame = new JInternalFrame("Listado de Préstamos", true, true, true, true);
+        frame.setSize(600, 400);
+        frame.setLayout(new BorderLayout());
+
+        String[] columnas = { "ID Préstamo", "Fecha Solicitud", "Estado", "Fecha Devolución", "Lector", "Bibliotecario", "Material" };
+        Object[][] datos = {};
+
+        JTable tablaPrestamos = new JTable(datos, columnas);
+        JScrollPane scrollPane = new JScrollPane(tablaPrestamos);
+        frame.add(scrollPane, BorderLayout.CENTER);
+
+        JButton btnCerrar = new JButton("Cerrar");
+        btnCerrar.addActionListener(e -> frame.dispose());
+        JPanel panelBotones = new JPanel();
+        panelBotones.add(btnCerrar);
+        frame.add(panelBotones, BorderLayout.SOUTH);
+
+        // Cargar datos de préstamos
+        try {
+            PrestamoController pc = new PrestamoController();
+            List<Prestamo> prestamos = pc.obtenerPrestamos();
+            Object[][] datosPrestamos = new Object[prestamos.size()][7];
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+            for (int i = 0; i < prestamos.size(); i++) {
+                Prestamo p = prestamos.get(i);
+                datosPrestamos[i][0] = p.getIdPrestamo();
+                datosPrestamos[i][1] = sdf.format(p.getFechaSoli());
+                datosPrestamos[i][2] = p.getEstadoPres().toString();
+                datosPrestamos[i][3] = sdf.format(p.getFechaDev());
+                datosPrestamos[i][4] = p.getLector().getCorreo();
+                datosPrestamos[i][5] = p.getBibliotecario().getCorreo();
+                datosPrestamos[i][6] = p.getMaterial().getIdMaterial();
+            }
+
+            tablaPrestamos.setModel(new javax.swing.table.DefaultTableModel(datosPrestamos, columnas));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(frame, "Error al cargar préstamos: " + ex.getMessage());
+        }
 
         desktop.add(frame);
         frame.setVisible(true);
