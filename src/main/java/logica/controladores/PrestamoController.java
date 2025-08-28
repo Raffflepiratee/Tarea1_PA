@@ -22,12 +22,8 @@ public class PrestamoController implements IPrestamoController {
     }
 
     @Override
-    public void agregarPrestamo(DtPrestamo prestamo, String correoLector, String correoBiblio, int idMaterial)
-            throws PrestamoRepetidoException {
+    public void agregarPrestamo(DtPrestamo prestamo, String correoLector, String correoBiblio, int idMaterial) throws PrestamoRepetidoException {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
-        // tenemos que buscar por otra cosa el prestamo, capaz que por idMaterial y
-        // estado
-        Prestamo nuevoPrestamo = pH.buscarPrestamoPorId(prestamo.getIdPrestamo());
 
         MaterialHandler mH = MaterialHandler.getInstancia();
         Material m = mH.buscarMaterialPorId(idMaterial);
@@ -39,11 +35,11 @@ public class PrestamoController implements IPrestamoController {
         UsuarioHandler uH2 = UsuarioHandler.getInstancia();
         Bibliotecario uBibliotecario = (Bibliotecario) uH2.buscarUsuarioPorCorreo(correoBiblio);
 
-        if (nuevoPrestamo != null) {
+        if (existePrestamoActivo(idMaterial)) {
             throw new PrestamoRepetidoException(
-                    "El prestamo ya existe en el sistema");
-        } else { // Si el prestamo no existe
-            nuevoPrestamo = new Prestamo(
+                    "Ya existe un prestamo activo para este material");
+        }else { // Si el prestamo no existe
+            Prestamo nuevoPrestamo = new Prestamo(
                     prestamo.getFechaSoli(),
                     prestamo.getEstadoPres(),
                     prestamo.getFechaDev(),
@@ -92,4 +88,17 @@ public class PrestamoController implements IPrestamoController {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         pH.actualizarPrestamoH(prestamo);
     }
+
+    @Override
+    public boolean existePrestamoActivo(int idMaterial){
+        PrestamoHandler pH = PrestamoHandler.getInstancia();
+        List<Prestamo> prestamos = pH.obtenerPrestamos();
+        for(Prestamo p : prestamos){
+            if(p.getMaterial().getIdMaterial() == idMaterial && (p.getEstadoPres() == EstadosP.PENDIENTE || p.getEstadoPres() == EstadosP.EN_CURSO)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

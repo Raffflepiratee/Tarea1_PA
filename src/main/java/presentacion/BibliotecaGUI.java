@@ -216,6 +216,7 @@ public class BibliotecaGUI extends JFrame {
                 DtPrestamo dtPrestamo = new DtPrestamo(fechaSoli, estado, fechaDev);
                 PrestamoController pc = new PrestamoController();
                 pc.agregarPrestamo(dtPrestamo, correoLector, correoBiblio, idMaterial);
+                JOptionPane.showMessageDialog(frame, "Préstamo registrado correctamente.");
 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(frame, "Error al registrar préstamo: " + ex.getMessage());

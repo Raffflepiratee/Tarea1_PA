@@ -18,4 +18,6 @@ public interface IPrestamoController {
     void cambiarEstadoPrestamo(DtPrestamo Prestamo, EstadosP nuevoEstado) throws PrestamoRepetidoException;
 
     void actualizarPrestamo(Prestamo prestamo);
+
+    boolean existePrestamoActivo(int Material);
 }

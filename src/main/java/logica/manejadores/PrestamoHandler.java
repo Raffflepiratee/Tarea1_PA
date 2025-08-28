@@ -3,6 +3,10 @@ package logica.manejadores;
 import logica.clases.Prestamo;
 
 import persistencia.Conexion;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 public class PrestamoHandler {
@@ -37,6 +41,13 @@ public class PrestamoHandler {
         em.getTransaction().begin();
         em.merge(p);
         em.getTransaction().commit();
+    }
+
+    public List<Prestamo> obtenerPrestamos() {
+        Conexion c = Conexion.getInstancia();
+        EntityManager em = c.getEntityManager();
+        List<Prestamo> prestamos = em.createQuery("SELECT p FROM Prestamo p", Prestamo.class).getResultList();
+        return new ArrayList<>(prestamos);
     }
 
 }
