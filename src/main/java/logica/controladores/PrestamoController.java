@@ -113,4 +113,23 @@ public class PrestamoController implements IPrestamoController {
         return false;
     }
 
+    @Override
+    public List<DtPrestamo> obtenerDtPrestamoBibliotecario(int idEmp){
+        List<Prestamo> listaPrestamosBiblio = PrestamoHandler.getInstancia().obtenerPrestamosPorBibliotecario(idEmp);
+        List<DtPrestamo> dtPrestamosBiblio = new ArrayList<>(); 
+        
+        for(Prestamo p : listaPrestamosBiblio){
+            DtPrestamo dtPrestamo = new DtPrestamo(
+                p.getIdPrestamo(),
+                p.getFechaSoli(),
+                p.getEstadoPres(),
+                p.getFechaDev(),
+                p.getLector().getCorreo(),
+                p.getBibliotecario().getCorreo(),
+                p.getMaterial().getIdMaterial()
+            );
+            dtPrestamosBiblio.add(dtPrestamo);
+        }
+        return dtPrestamosBiblio;
+    }
 }

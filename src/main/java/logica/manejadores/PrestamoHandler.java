@@ -50,4 +50,13 @@ public class PrestamoHandler {
         return new ArrayList<>(prestamos);
     }
 
+    public List<Prestamo> obtenerPrestamosPorBibliotecario(int idEmp){
+        Conexion c = Conexion.getInstancia();
+        EntityManager em = c.getEntityManager();
+        List<Prestamo> prestamosPorBibliotecatrio = em.createQuery(
+            "SELECT p FROM Prestamo p WHERE p.bibliotecario.idEmp = :idEmp", Prestamo.class)
+            .setParameter("idEmp", idEmp)
+            .getResultList();
+        return new ArrayList<>(prestamosPorBibliotecatrio);
+    }
 }

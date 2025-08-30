@@ -20,4 +20,6 @@ public interface IPrestamoController {
     void actualizarPrestamo(Prestamo prestamo);
 
     boolean existePrestamoActivo(int Material);
+
+    public List<DtPrestamo> obtenerDtPrestamoBibliotecario(int idEmp);
 }

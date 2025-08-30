@@ -44,13 +44,20 @@ public class BibliotecaGUI extends JFrame {
         JMenu menuPrestamo = new JMenu("Préstamo");
         JMenuItem registrarPrestamo = new JMenuItem("Registrar Préstamo");
         JMenuItem listarPrestamos = new JMenuItem("Listar Préstamos");
+        JMenuItem listarPrestamosBibliotecario = new JMenuItem("Listar prestamos por bibliotecario");
 
         registrarPrestamo.addActionListener(e -> abrirFormularioPrestamo());
         menuPrestamo.add(registrarPrestamo);
 
         listarPrestamos.addActionListener(e -> abrirListadoPrestamos());
         menuPrestamo.add(listarPrestamos);
+
+        listarPrestamosBibliotecario.addActionListener(e -> abrirListadoPrestamosBibliotecario());
+        menuPrestamo.add(listarPrestamosBibliotecario);
+
         menuBar.add(menuPrestamo);
+
+
 
         setJMenuBar(menuBar);
         setVisible(true);
@@ -331,6 +338,48 @@ public class BibliotecaGUI extends JFrame {
         setText((value == null) ? "" : value.toString());
         return this;
     }
+}
+
+public void abrirListadoPrestamosBibliotecario(){
+    JInternalFrame frame = new JInternalFrame("Listado de Préstamos por Bibliotecario", true, true, true, true);
+    frame.setSize(800, 600);
+    frame.setLayout(new BorderLayout());
+
+    JPanel panel = new JPanel();
+    JLabel label = new JLabel("ID Empleado:");
+    JTextField textField = new JTextField(10);
+    JButton button = new JButton("Buscar");
+    panel.add(label);
+    panel.add(textField);
+    panel.add(button);
+    frame.add(panel, BorderLayout.NORTH);
+
+    button.addActionListener(e -> {
+        int idEmp = Integer.parseInt(textField.getText());
+        PrestamoController pC = new PrestamoController();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        List<DtPrestamo> prestamos = pC.obtenerDtPrestamoBibliotecario(idEmp);
+
+        String[] columnas = {"ID", "Fecha Solicitud", "Estado", "Fecha Devolución", "Lector", "Bibliotecario", "Material"};
+        DefaultTableModel model = new DefaultTableModel(columnas, 0);
+        for (DtPrestamo p : prestamos) {
+            model.addRow(new Object[]{
+                p.getIdPrestamo(),
+                sdf.format(p.getFechaSoli()),
+                p.getEstadoPres(),
+                sdf.format(p.getFechaDev()),
+                p.getLector(),
+                p.getBibliotecario(),
+                p.getMaterial()
+            });
+        }
+        JTable table = new JTable(model);
+        JScrollPane scroll = new JScrollPane(table);
+        frame.add(scroll, BorderLayout.CENTER);
+    });
+
+    desktop.add(frame);
+    frame.setVisible(true);
 }
 
 class ButtonEditor extends DefaultCellEditor {
