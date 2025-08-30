@@ -17,6 +17,16 @@ public interface IPrestamoController {
 
     void cambiarEstadoPrestamo(DtPrestamo Prestamo, EstadosP nuevoEstado);
 
+    void cambiarMaterialPrestamo(DtPrestamo Prestamo, int nuevoMaterialID);
+
+    void cambiarCorreoLectorPrestamo(DtPrestamo Prestamo, String nuevoCorreo);
+
+    void cambiarCorreoBibliotecarioPrestamo(DtPrestamo Prestamo, String nuevoCorreo);
+
+    void cambiarFechaSolicitudPrestamo(DtPrestamo Prestamo, Date nuevaFecha);
+
+    void cambiarFechaDevolucionPrestamo(DtPrestamo Prestamo, Date nuevaFecha);
+
     void actualizarPrestamo(Prestamo prestamo);
 
     boolean existePrestamoActivo(int Material);

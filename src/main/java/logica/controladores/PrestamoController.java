@@ -85,6 +85,7 @@ public class PrestamoController implements IPrestamoController {
         return null;
     }
 
+    //- Funciones para editar prestamos
     @Override
     public void cambiarEstadoPrestamo(DtPrestamo Prestamo, EstadosP nuevoEstado){
         PrestamoHandler pH = PrestamoHandler.getInstancia();
@@ -94,6 +95,67 @@ public class PrestamoController implements IPrestamoController {
             actualizarPrestamo(prestamo);
         } 
     }
+
+    @Override
+    public void cambiarMaterialPrestamo(DtPrestamo Prestamo, int nuevoMaterialID){
+        PrestamoHandler pH = PrestamoHandler.getInstancia();
+        Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
+        MaterialHandler mH = MaterialHandler.getInstancia();
+        Material nuevoMaterial = mH.buscarMaterialPorId(nuevoMaterialID);
+        if (nuevoMaterial != null) {
+            if (prestamo != null) {
+                prestamo.setMaterial(nuevoMaterial);
+                actualizarPrestamo(prestamo);
+            }
+        }
+    }
+
+    @Override
+    public void cambiarCorreoLectorPrestamo(DtPrestamo Prestamo, String nuevoCorreo){
+        PrestamoHandler pH = PrestamoHandler.getInstancia();
+        Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
+        if (prestamo != null) {
+            Lector nuevoLector = (Lector) UsuarioHandler.getInstancia().buscarUsuarioPorCorreo(nuevoCorreo);
+            if (nuevoLector != null) {
+                prestamo.setLector(nuevoLector);
+                actualizarPrestamo(prestamo);
+            }
+        }
+    }
+
+    @Override
+    public void cambiarCorreoBibliotecarioPrestamo(DtPrestamo Prestamo, String nuevoCorreo){
+        PrestamoHandler pH = PrestamoHandler.getInstancia();
+        Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
+        if (prestamo != null) {
+            Bibliotecario nuevoBiblio = (Bibliotecario) UsuarioHandler.getInstancia().buscarUsuarioPorCorreo(nuevoCorreo);
+            if (nuevoBiblio != null) {
+                prestamo.setBibliotecario(nuevoBiblio);
+                actualizarPrestamo(prestamo);
+            }
+        }
+    }
+
+    @Override
+    public void cambiarFechaSolicitudPrestamo(DtPrestamo Prestamo, Date nuevaFecha){
+        PrestamoHandler pH = PrestamoHandler.getInstancia();
+        Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
+        if (prestamo != null) {
+            prestamo.setFechaSoli(nuevaFecha);
+            actualizarPrestamo(prestamo);
+        } 
+    }
+
+    @Override
+    public void cambiarFechaDevolucionPrestamo(DtPrestamo Prestamo, Date nuevaFecha){
+        PrestamoHandler pH = PrestamoHandler.getInstancia();
+        Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
+        if (prestamo != null) {
+            prestamo.setFechaDev(nuevaFecha);
+            actualizarPrestamo(prestamo);
+        } 
+    }
+    
 
     @Override
     public void actualizarPrestamo(Prestamo prestamo) {

@@ -292,25 +292,88 @@ public class BibliotecaGUI extends JFrame {
         table.getColumn("Opciones").setCellRenderer(new ButtonRenderer());
         table.getColumn("Opciones").setCellEditor(new ButtonEditor(new JCheckBox(), (row) -> {
             DtPrestamo p = prestamos.get(row);
-            Object[] options = {"Cambiar Estado", "Ver Detalles", "Cancelar"};
-            int choice = JOptionPane.showOptionDialog(
-                frame,
-                "Préstamo ID: " + p.getIdPrestamo() +
-                "\nEstado: " + p.getEstadoPres() +
-                "\nFecha Solicitud: " + sdf.format(p.getFechaSoli()) +
-                "\nFecha Devolución: " + sdf.format(p.getFechaDev()),
-                "Opciones de Préstamo",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                options,
-                options[0]
-            );
-            if (choice == 0) { // Cambiar Estado
+
+            JDialog editDialog = new JDialog(SwingUtilities.getWindowAncestor(desktop), "Editar Préstamo ID: " + p.getIdPrestamo(), Dialog.ModalityType.APPLICATION_MODAL);
+            editDialog.setSize(600, 300);
+            editDialog.setLayout(new BorderLayout());
+
+            JPanel panelCampos = new JPanel(new GridLayout(6, 2, 10, 10));
+
+            panelCampos.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+
+            // ID Material
+            panelCampos.add(new JLabel("ID Material: " + p.getMaterial()));
+            JButton btnEditMaterial = new JButton("Editar");
+            btnEditMaterial.addActionListener(e -> {
+                String nuevoId = JOptionPane.showInputDialog(editDialog, "Nuevo ID Material:", p.getMaterial());
+                if (nuevoId != null && !nuevoId.isEmpty()) {
+                    pC.cambiarMaterialPrestamo(p, Integer.parseInt(nuevoId));
+                }
+            });
+            panelCampos.add(btnEditMaterial);
+
+            // Correo Lector
+            panelCampos.add(new JLabel("Correo Lector: " + p.getLector()));
+            JButton btnEditLector = new JButton("Editar");
+            btnEditLector.addActionListener(e -> {
+                String nuevoCorreo = JOptionPane.showInputDialog(editDialog, "Nuevo correo lector:", p.getLector());
+                if (nuevoCorreo != null && !nuevoCorreo.isEmpty()) {
+                    pC.cambiarCorreoLectorPrestamo(p, nuevoCorreo);
+                }
+            });
+            panelCampos.add(btnEditLector);
+
+            // Correo Bibliotecario
+            panelCampos.add(new JLabel("Correo Bibliotecario: " + p.getBibliotecario()));
+            JButton btnEditBiblio = new JButton("Editar");
+            btnEditBiblio.addActionListener(e -> {
+                String nuevoCorreo = JOptionPane.showInputDialog(editDialog, "Nuevo correo bibliotecario:", p.getBibliotecario());
+                if (nuevoCorreo != null && !nuevoCorreo.isEmpty()) {
+                    pC.cambiarCorreoBibliotecarioPrestamo(p, nuevoCorreo);
+                }
+            });
+            panelCampos.add(btnEditBiblio);
+
+            // Fecha Solicitud
+            panelCampos.add(new JLabel("Fecha Solicitud: " + sdf.format(p.getFechaSoli())));
+            JButton btnEditFechaSoli = new JButton("Editar");
+            btnEditFechaSoli.addActionListener(e -> {
+                String nuevaFecha = JOptionPane.showInputDialog(editDialog, "Nueva fecha solicitud (dd/MM/yyyy):", sdf.format(p.getFechaSoli()));
+                try {
+                    if (nuevaFecha != null && !nuevaFecha.isEmpty()) {
+                        Date fecha = sdf.parse(nuevaFecha);
+                        pC.cambiarFechaSolicitudPrestamo(p, fecha);
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(editDialog, "Formato de fecha inválido.");
+                }
+            });
+            panelCampos.add(btnEditFechaSoli);
+
+            // Fecha Devolución
+            panelCampos.add(new JLabel("Fecha Devolución: " + sdf.format(p.getFechaDev())));
+            JButton btnEditFechaDev = new JButton("Editar");
+            btnEditFechaDev.addActionListener(e -> {
+                String nuevaFecha = JOptionPane.showInputDialog(editDialog, "Nueva fecha devolución (dd/MM/yyyy):", sdf.format(p.getFechaDev()));
+                try {
+                    if (nuevaFecha != null && !nuevaFecha.isEmpty()) {
+                        Date fecha = sdf.parse(nuevaFecha);
+                        pC.cambiarFechaDevolucionPrestamo(p, fecha);
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(editDialog, "Formato de fecha inválido.");
+                }
+            });
+            panelCampos.add(btnEditFechaDev);
+
+            // Estado
+            panelCampos.add(new JLabel("Estado: " + p.getEstadoPres()));
+            JButton btnEditEstado = new JButton("Editar");
+            btnEditEstado.addActionListener(e -> {
                 EstadosP nuevoEstado = (EstadosP) JOptionPane.showInputDialog(
-                    frame,
+                    editDialog,
                     "Selecciona nuevo estado:",
-                    "Cambiar Estado",
+                    "Editar Estado",
                     JOptionPane.QUESTION_MESSAGE,
                     null,
                     EstadosP.values(),
@@ -318,18 +381,21 @@ public class BibliotecaGUI extends JFrame {
                 );
                 if (nuevoEstado != null) {
                     pC.cambiarEstadoPrestamo(p, nuevoEstado);
-                    JOptionPane.showMessageDialog(frame, "Estado cambiado a: " + nuevoEstado);
-                    model.setValueAt(nuevoEstado, row, 2);
                 }
-            } 
-    }));
+            });
+            panelCampos.add(btnEditEstado);
 
-    JScrollPane scroll = new JScrollPane(table);
-    frame.add(scroll, BorderLayout.CENTER);
+            editDialog.add(panelCampos, BorderLayout.CENTER);
+            editDialog.setVisible(true);
+            desktop.add(editDialog);
+        }));
 
-    desktop.add(frame);
-    frame.setVisible(true);
-}
+        JScrollPane scroll = new JScrollPane(table);
+        frame.add(scroll, BorderLayout.CENTER);
+
+        desktop.add(frame);
+        frame.setVisible(true);
+    }
 
     class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
     public ButtonRenderer() { setOpaque(true); }
@@ -337,8 +403,8 @@ public class BibliotecaGUI extends JFrame {
             boolean isSelected, boolean hasFocus, int row, int column) {
         setText((value == null) ? "" : value.toString());
         return this;
+        }
     }
-}
 
 public void abrirListadoPrestamosBibliotecario(){
     JInternalFrame frame = new JInternalFrame("Listado de Préstamos por Bibliotecario", true, true, true, true);
