@@ -5,6 +5,7 @@ import logica.clases.Material;
 import persistencia.Conexion;
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Date;
 
 public class MaterialHandler {
 
@@ -37,5 +38,16 @@ public class MaterialHandler {
         Conexion c = Conexion.getInstancia();
         EntityManager em = c.getEntityManager();
         return em.createQuery("SELECT m FROM Material m", Material.class).getResultList();
+    }
+
+    public List<Material> obtenerMaterialesPorRango(Date fechaInicio, Date fechaFin) {
+        Conexion c = Conexion.getInstancia();
+        EntityManager em = c.getEntityManager();
+        return em
+                .createQuery("SELECT m FROM Material m WHERE m.fechaRegistro BETWEEN :fechaInicio AND :fechaFin",
+                        Material.class)
+                .setParameter("fechaInicio", fechaInicio)
+                .setParameter("fechaFin", fechaFin)
+                .getResultList();
     }
 }

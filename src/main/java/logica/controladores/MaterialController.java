@@ -92,6 +92,33 @@ public class MaterialController implements IMaterialController {
         return null;
     }
 
+    @Override
+    public List<DtMaterial> obtenerMaterialesPorRango(Date fechaInicio, Date fechaFin) {
+        List<Material> materiales = MaterialHandler.getInstancia().obtenerMaterialesPorRango(fechaInicio, fechaFin);
+        List<DtMaterial> dtMateriales = new ArrayList<>();
+        for (Material m : materiales) {
+            if (m instanceof Libro) {
+                Libro libro = (Libro) m;
+                DtLibro dtLibro = new DtLibro(
+                        libro.getIdMaterial(),
+                        libro.getFechaRegistro(),
+                        libro.getTitulo(),
+                        libro.getCantPag());
+                dtMateriales.add(dtLibro);
+            } else if (m instanceof ArticuloEspecial) {
+                ArticuloEspecial art = (ArticuloEspecial) m;
+                DtArticuloEspecial dtArt = new DtArticuloEspecial(
+                        art.getIdMaterial(),
+                        art.getFechaRegistro(),
+                        art.getDescripcion(),
+                        art.getPeso(),
+                        art.getDimFisica());
+                dtMateriales.add(dtArt);
+            }
+        }
+        return dtMateriales;
+    }
+
     // libros
     /*
      * @Override

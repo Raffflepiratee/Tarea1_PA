@@ -15,4 +15,6 @@ public interface IMaterialController {
     List<DtMaterial> obtenerMateriales();
 
     Material buscarMaterialPorId(int id);
+
+    List<DtMaterial> obtenerMaterialesPorRango(Date fechaInicio, Date fechaFin);
 }

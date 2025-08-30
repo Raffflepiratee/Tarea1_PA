@@ -8,8 +8,10 @@ import logica.controladores.*;
 import javax.swing.table.DefaultTableModel;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Flow;
 
 import datatypes.*;
 
@@ -41,11 +43,15 @@ public class BibliotecaGUI extends JFrame {
         JMenuItem registrarMaterial = new JMenuItem("Registrar Material");
         JMenuItem listarMateriales = new JMenuItem("Listar Materiales");
 
+        JMenuItem listarMaterialesPorRango = new JMenuItem("Listar Materiales en un rango de fechas");
+
         registrarMaterial.addActionListener(e -> abrirFormularioRegistroMaterial());
         listarMateriales.addActionListener(e -> abrirListadoMateriales());
+        listarMaterialesPorRango.addActionListener(e -> abrirListadoMaterialesPorRango());
 
         menuMateriales.add(registrarMaterial);
         menuMateriales.add(listarMateriales);
+        menuMateriales.add(listarMaterialesPorRango);
         menuBar.add(menuMateriales);
 
         setJMenuBar(menuBar);
@@ -308,6 +314,133 @@ public class BibliotecaGUI extends JFrame {
         JScrollPane scroll = new JScrollPane(table);
         frame.add(scroll, BorderLayout.CENTER);
 
+        desktop.add(frame);
+        frame.setVisible(true);
+    }
+
+    private void abrirListadoMaterialesPorRango() {
+        JInternalFrame frame = new JInternalFrame("Listado de Materiales por Rango de Fechas", true, true, true, true);
+        frame.setSize(700, 500);
+        frame.setLayout(new BorderLayout());
+
+        JPanel panelForm = new JPanel(new GridLayout(3, 1, 5, 5));
+
+        // campos para fecha inicio
+        JComboBox<Integer> comboDiaInicio = new JComboBox<>();
+        JComboBox<String> comboMesInicio = new JComboBox<>();
+        JComboBox<Integer> comboAnioInicio = new JComboBox<>();
+
+        for (int i = 1; i <= 31; i++)
+            comboDiaInicio.addItem(i);
+        for (String mes : new String[] {
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        })
+            comboMesInicio.addItem(mes);
+        int anioActual = Calendar.getInstance().get(Calendar.YEAR);
+        for (int i = anioActual; i >= 1900; i--)
+            comboAnioInicio.addItem(i);
+
+        JPanel panelFechaInicio = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelFechaInicio.add(new JLabel("Fecha Inicio:"));
+        panelFechaInicio.add(comboDiaInicio);
+        panelFechaInicio.add(comboMesInicio);
+        panelFechaInicio.add(comboAnioInicio);
+        panelForm.add(panelFechaInicio);
+
+        // campos para fecha fin
+        JComboBox<Integer> comboDiaFin = new JComboBox<>();
+        JComboBox<String> comboMesFin = new JComboBox<>();
+        JComboBox<Integer> comboAnioFin = new JComboBox<>();
+
+        for (int i = 1; i <= 31; i++)
+            comboDiaFin.addItem(i);
+        for (String mes : new String[] {
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        })
+            comboMesFin.addItem(mes);
+        for (int i = anioActual; i >= 1900; i--)
+            comboAnioFin.addItem(i);
+
+        JPanel panelFechaFin = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelFechaFin.add(new JLabel("Fecha Fin:"));
+        panelFechaFin.add(comboDiaFin);
+        panelFechaFin.add(comboMesFin);
+        panelFechaFin.add(comboAnioFin);
+        panelForm.add(panelFechaFin);
+
+        JButton btnBuscar = new JButton("Buscar");
+        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelBoton.add(btnBuscar);
+        panelForm.add(panelBoton);
+
+        frame.add(panelForm, BorderLayout.NORTH);
+
+        String[] columnas = { "ID", "Fecha Registro", "Titulo", "Cantidad Pag", "Descripcion", "Peso", "DimFisica" };
+        Object[][] data = new Object[0][columnas.length];
+
+        DefaultTableModel model = new DefaultTableModel(data, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        JTable table = new JTable(model);
+        JScrollPane scroll = new JScrollPane(table);
+        frame.add(scroll, BorderLayout.CENTER);
+
+        btnBuscar.addActionListener(e -> {
+            try {
+                int diaInicio = comboDiaInicio.getSelectedIndex() + 1;
+                int mesInicio = comboMesInicio.getSelectedIndex();
+                int anioInicio = (int) comboAnioInicio.getSelectedItem();
+
+                int diaFin = comboDiaFin.getSelectedIndex() + 1;
+                int mesFin = comboMesFin.getSelectedIndex();
+                int anioFin = (int) comboAnioFin.getSelectedItem();
+
+                Calendar calInicio = Calendar.getInstance();
+                calInicio.set(anioInicio, mesInicio, diaInicio);
+                Date fechaInicio = calInicio.getTime();
+
+                Calendar calFin = Calendar.getInstance();
+                calFin.set(anioFin, mesFin, diaFin);
+                Date fechaFin = calFin.getTime();
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+                MaterialController mC = new MaterialController();
+                List<DtMaterial> materiales = mC.obtenerMaterialesPorRango(fechaInicio, fechaFin);
+
+                Object[][] nuevaData = new Object[materiales.size()][columnas.length];
+
+                for (int i = 0; i < materiales.size(); i++) {
+                    DtMaterial m = materiales.get(i);
+                    nuevaData[i][0] = m.getIdMaterial();
+                    nuevaData[i][1] = sdf.format(m.getFechaRegistro());
+                    if (m instanceof DtLibro) {
+                        DtLibro libro = (DtLibro) m;
+                        nuevaData[i][2] = libro.getTitulo();
+                        nuevaData[i][3] = libro.getCantPag();
+                        nuevaData[i][4] = "N/A";
+                        nuevaData[i][5] = "N/A";
+                        nuevaData[i][6] = "N/A";
+                    } else {
+                        DtArticuloEspecial art = (DtArticuloEspecial) m;
+                        nuevaData[i][2] = "N/A";
+                        nuevaData[i][3] = "N/A";
+                        nuevaData[i][4] = art.getDescripcion();
+                        nuevaData[i][5] = art.getPeso();
+                        nuevaData[i][6] = art.getDimFisica();
+                    }
+                }
+                model.setDataVector(nuevaData, columnas);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error al buscar materiales: " + ex.getMessage());
+            }
+        });
         desktop.add(frame);
         frame.setVisible(true);
     }
