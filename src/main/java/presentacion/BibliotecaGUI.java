@@ -44,7 +44,7 @@ public class BibliotecaGUI extends JFrame {
         JMenu menuPrestamo = new JMenu("Préstamo");
         JMenuItem registrarPrestamo = new JMenuItem("Registrar Préstamo");
         JMenuItem listarPrestamos = new JMenuItem("Listar Préstamos");
-        JMenuItem listarPrestamosBibliotecario = new JMenuItem("Listar prestamos por bibliotecario");
+       
 
         registrarPrestamo.addActionListener(e -> abrirFormularioPrestamo());
         menuPrestamo.add(registrarPrestamo);
@@ -52,11 +52,19 @@ public class BibliotecaGUI extends JFrame {
         listarPrestamos.addActionListener(e -> abrirListadoPrestamos());
         menuPrestamo.add(listarPrestamos);
 
-        listarPrestamosBibliotecario.addActionListener(e -> abrirListadoPrestamosBibliotecario());
-        menuPrestamo.add(listarPrestamosBibliotecario);
-
         menuBar.add(menuPrestamo);
 
+        //Menu control y seguimiento
+        JMenu menuControl = new JMenu("Control y Seguimiento");
+        JMenuItem listarPrestamosBibliotecario = new JMenuItem("Listar préstamos por bibliotecario");
+        
+        listarPrestamosBibliotecario.addActionListener(e -> abrirListadoPrestamosBibliotecario());
+        menuControl.add(listarPrestamosBibliotecario);
+        
+        listarPrestamosBibliotecario.addActionListener(e -> abrirListadoPrestamosBibliotecario());
+        menuControl.add(listarPrestamosBibliotecario);
+
+        menuBar.add(menuControl);
 
 
         setJMenuBar(menuBar);
