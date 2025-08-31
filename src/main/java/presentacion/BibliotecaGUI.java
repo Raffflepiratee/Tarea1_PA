@@ -419,173 +419,182 @@ public class BibliotecaGUI extends JFrame {
         }
     }
 
-public void abrirListadoPrestamosBibliotecario(){
-    JInternalFrame frame = new JInternalFrame("Listado de Préstamos por Bibliotecario", true, true, true, true);
-    frame.setSize(800, 600);
-    frame.setLayout(new BorderLayout());
 
-    JPanel panel = new JPanel();
-    JLabel label = new JLabel("ID Empleado:");
-    JTextField textField = new JTextField(10);
-    JButton button = new JButton("Buscar");
-    panel.add(label);
-    panel.add(textField);
-    panel.add(button);
-    frame.add(panel, BorderLayout.NORTH);
+    
+    public void abrirListadoPrestamosBibliotecario() {
+        JInternalFrame frame = new JInternalFrame("Listado de Préstamos por Bibliotecario", true, true, true, true);
+        frame.setSize(800, 600);
+        frame.setLayout(new BorderLayout());
 
-    button.addActionListener(e -> {
-        int idEmp = Integer.parseInt(textField.getText());
-        PrestamoController pC = new PrestamoController();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        List<DtPrestamo> prestamos = pC.obtenerDtPrestamoBibliotecario(idEmp);
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("ID Empleado:");
+        JTextField textField = new JTextField(10);
+        JButton button = new JButton("Buscar");
+        panel.add(label);
+        panel.add(textField);
+        panel.add(button);
+        frame.add(panel, BorderLayout.NORTH);
 
         String[] columnas = {"ID", "Fecha Solicitud", "Estado", "Fecha Devolución", "Lector", "Bibliotecario", "Material"};
         DefaultTableModel model = new DefaultTableModel(columnas, 0);
-        for (DtPrestamo p : prestamos) {
-            model.addRow(new Object[]{
-                p.getIdPrestamo(),
-                sdf.format(p.getFechaSoli()),
-                p.getEstadoPres(),
-                sdf.format(p.getFechaDev()),
-                p.getLector(),
-                p.getBibliotecario(),
-                p.getMaterial()
-            });
-        }
         JTable table = new JTable(model);
         JScrollPane scroll = new JScrollPane(table);
         frame.add(scroll, BorderLayout.CENTER);
-    });
 
-    desktop.add(frame);
-    frame.setVisible(true);
-}
+        button.addActionListener(e -> {
+            try {
+                int idEmp = Integer.parseInt(textField.getText());
+                PrestamoController pC = new PrestamoController();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                List<DtPrestamo> prestamos = pC.obtenerDtPrestamoBibliotecario(idEmp);
 
-public void abrirListadoReporteZonal(){
-    JInternalFrame frame = new JInternalFrame("Listado de Reporte Zonal", true, true, true, true);
-    frame.setSize(800, 600);
-    frame.setLayout(new BorderLayout());
+                // Limpiar la tabla antes de agregar nuevos datos
+                model.setRowCount(0);
 
-    String[] columnas = {"Zona", "Cantidad de Préstamos", "Detalles"};
-    DefaultTableModel model = new DefaultTableModel(columnas, 0);
-
-    PrestamoController pC = new PrestamoController();
-
-    for(datatypes.Zonas zona : datatypes.Zonas.values()){
-        List<DtPrestamo> prestamos = pC.obtenerDtPrestamosPorZona(zona);
-        model.addRow(new Object[]{zona, prestamos.size(), "Detalles"});
-    }
-
-    JTable table = new JTable(model);
-
-    table.getColumn("Detalles").setCellRenderer(new ButtonRenderer());
-    table.getColumn("Detalles").setCellEditor(new ButtonEditor(new JCheckBox(), (row) -> {
-        datatypes.Zonas zona = (datatypes.Zonas) model.getValueAt(row, 0);
-        List<DtPrestamo> prestamos = pC.obtenerDtPrestamosPorZona(zona);
-
-        JInternalFrame detallesFrame = new JInternalFrame("Detalles de Préstamos - " + zona, true, true, true, true);
-        detallesFrame.setSize(600, 400);
-        detallesFrame.setLayout(new BorderLayout());
-
-        String[] columnasDetalles = {"ID", "Fecha Solicitud", "Estado", "Fecha Devolución", "Lector", "Bibliotecario", "Material"};
-        DefaultTableModel modelDetalles = new DefaultTableModel(columnasDetalles, 0);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        for (DtPrestamo p : prestamos) {
-            modelDetalles.addRow(new Object[]{
-                p.getIdPrestamo(),
-                sdf.format(p.getFechaSoli()),
-                p.getEstadoPres(),
-                sdf.format(p.getFechaDev()),
-                p.getLector(),
-                p.getBibliotecario(),
-                p.getMaterial()
-            });
-        }
-        JTable tableDetalles = new JTable(modelDetalles);
-        JScrollPane scrollDetalles = new JScrollPane(tableDetalles);
-        detallesFrame.add(scrollDetalles, BorderLayout.CENTER);
-
-        desktop.add(detallesFrame);
-        detallesFrame.setVisible(true);
-    }));
-
-    JScrollPane scroll = new JScrollPane(table);
-    frame.add(scroll, BorderLayout.CENTER);
-
-    desktop.add(frame);
-    frame.setVisible(true);
-}
-
-public void abrirMaterialesConMasPrestamosPendientes(){
-    JInternalFrame frame = new JInternalFrame("Materiales con más préstamos pendientes", true, true, true, true);
-    frame.setSize(600, 400);
-    frame.setLayout(new BorderLayout());
-
-    String[] columnas = {"Índice", "ID Material", "Cantidad de Préstamos Pendientes"};
-    DefaultTableModel model = new DefaultTableModel(columnas, 0);
-
-    PrestamoController pC = new PrestamoController();
-    List<DtPrestamo> prestamosPendientes = pC.obtenerDtPrestamosPendientes();
-
-    // Agrupar por idMaterial y contar
-    java.util.Map<Integer, Integer> conteoPorMaterial = new java.util.HashMap<>();
-    for (DtPrestamo p : prestamosPendientes) {
-        int idMaterial = p.getMaterial();
-        conteoPorMaterial.put(idMaterial, conteoPorMaterial.getOrDefault(idMaterial, 0) + 1);
-    }
-
-    // Ordenar por cantidad descendente
-    java.util.List<java.util.Map.Entry<Integer, Integer>> listaOrdenada = new java.util.ArrayList<>(conteoPorMaterial.entrySet());
-    listaOrdenada.sort((a, b) -> b.getValue().compareTo(a.getValue()));
-
-    int indice = 1;
-    for (java.util.Map.Entry<Integer, Integer> entry : listaOrdenada) {
-        model.addRow(new Object[]{indice++, entry.getKey(), entry.getValue()});
-    }
-
-    JTable table = new JTable(model);
-    JScrollPane scroll = new JScrollPane(table);
-    frame.add(scroll, BorderLayout.CENTER);
-
-    desktop.add(frame);
-    frame.setVisible(true);
-}
-
-
-
-class ButtonEditor extends DefaultCellEditor {
-        private JButton button;
-        private String label;
-        private boolean isPushed;
-        private IntConsumer onClick;
-        private int row;
-
-        public ButtonEditor(JCheckBox checkBox, java.util.function.IntConsumer onClick) {
-            super(checkBox);
-            this.onClick = onClick;
-            button = new JButton();
-            button.setOpaque(true);
-            button.addActionListener(e -> fireEditingStopped());
-        }
-
-        public Component getTableCellEditorComponent(JTable table, Object value,
-                boolean isSelected, int row, int column) {
-            this.row = row;
-            label = (value == null) ? "" : value.toString();
-            button.setText(label);
-            isPushed = true;
-            return button;
-        }
-
-        public Object getCellEditorValue() {
-            if (isPushed) {
-                onClick.accept(row);
+                for (DtPrestamo p : prestamos) {
+                    model.addRow(new Object[]{
+                        p.getIdPrestamo(),
+                        sdf.format(p.getFechaSoli()),
+                        p.getEstadoPres(),
+                        sdf.format(p.getFechaDev()),
+                        p.getLector(),
+                        p.getBibliotecario(),
+                        p.getMaterial()
+                    });
+                }
+                frame.revalidate();
+                frame.repaint();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
             }
-            isPushed = false;
-            return label;
+        });
+
+        desktop.add(frame);
+        frame.setVisible(true);
+    }
+
+    public void abrirListadoReporteZonal(){
+        JInternalFrame frame = new JInternalFrame("Listado de Reporte Zonal", true, true, true, true);
+        frame.setSize(800, 600);
+        frame.setLayout(new BorderLayout());
+
+        String[] columnas = {"Zona", "Cantidad de Préstamos", "Detalles"};
+        DefaultTableModel model = new DefaultTableModel(columnas, 0);
+
+        PrestamoController pC = new PrestamoController();
+
+        for(datatypes.Zonas zona : datatypes.Zonas.values()){
+            List<DtPrestamo> prestamos = pC.obtenerDtPrestamosPorZona(zona);
+            model.addRow(new Object[]{zona, prestamos.size(), "Detalles"});
         }
-}
-        
+
+        JTable table = new JTable(model);
+
+        table.getColumn("Detalles").setCellRenderer(new ButtonRenderer());
+        table.getColumn("Detalles").setCellEditor(new ButtonEditor(new JCheckBox(), (row) -> {
+            datatypes.Zonas zona = (datatypes.Zonas) model.getValueAt(row, 0);
+            List<DtPrestamo> prestamos = pC.obtenerDtPrestamosPorZona(zona);
+
+            JInternalFrame detallesFrame = new JInternalFrame("Detalles de Préstamos - " + zona, true, true, true, true);
+            detallesFrame.setSize(600, 400);
+            detallesFrame.setLayout(new BorderLayout());
+
+            String[] columnasDetalles = {"ID", "Fecha Solicitud", "Estado", "Fecha Devolución", "Lector", "Bibliotecario", "Material"};
+            DefaultTableModel modelDetalles = new DefaultTableModel(columnasDetalles, 0);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            for (DtPrestamo p : prestamos) {
+                modelDetalles.addRow(new Object[]{
+                    p.getIdPrestamo(),
+                    sdf.format(p.getFechaSoli()),
+                    p.getEstadoPres(),
+                    sdf.format(p.getFechaDev()),
+                    p.getLector(),
+                    p.getBibliotecario(),
+                    p.getMaterial()
+                });
+            }
+            JTable tableDetalles = new JTable(modelDetalles);
+            JScrollPane scrollDetalles = new JScrollPane(tableDetalles);
+            detallesFrame.add(scrollDetalles, BorderLayout.CENTER);
+
+            desktop.add(detallesFrame);
+            detallesFrame.setVisible(true);
+        }));
+
+        JScrollPane scroll = new JScrollPane(table);
+        frame.add(scroll, BorderLayout.CENTER);
+
+        desktop.add(frame);
+        frame.setVisible(true);
+    }
+
+    public void abrirMaterialesConMasPrestamosPendientes(){
+        JInternalFrame frame = new JInternalFrame("Materiales con más préstamos pendientes", true, true, true, true);
+        frame.setSize(600, 400);
+        frame.setLayout(new BorderLayout());
+
+        String[] columnas = {"Índice", "ID Material", "Cantidad de Préstamos Pendientes"};
+        DefaultTableModel model = new DefaultTableModel(columnas, 0);
+
+        PrestamoController pC = new PrestamoController();
+        List<DtPrestamo> prestamosPendientes = pC.obtenerDtPrestamosPendientes();
+
+        // Agrupar por idMaterial y contar
+        java.util.Map<Integer, Integer> conteoPorMaterial = new java.util.HashMap<>();
+        for (DtPrestamo p : prestamosPendientes) {
+            int idMaterial = p.getMaterial();
+            conteoPorMaterial.put(idMaterial, conteoPorMaterial.getOrDefault(idMaterial, 0) + 1);
+        }
+
+        // Ordenar por cantidad descendente
+        java.util.List<java.util.Map.Entry<Integer, Integer>> listaOrdenada = new java.util.ArrayList<>(conteoPorMaterial.entrySet());
+        listaOrdenada.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+        int indice = 1;
+        for (java.util.Map.Entry<Integer, Integer> entry : listaOrdenada) {
+            model.addRow(new Object[]{indice++, entry.getKey(), entry.getValue()});
+        }
+
+        JTable table = new JTable(model);
+        JScrollPane scroll = new JScrollPane(table);
+        frame.add(scroll, BorderLayout.CENTER);
+
+        desktop.add(frame);
+        frame.setVisible(true);
+    }
+
+    class ButtonEditor extends DefaultCellEditor {
+            private JButton button;
+            private String label;
+            private boolean isPushed;
+            private IntConsumer onClick;
+            private int row;
+
+            public ButtonEditor(JCheckBox checkBox, java.util.function.IntConsumer onClick) {
+                super(checkBox);
+                this.onClick = onClick;
+                button = new JButton();
+                button.setOpaque(true);
+                button.addActionListener(e -> fireEditingStopped());
+            }
+
+            public Component getTableCellEditorComponent(JTable table, Object value,
+                    boolean isSelected, int row, int column) {
+                this.row = row;
+                label = (value == null) ? "" : value.toString();
+                button.setText(label);
+                isPushed = true;
+                return button;
+            }
+
+            public Object getCellEditorValue() {
+                if (isPushed) {
+                    onClick.accept(row);
+                }
+                isPushed = false;
+                return label;
+            }
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(BibliotecaGUI::new);
