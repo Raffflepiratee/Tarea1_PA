@@ -47,6 +47,9 @@ public class PrestamoController implements IPrestamoController {
                     uLector,
                     uBibliotecario,
                     m);
+            m.getPrestamos().add(nuevoPrestamo);
+            uLector.getPrestamos().add(nuevoPrestamo);
+            uBibliotecario.getPrestamos().add(nuevoPrestamo);
             pH.agregarPrestamoH(nuevoPrestamo);
         }
     }
