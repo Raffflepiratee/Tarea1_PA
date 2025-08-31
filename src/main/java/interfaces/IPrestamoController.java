@@ -31,5 +31,7 @@ public interface IPrestamoController {
 
     boolean existePrestamoActivo(int Material);
 
-    public List<DtPrestamo> obtenerDtPrestamoBibliotecario(int idEmp);
+    List<DtPrestamo> obtenerDtPrestamoBibliotecario(int idEmp);
+
+    List<DtPrestamo> obtenerDtPrestamosPorZona(Zonas zona);
 }

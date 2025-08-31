@@ -1,6 +1,7 @@
 package logica.manejadores;
 
 import logica.clases.Prestamo;
+import datatypes.Zonas;
 
 import persistencia.Conexion;
 
@@ -59,4 +60,15 @@ public class PrestamoHandler {
             .getResultList();
         return new ArrayList<>(prestamosPorBibliotecatrio);
     }
+
+    public List<Prestamo> obtenerPrestamosPorZona(Zonas zona){
+        Conexion c = Conexion.getInstancia();
+        EntityManager em = c.getEntityManager();
+        List<Prestamo> prestamosPorZona = em.createQuery(
+            "SELECT p FROM Prestamo p WHERE p.lector.zona = :zona", Prestamo.class)
+            .setParameter("zona", zona)
+            .getResultList();
+        return new ArrayList<>(prestamosPorZona);
+    }
+
 }

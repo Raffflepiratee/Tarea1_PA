@@ -194,4 +194,24 @@ public class PrestamoController implements IPrestamoController {
         }
         return dtPrestamosBiblio;
     }
+
+    @Override
+    public List<DtPrestamo> obtenerDtPrestamosPorZona(Zonas zona){
+        List<Prestamo> listaPrestamosZona = PrestamoHandler.getInstancia().obtenerPrestamosPorZona(zona);
+        List<DtPrestamo> dtPrestamosZona = new ArrayList<>();
+
+        for(Prestamo p : listaPrestamosZona){
+            DtPrestamo dtPrestamo = new DtPrestamo(
+                p.getIdPrestamo(),
+                p.getFechaSoli(),
+                p.getEstadoPres(),
+                p.getFechaDev(),
+                p.getLector().getCorreo(),
+                p.getBibliotecario().getCorreo(),
+                p.getMaterial().getIdMaterial()
+            );
+            dtPrestamosZona.add(dtPrestamo);
+        }
+        return dtPrestamosZona;
+    }
 }

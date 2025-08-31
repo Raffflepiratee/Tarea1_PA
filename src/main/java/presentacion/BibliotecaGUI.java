@@ -3,6 +3,7 @@ package presentacion;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Date;
+import java.util.Map;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.function.IntConsumer;
@@ -57,15 +58,18 @@ public class BibliotecaGUI extends JFrame {
         //Menu control y seguimiento
         JMenu menuControl = new JMenu("Control y Seguimiento");
         JMenuItem listarPrestamosBibliotecario = new JMenuItem("Listar préstamos por bibliotecario");
+        JMenuItem listarReporteZonal = new JMenuItem("Listar reporte zonal");
         
         listarPrestamosBibliotecario.addActionListener(e -> abrirListadoPrestamosBibliotecario());
         menuControl.add(listarPrestamosBibliotecario);
         
         listarPrestamosBibliotecario.addActionListener(e -> abrirListadoPrestamosBibliotecario());
         menuControl.add(listarPrestamosBibliotecario);
+
+        listarReporteZonal.addActionListener(e -> abrirListadoReporteZonal());
+        menuControl.add(listarReporteZonal);
 
         menuBar.add(menuControl);
-
 
         setJMenuBar(menuBar);
         setVisible(true);
@@ -451,6 +455,61 @@ public void abrirListadoPrestamosBibliotecario(){
         JScrollPane scroll = new JScrollPane(table);
         frame.add(scroll, BorderLayout.CENTER);
     });
+
+    desktop.add(frame);
+    frame.setVisible(true);
+}
+
+public void abrirListadoReporteZonal(){
+    JInternalFrame frame = new JInternalFrame("Listado de Reporte Zonal", true, true, true, true);
+    frame.setSize(800, 600);
+    frame.setLayout(new BorderLayout());
+
+    String[] columnas = {"Zona", "Cantidad de Préstamos", "Detalles"};
+    DefaultTableModel model = new DefaultTableModel(columnas, 0);
+
+    PrestamoController pC = new PrestamoController();
+
+    for(datatypes.Zonas zona : datatypes.Zonas.values()){
+        List<DtPrestamo> prestamos = pC.obtenerDtPrestamosPorZona(zona);
+        model.addRow(new Object[]{zona, prestamos.size(), "Detalles"});
+    }
+
+    JTable table = new JTable(model);
+
+    table.getColumn("Detalles").setCellRenderer(new ButtonRenderer());
+    table.getColumn("Detalles").setCellEditor(new ButtonEditor(new JCheckBox(), (row) -> {
+        datatypes.Zonas zona = (datatypes.Zonas) model.getValueAt(row, 0);
+        List<DtPrestamo> prestamos = pC.obtenerDtPrestamosPorZona(zona);
+
+        JInternalFrame detallesFrame = new JInternalFrame("Detalles de Préstamos - " + zona, true, true, true, true);
+        detallesFrame.setSize(600, 400);
+        detallesFrame.setLayout(new BorderLayout());
+
+        String[] columnasDetalles = {"ID", "Fecha Solicitud", "Estado", "Fecha Devolución", "Lector", "Bibliotecario", "Material"};
+        DefaultTableModel modelDetalles = new DefaultTableModel(columnasDetalles, 0);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        for (DtPrestamo p : prestamos) {
+            modelDetalles.addRow(new Object[]{
+                p.getIdPrestamo(),
+                sdf.format(p.getFechaSoli()),
+                p.getEstadoPres(),
+                sdf.format(p.getFechaDev()),
+                p.getLector(),
+                p.getBibliotecario(),
+                p.getMaterial()
+            });
+        }
+        JTable tableDetalles = new JTable(modelDetalles);
+        JScrollPane scrollDetalles = new JScrollPane(tableDetalles);
+        detallesFrame.add(scrollDetalles, BorderLayout.CENTER);
+
+        desktop.add(detallesFrame);
+        detallesFrame.setVisible(true);
+    }));
+
+    JScrollPane scroll = new JScrollPane(table);
+    frame.add(scroll, BorderLayout.CENTER);
 
     desktop.add(frame);
     frame.setVisible(true);
