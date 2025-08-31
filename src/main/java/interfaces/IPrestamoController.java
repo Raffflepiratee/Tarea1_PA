@@ -34,4 +34,6 @@ public interface IPrestamoController {
     List<DtPrestamo> obtenerDtPrestamoBibliotecario(int idEmp);
 
     List<DtPrestamo> obtenerDtPrestamosPorZona(Zonas zona);
+
+    List<DtPrestamo> obtenerDtPrestamosPendientes();
 }

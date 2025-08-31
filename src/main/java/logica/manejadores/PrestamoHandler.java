@@ -71,4 +71,12 @@ public class PrestamoHandler {
         return new ArrayList<>(prestamosPorZona);
     }
 
+    public List<Prestamo> obtenerPrestamosPendientes(){
+        Conexion c = Conexion.getInstancia();
+        EntityManager em = c.getEntityManager();
+        List<Prestamo> prestamosPendientes = em.createQuery(
+            "SELECT p FROM Prestamo p WHERE p.estadoPres = 'PENDIENTE'", Prestamo.class)
+            .getResultList();
+        return new ArrayList<>(prestamosPendientes);
+    }
 }

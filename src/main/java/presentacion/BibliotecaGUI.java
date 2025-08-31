@@ -59,15 +59,16 @@ public class BibliotecaGUI extends JFrame {
         JMenu menuControl = new JMenu("Control y Seguimiento");
         JMenuItem listarPrestamosBibliotecario = new JMenuItem("Listar préstamos por bibliotecario");
         JMenuItem listarReporteZonal = new JMenuItem("Listar reporte zonal");
-        
-        listarPrestamosBibliotecario.addActionListener(e -> abrirListadoPrestamosBibliotecario());
-        menuControl.add(listarPrestamosBibliotecario);
+        JMenuItem reporteMateriales = new JMenuItem("Materiales con más préstamos pendientes");
         
         listarPrestamosBibliotecario.addActionListener(e -> abrirListadoPrestamosBibliotecario());
         menuControl.add(listarPrestamosBibliotecario);
 
         listarReporteZonal.addActionListener(e -> abrirListadoReporteZonal());
         menuControl.add(listarReporteZonal);
+
+        reporteMateriales.addActionListener(e -> abrirMaterialesConMasPrestamosPendientes());
+        menuControl.add(reporteMateriales);
 
         menuBar.add(menuControl);
 
@@ -514,6 +515,43 @@ public void abrirListadoReporteZonal(){
     desktop.add(frame);
     frame.setVisible(true);
 }
+
+public void abrirMaterialesConMasPrestamosPendientes(){
+    JInternalFrame frame = new JInternalFrame("Materiales con más préstamos pendientes", true, true, true, true);
+    frame.setSize(600, 400);
+    frame.setLayout(new BorderLayout());
+
+    String[] columnas = {"Índice", "ID Material", "Cantidad de Préstamos Pendientes"};
+    DefaultTableModel model = new DefaultTableModel(columnas, 0);
+
+    PrestamoController pC = new PrestamoController();
+    List<DtPrestamo> prestamosPendientes = pC.obtenerDtPrestamosPendientes();
+
+    // Agrupar por idMaterial y contar
+    java.util.Map<Integer, Integer> conteoPorMaterial = new java.util.HashMap<>();
+    for (DtPrestamo p : prestamosPendientes) {
+        int idMaterial = p.getMaterial();
+        conteoPorMaterial.put(idMaterial, conteoPorMaterial.getOrDefault(idMaterial, 0) + 1);
+    }
+
+    // Ordenar por cantidad descendente
+    java.util.List<java.util.Map.Entry<Integer, Integer>> listaOrdenada = new java.util.ArrayList<>(conteoPorMaterial.entrySet());
+    listaOrdenada.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+    int indice = 1;
+    for (java.util.Map.Entry<Integer, Integer> entry : listaOrdenada) {
+        model.addRow(new Object[]{indice++, entry.getKey(), entry.getValue()});
+    }
+
+    JTable table = new JTable(model);
+    JScrollPane scroll = new JScrollPane(table);
+    frame.add(scroll, BorderLayout.CENTER);
+
+    desktop.add(frame);
+    frame.setVisible(true);
+}
+
+
 
 class ButtonEditor extends DefaultCellEditor {
         private JButton button;
