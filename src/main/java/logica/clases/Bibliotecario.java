@@ -31,4 +31,12 @@ public class Bibliotecario extends Usuario {
     public void setIdEmp(int idEmp) {
         this.idEmp = idEmp;
     }
+
+    public void setPrestamos(List<Prestamo> prestamos) {
+            this.prestamos = prestamos;
+    }
+    
+    public List<Prestamo> getPrestamos() {
+        return prestamos;
+    }
 }

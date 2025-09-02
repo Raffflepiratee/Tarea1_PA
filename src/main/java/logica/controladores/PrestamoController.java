@@ -23,7 +23,8 @@ public class PrestamoController implements IPrestamoController {
     }
 
     @Override
-    public void agregarPrestamo(Date fechaSoli, Date fechaDev, EstadosP estadoP, String correoLector, String correoBiblio, int idMaterial) throws PrestamoRepetidoException {
+    public void agregarPrestamo(Date fechaSoli, Date fechaDev, EstadosP estadoP, String correoLector,
+            String correoBiblio, int idMaterial) throws PrestamoRepetidoException {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
 
         MaterialHandler mH = MaterialHandler.getInstancia();
@@ -39,7 +40,7 @@ public class PrestamoController implements IPrestamoController {
         if (existePrestamoActivo(idMaterial)) {
             throw new PrestamoRepetidoException(
                     "Ya existe un prestamo activo para este material");
-        }else { // Si el prestamo no existe
+        } else { // Si el prestamo no existe
             Prestamo nuevoPrestamo = new Prestamo(
                     fechaSoli,
                     estadoP,
@@ -47,6 +48,9 @@ public class PrestamoController implements IPrestamoController {
                     uLector,
                     uBibliotecario,
                     m);
+            m.getPrestamos().add(nuevoPrestamo);
+            uLector.getPrestamos().add(nuevoPrestamo);
+            uBibliotecario.getPrestamos().add(nuevoPrestamo);
             pH.agregarPrestamoH(nuevoPrestamo);
         }
     }
@@ -60,16 +64,15 @@ public class PrestamoController implements IPrestamoController {
     public List<DtPrestamo> obtenerDtPrestamos() {
         List<Prestamo> listaPrestamos = PrestamoHandler.getInstancia().obtenerPrestamos();
         List<DtPrestamo> dtPrestamos = new ArrayList<>();
-        for(Prestamo prestamo : listaPrestamos){
+        for (Prestamo prestamo : listaPrestamos) {
             DtPrestamo dtPrestamo = new DtPrestamo(
-                prestamo.getIdPrestamo(),
-                prestamo.getFechaSoli(),
-                prestamo.getEstadoPres(),
-                prestamo.getFechaDev(),
-                prestamo.getLector().getCorreo(),
-                prestamo.getBibliotecario().getCorreo(),
-                prestamo.getMaterial().getIdMaterial()
-            );
+                    prestamo.getIdPrestamo(),
+                    prestamo.getFechaSoli(),
+                    prestamo.getEstadoPres(),
+                    prestamo.getFechaDev(),
+                    prestamo.getLector().getCorreo(),
+                    prestamo.getBibliotecario().getCorreo(),
+                    prestamo.getMaterial().getIdMaterial());
             dtPrestamos.add(dtPrestamo);
         }
         return dtPrestamos;
@@ -85,19 +88,18 @@ public class PrestamoController implements IPrestamoController {
         return null;
     }
 
-    //- Funciones para editar prestamos
     @Override
-    public void cambiarEstadoPrestamo(DtPrestamo Prestamo, EstadosP nuevoEstado){
+    public void cambiarEstadoPrestamo(DtPrestamo Prestamo, EstadosP nuevoEstado) {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
         if (prestamo != null) {
             prestamo.setEstadoPres(nuevoEstado);
             actualizarPrestamo(prestamo);
-        } 
+        }
     }
 
     @Override
-    public void cambiarMaterialPrestamo(DtPrestamo Prestamo, int nuevoMaterialID){
+    public void cambiarMaterialPrestamo(DtPrestamo Prestamo, int nuevoMaterialID) {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
         MaterialHandler mH = MaterialHandler.getInstancia();
@@ -111,7 +113,7 @@ public class PrestamoController implements IPrestamoController {
     }
 
     @Override
-    public void cambiarCorreoLectorPrestamo(DtPrestamo Prestamo, String nuevoCorreo){
+    public void cambiarCorreoLectorPrestamo(DtPrestamo Prestamo, String nuevoCorreo) {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
         if (prestamo != null) {
@@ -124,11 +126,12 @@ public class PrestamoController implements IPrestamoController {
     }
 
     @Override
-    public void cambiarCorreoBibliotecarioPrestamo(DtPrestamo Prestamo, String nuevoCorreo){
+    public void cambiarCorreoBibliotecarioPrestamo(DtPrestamo Prestamo, String nuevoCorreo) {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
         if (prestamo != null) {
-            Bibliotecario nuevoBiblio = (Bibliotecario) UsuarioHandler.getInstancia().buscarUsuarioPorCorreo(nuevoCorreo);
+            Bibliotecario nuevoBiblio = (Bibliotecario) UsuarioHandler.getInstancia()
+                    .buscarUsuarioPorCorreo(nuevoCorreo);
             if (nuevoBiblio != null) {
                 prestamo.setBibliotecario(nuevoBiblio);
                 actualizarPrestamo(prestamo);
@@ -137,25 +140,24 @@ public class PrestamoController implements IPrestamoController {
     }
 
     @Override
-    public void cambiarFechaSolicitudPrestamo(DtPrestamo Prestamo, Date nuevaFecha){
+    public void cambiarFechaSolicitudPrestamo(DtPrestamo Prestamo, Date nuevaFecha) {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
         if (prestamo != null) {
             prestamo.setFechaSoli(nuevaFecha);
             actualizarPrestamo(prestamo);
-        } 
+        }
     }
 
     @Override
-    public void cambiarFechaDevolucionPrestamo(DtPrestamo Prestamo, Date nuevaFecha){
+    public void cambiarFechaDevolucionPrestamo(DtPrestamo Prestamo, Date nuevaFecha) {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
         if (prestamo != null) {
             prestamo.setFechaDev(nuevaFecha);
             actualizarPrestamo(prestamo);
-        } 
+        }
     }
-    
 
     @Override
     public void actualizarPrestamo(Prestamo prestamo) {
@@ -164,11 +166,12 @@ public class PrestamoController implements IPrestamoController {
     }
 
     @Override
-    public boolean existePrestamoActivo(int idMaterial){
+    public boolean existePrestamoActivo(int idMaterial) {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         List<Prestamo> prestamos = pH.obtenerPrestamos();
-        for(Prestamo p : prestamos){
-            if(p.getMaterial().getIdMaterial() == idMaterial && (p.getEstadoPres() == EstadosP.PENDIENTE || p.getEstadoPres() == EstadosP.EN_CURSO)){
+        for (Prestamo p : prestamos) {
+            if (p.getMaterial().getIdMaterial() == idMaterial
+                    && (p.getEstadoPres() == EstadosP.PENDIENTE || p.getEstadoPres() == EstadosP.EN_CURSO)) {
                 return true;
             }
         }
@@ -176,22 +179,78 @@ public class PrestamoController implements IPrestamoController {
     }
 
     @Override
-    public List<DtPrestamo> obtenerDtPrestamoBibliotecario(int idEmp){
+    public List<DtPrestamo> obtenerDtPrestamoBibliotecario(int idEmp) {
         List<Prestamo> listaPrestamosBiblio = PrestamoHandler.getInstancia().obtenerPrestamosPorBibliotecario(idEmp);
-        List<DtPrestamo> dtPrestamosBiblio = new ArrayList<>(); 
-        
-        for(Prestamo p : listaPrestamosBiblio){
+        List<DtPrestamo> dtPrestamosBiblio = new ArrayList<>();
+
+        for (Prestamo p : listaPrestamosBiblio) {
             DtPrestamo dtPrestamo = new DtPrestamo(
-                p.getIdPrestamo(),
-                p.getFechaSoli(),
-                p.getEstadoPres(),
-                p.getFechaDev(),
-                p.getLector().getCorreo(),
-                p.getBibliotecario().getCorreo(),
-                p.getMaterial().getIdMaterial()
-            );
+                    p.getIdPrestamo(),
+                    p.getFechaSoli(),
+                    p.getEstadoPres(),
+                    p.getFechaDev(),
+                    p.getLector().getCorreo(),
+                    p.getBibliotecario().getCorreo(),
+                    p.getMaterial().getIdMaterial());
             dtPrestamosBiblio.add(dtPrestamo);
         }
         return dtPrestamosBiblio;
+    }
+
+    @Override
+    public List<DtPrestamo> obtenerDtPrestamosPorZona(Zonas zona) {
+        List<Prestamo> listaPrestamosZona = PrestamoHandler.getInstancia().obtenerPrestamosPorZona(zona);
+        List<DtPrestamo> dtPrestamosZona = new ArrayList<>();
+
+        for (Prestamo p : listaPrestamosZona) {
+            DtPrestamo dtPrestamo = new DtPrestamo(
+                    p.getIdPrestamo(),
+                    p.getFechaSoli(),
+                    p.getEstadoPres(),
+                    p.getFechaDev(),
+                    p.getLector().getCorreo(),
+                    p.getBibliotecario().getCorreo(),
+                    p.getMaterial().getIdMaterial());
+            dtPrestamosZona.add(dtPrestamo);
+        }
+        return dtPrestamosZona;
+    }
+
+    @Override
+    public List<DtPrestamo> obtenerDtPrestamosPendientes() {
+        List<Prestamo> listaPrestamos = PrestamoHandler.getInstancia().obtenerPrestamosPendientes();
+        List<DtPrestamo> dtPrestamos = new ArrayList<>();
+
+        for (Prestamo p : listaPrestamos) {
+            DtPrestamo dtPrestamo = new DtPrestamo(
+                    p.getIdPrestamo(),
+                    p.getFechaSoli(),
+                    p.getEstadoPres(),
+                    p.getFechaDev(),
+                    p.getLector().getCorreo(),
+                    p.getBibliotecario().getCorreo(),
+                    p.getMaterial().getIdMaterial());
+            dtPrestamos.add(dtPrestamo);
+        }
+        return dtPrestamos;
+    }
+
+    @Override
+    public List<DtPrestamo> obtenerPrestamosActivosLector(String correoLector) {
+        PrestamoHandler pH = PrestamoHandler.getInstancia();
+        List<Prestamo> listaPrestamos = pH.obtenerPrestamosActivosLectorH(correoLector);
+        List<DtPrestamo> dtPrestamos = new ArrayList<>();
+        for (Prestamo p : listaPrestamos) {
+            DtPrestamo dtPrestamo = new DtPrestamo(
+                    p.getIdPrestamo(),
+                    p.getFechaSoli(),
+                    p.getEstadoPres(),
+                    p.getFechaDev(),
+                    p.getLector().getCorreo(),
+                    p.getBibliotecario().getCorreo(),
+                    p.getMaterial().getIdMaterial());
+            dtPrestamos.add(dtPrestamo);
+        }
+        return dtPrestamos;
     }
 }

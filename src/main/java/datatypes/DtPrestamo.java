@@ -11,11 +11,15 @@ public class DtPrestamo {
     private Date fechaSoli;
     private EstadosP estadoPres;
     private Date fechaDev;
+
+    // ver de cambiarlos a objetos
     private String lector;
     private String bibliotecario;
     private int material;
 
-    public DtPrestamo(Date fechaSoli, EstadosP estadoPres, Date fechaDev, String correoLector, String correoBibliotecario, int idMaterial) {
+    // ni lo usamos
+    public DtPrestamo(Date fechaSoli, EstadosP estadoPres, Date fechaDev, String correoLector,
+            String correoBibliotecario, int idMaterial) {
         this.fechaSoli = fechaSoli;
         this.estadoPres = estadoPres;
         this.fechaDev = fechaDev;
@@ -24,8 +28,9 @@ public class DtPrestamo {
         this.material = idMaterial;
     }
 
-    //Constructor completo para mostrar datos en la tabla de listar prestamos :)
-    public DtPrestamo(int idPrestamo, Date fechaSoli, EstadosP estadoPres, Date fechaDev, String correoLector, String correoBibliotecario, int idMaterial) {
+    // Constructor completo para mostrar datos en la tabla de listar prestamos :)
+    public DtPrestamo(int idPrestamo, Date fechaSoli, EstadosP estadoPres, Date fechaDev, String correoLector,
+            String correoBibliotecario, int idMaterial) {
         this.idPrestamo = idPrestamo;
         this.fechaSoli = fechaSoli;
         this.estadoPres = estadoPres;

@@ -7,7 +7,8 @@ import logica.clases.Prestamo;
 import excepciones.PrestamoRepetidoException;
 
 public interface IPrestamoController {
-    void agregarPrestamo(Date fechaSoli, Date fechaDev, EstadosP estadoP, String correoLector, String correoBiblio, int idMaterial) throws PrestamoRepetidoException;
+    void agregarPrestamo(Date fechaSoli, Date fechaDev, EstadosP estadoP, String correoLector, String correoBiblio,
+            int idMaterial) throws PrestamoRepetidoException;
 
     void eliminarPrestamo(Prestamo prestamo);
 
@@ -31,5 +32,11 @@ public interface IPrestamoController {
 
     boolean existePrestamoActivo(int Material);
 
-    public List<DtPrestamo> obtenerDtPrestamoBibliotecario(int idEmp);
+    List<DtPrestamo> obtenerDtPrestamoBibliotecario(int idEmp);
+
+    List<DtPrestamo> obtenerDtPrestamosPorZona(Zonas zona);
+
+    List<DtPrestamo> obtenerDtPrestamosPendientes();
+
+    List<DtPrestamo> obtenerPrestamosActivosLector(String correoLector);
 }

@@ -3,6 +3,7 @@ package presentacion;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Date;
+import java.util.Map;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.function.IntConsumer;
@@ -15,8 +16,6 @@ import logica.clases.*;
 import logica.manejadores.UsuarioHandler;
 import logica.controladores.*;
 import datatypes.*;
-
-
 
 public class BibliotecaGUI extends JFrame {
 
@@ -44,7 +43,6 @@ public class BibliotecaGUI extends JFrame {
         JMenu menuPrestamo = new JMenu("Préstamo");
         JMenuItem registrarPrestamo = new JMenuItem("Registrar Préstamo");
         JMenuItem listarPrestamos = new JMenuItem("Listar Préstamos");
-        JMenuItem listarPrestamosBibliotecario = new JMenuItem("Listar prestamos por bibliotecario");
 
         registrarPrestamo.addActionListener(e -> abrirFormularioPrestamo());
         menuPrestamo.add(registrarPrestamo);
@@ -52,12 +50,28 @@ public class BibliotecaGUI extends JFrame {
         listarPrestamos.addActionListener(e -> abrirListadoPrestamos());
         menuPrestamo.add(listarPrestamos);
 
-        listarPrestamosBibliotecario.addActionListener(e -> abrirListadoPrestamosBibliotecario());
-        menuPrestamo.add(listarPrestamosBibliotecario);
-
         menuBar.add(menuPrestamo);
 
+        // Menu control y seguimiento
+        JMenu menuControl = new JMenu("Control y Seguimiento");
+        JMenuItem listarPrestamosBibliotecario = new JMenuItem("Listar préstamos por bibliotecario");
+        JMenuItem listarReporteZonal = new JMenuItem("Listar reporte zonal");
+        JMenuItem reporteMateriales = new JMenuItem("Materiales con más préstamos pendientes");
+        JMenuItem listarPrestamosActivosLector = new JMenuItem("Listar préstamos activos por lector");
 
+        listarPrestamosBibliotecario.addActionListener(e -> abrirListadoPrestamosBibliotecario());
+        menuControl.add(listarPrestamosBibliotecario);
+
+        listarReporteZonal.addActionListener(e -> abrirListadoReporteZonal());
+        menuControl.add(listarReporteZonal);
+
+        reporteMateriales.addActionListener(e -> abrirMaterialesConMasPrestamosPendientes());
+        menuControl.add(reporteMateriales);
+
+        listarPrestamosActivosLector.addActionListener(e -> abrirListadoPrestamosActivosLector());
+        menuControl.add(listarPrestamosActivosLector);
+
+        menuBar.add(menuControl);
 
         setJMenuBar(menuBar);
         setVisible(true);
@@ -232,7 +246,6 @@ public class BibliotecaGUI extends JFrame {
                 Date fechaSoli = sdf.parse(fechaSoliStr);
                 Date fechaDev = sdf.parse(fechaDevStr);
 
-                
                 PrestamoController pc = new PrestamoController();
                 pc.agregarPrestamo(fechaSoli, fechaDev, estado, correoLector, correoBiblio, idMaterial);
                 JOptionPane.showMessageDialog(frame, "Préstamo registrado correctamente.");
@@ -262,7 +275,8 @@ public class BibliotecaGUI extends JFrame {
         List<DtPrestamo> prestamos = pC.obtenerDtPrestamos();
 
         // Columnas
-        String[] columnas = {"ID", "Fecha Solicitud", "Estado", "Fecha Devolución", "Lector", "Bibliotecario", "Material", "Opciones"};
+        String[] columnas = { "ID", "Fecha Solicitud", "Estado", "Fecha Devolución", "Lector", "Bibliotecario",
+                "Material", "Opciones" };
         Object[][] data = new Object[prestamos.size()][columnas.length];
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -293,7 +307,8 @@ public class BibliotecaGUI extends JFrame {
         table.getColumn("Opciones").setCellEditor(new ButtonEditor(new JCheckBox(), (row) -> {
             DtPrestamo p = prestamos.get(row);
 
-            JDialog editDialog = new JDialog(SwingUtilities.getWindowAncestor(desktop), "Editar Préstamo ID: " + p.getIdPrestamo(), Dialog.ModalityType.APPLICATION_MODAL);
+            JDialog editDialog = new JDialog(SwingUtilities.getWindowAncestor(desktop),
+                    "Editar Préstamo ID: " + p.getIdPrestamo(), Dialog.ModalityType.APPLICATION_MODAL);
             editDialog.setSize(600, 300);
             editDialog.setLayout(new BorderLayout());
 
@@ -327,7 +342,8 @@ public class BibliotecaGUI extends JFrame {
             panelCampos.add(new JLabel("Correo Bibliotecario: " + p.getBibliotecario()));
             JButton btnEditBiblio = new JButton("Editar");
             btnEditBiblio.addActionListener(e -> {
-                String nuevoCorreo = JOptionPane.showInputDialog(editDialog, "Nuevo correo bibliotecario:", p.getBibliotecario());
+                String nuevoCorreo = JOptionPane.showInputDialog(editDialog, "Nuevo correo bibliotecario:",
+                        p.getBibliotecario());
                 if (nuevoCorreo != null && !nuevoCorreo.isEmpty()) {
                     pC.cambiarCorreoBibliotecarioPrestamo(p, nuevoCorreo);
                 }
@@ -338,7 +354,8 @@ public class BibliotecaGUI extends JFrame {
             panelCampos.add(new JLabel("Fecha Solicitud: " + sdf.format(p.getFechaSoli())));
             JButton btnEditFechaSoli = new JButton("Editar");
             btnEditFechaSoli.addActionListener(e -> {
-                String nuevaFecha = JOptionPane.showInputDialog(editDialog, "Nueva fecha solicitud (dd/MM/yyyy):", sdf.format(p.getFechaSoli()));
+                String nuevaFecha = JOptionPane.showInputDialog(editDialog, "Nueva fecha solicitud (dd/MM/yyyy):",
+                        sdf.format(p.getFechaSoli()));
                 try {
                     if (nuevaFecha != null && !nuevaFecha.isEmpty()) {
                         Date fecha = sdf.parse(nuevaFecha);
@@ -354,7 +371,8 @@ public class BibliotecaGUI extends JFrame {
             panelCampos.add(new JLabel("Fecha Devolución: " + sdf.format(p.getFechaDev())));
             JButton btnEditFechaDev = new JButton("Editar");
             btnEditFechaDev.addActionListener(e -> {
-                String nuevaFecha = JOptionPane.showInputDialog(editDialog, "Nueva fecha devolución (dd/MM/yyyy):", sdf.format(p.getFechaDev()));
+                String nuevaFecha = JOptionPane.showInputDialog(editDialog, "Nueva fecha devolución (dd/MM/yyyy):",
+                        sdf.format(p.getFechaDev()));
                 try {
                     if (nuevaFecha != null && !nuevaFecha.isEmpty()) {
                         Date fecha = sdf.parse(nuevaFecha);
@@ -371,14 +389,13 @@ public class BibliotecaGUI extends JFrame {
             JButton btnEditEstado = new JButton("Editar");
             btnEditEstado.addActionListener(e -> {
                 EstadosP nuevoEstado = (EstadosP) JOptionPane.showInputDialog(
-                    editDialog,
-                    "Selecciona nuevo estado:",
-                    "Editar Estado",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    EstadosP.values(),
-                    p.getEstadoPres()
-                );
+                        editDialog,
+                        "Selecciona nuevo estado:",
+                        "Editar Estado",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        EstadosP.values(),
+                        p.getEstadoPres());
                 if (nuevoEstado != null) {
                     pC.cambiarEstadoPrestamo(p, nuevoEstado);
                 }
@@ -398,57 +415,164 @@ public class BibliotecaGUI extends JFrame {
     }
 
     class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
-    public ButtonRenderer() { setOpaque(true); }
-    public Component getTableCellRendererComponent(JTable table, Object value,
-            boolean isSelected, boolean hasFocus, int row, int column) {
-        setText((value == null) ? "" : value.toString());
-        return this;
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            setText((value == null) ? "" : value.toString());
+            return this;
         }
     }
 
-public void abrirListadoPrestamosBibliotecario(){
-    JInternalFrame frame = new JInternalFrame("Listado de Préstamos por Bibliotecario", true, true, true, true);
-    frame.setSize(800, 600);
-    frame.setLayout(new BorderLayout());
+    public void abrirListadoPrestamosBibliotecario() {
+        JInternalFrame frame = new JInternalFrame("Listado de Préstamos por Bibliotecario", true, true, true, true);
+        frame.setSize(800, 600);
+        frame.setLayout(new BorderLayout());
 
-    JPanel panel = new JPanel();
-    JLabel label = new JLabel("ID Empleado:");
-    JTextField textField = new JTextField(10);
-    JButton button = new JButton("Buscar");
-    panel.add(label);
-    panel.add(textField);
-    panel.add(button);
-    frame.add(panel, BorderLayout.NORTH);
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("ID Empleado:");
+        JTextField textField = new JTextField(10);
+        JButton button = new JButton("Buscar");
+        panel.add(label);
+        panel.add(textField);
+        panel.add(button);
+        frame.add(panel, BorderLayout.NORTH);
 
-    button.addActionListener(e -> {
-        int idEmp = Integer.parseInt(textField.getText());
-        PrestamoController pC = new PrestamoController();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        List<DtPrestamo> prestamos = pC.obtenerDtPrestamoBibliotecario(idEmp);
-
-        String[] columnas = {"ID", "Fecha Solicitud", "Estado", "Fecha Devolución", "Lector", "Bibliotecario", "Material"};
+        String[] columnas = { "ID", "Fecha Solicitud", "Estado", "Fecha Devolución", "Lector", "Bibliotecario",
+                "Material" };
         DefaultTableModel model = new DefaultTableModel(columnas, 0);
-        for (DtPrestamo p : prestamos) {
-            model.addRow(new Object[]{
-                p.getIdPrestamo(),
-                sdf.format(p.getFechaSoli()),
-                p.getEstadoPres(),
-                sdf.format(p.getFechaDev()),
-                p.getLector(),
-                p.getBibliotecario(),
-                p.getMaterial()
-            });
-        }
         JTable table = new JTable(model);
         JScrollPane scroll = new JScrollPane(table);
         frame.add(scroll, BorderLayout.CENTER);
-    });
 
-    desktop.add(frame);
-    frame.setVisible(true);
-}
+        button.addActionListener(e -> {
+            try {
+                int idEmp = Integer.parseInt(textField.getText());
+                PrestamoController pC = new PrestamoController();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                List<DtPrestamo> prestamos = pC.obtenerDtPrestamoBibliotecario(idEmp);
 
-class ButtonEditor extends DefaultCellEditor {
+                // Limpiar la tabla antes de agregar nuevos datos
+                model.setRowCount(0);
+
+                for (DtPrestamo p : prestamos) {
+                    model.addRow(new Object[] {
+                            p.getIdPrestamo(),
+                            sdf.format(p.getFechaSoli()),
+                            p.getEstadoPres(),
+                            sdf.format(p.getFechaDev()),
+                            p.getLector(),
+                            p.getBibliotecario(),
+                            p.getMaterial()
+                    });
+                }
+                frame.revalidate();
+                frame.repaint();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+            }
+        });
+
+        desktop.add(frame);
+        frame.setVisible(true);
+    }
+
+    public void abrirListadoReporteZonal() {
+        JInternalFrame frame = new JInternalFrame("Listado de Reporte Zonal", true, true, true, true);
+        frame.setSize(800, 600);
+        frame.setLayout(new BorderLayout());
+
+        String[] columnas = { "Zona", "Cantidad de Préstamos", "Detalles" };
+        DefaultTableModel model = new DefaultTableModel(columnas, 0);
+
+        PrestamoController pC = new PrestamoController();
+
+        for (datatypes.Zonas zona : datatypes.Zonas.values()) {
+            List<DtPrestamo> prestamos = pC.obtenerDtPrestamosPorZona(zona);
+            model.addRow(new Object[] { zona, prestamos.size(), "Detalles" });
+        }
+
+        JTable table = new JTable(model);
+
+        table.getColumn("Detalles").setCellRenderer(new ButtonRenderer());
+        table.getColumn("Detalles").setCellEditor(new ButtonEditor(new JCheckBox(), (row) -> {
+            datatypes.Zonas zona = (datatypes.Zonas) model.getValueAt(row, 0);
+            List<DtPrestamo> prestamos = pC.obtenerDtPrestamosPorZona(zona);
+
+            JInternalFrame detallesFrame = new JInternalFrame("Detalles de Préstamos - " + zona, true, true, true,
+                    true);
+            detallesFrame.setSize(600, 400);
+            detallesFrame.setLayout(new BorderLayout());
+
+            String[] columnasDetalles = { "ID", "Fecha Solicitud", "Estado", "Fecha Devolución", "Lector",
+                    "Bibliotecario", "Material" };
+            DefaultTableModel modelDetalles = new DefaultTableModel(columnasDetalles, 0);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            for (DtPrestamo p : prestamos) {
+                modelDetalles.addRow(new Object[] {
+                        p.getIdPrestamo(),
+                        sdf.format(p.getFechaSoli()),
+                        p.getEstadoPres(),
+                        sdf.format(p.getFechaDev()),
+                        p.getLector(),
+                        p.getBibliotecario(),
+                        p.getMaterial()
+                });
+            }
+            JTable tableDetalles = new JTable(modelDetalles);
+            JScrollPane scrollDetalles = new JScrollPane(tableDetalles);
+            detallesFrame.add(scrollDetalles, BorderLayout.CENTER);
+
+            desktop.add(detallesFrame);
+            detallesFrame.setVisible(true);
+        }));
+
+        JScrollPane scroll = new JScrollPane(table);
+        frame.add(scroll, BorderLayout.CENTER);
+
+        desktop.add(frame);
+        frame.setVisible(true);
+    }
+
+    public void abrirMaterialesConMasPrestamosPendientes() {
+        JInternalFrame frame = new JInternalFrame("Materiales con más préstamos pendientes", true, true, true, true);
+        frame.setSize(600, 400);
+        frame.setLayout(new BorderLayout());
+
+        String[] columnas = { "Índice", "ID Material", "Cantidad de Préstamos Pendientes" };
+        DefaultTableModel model = new DefaultTableModel(columnas, 0);
+
+        PrestamoController pC = new PrestamoController();
+        List<DtPrestamo> prestamosPendientes = pC.obtenerDtPrestamosPendientes();
+
+        // Agrupar por idMaterial y contar
+        java.util.Map<Integer, Integer> conteoPorMaterial = new java.util.HashMap<>();
+        for (DtPrestamo p : prestamosPendientes) {
+            int idMaterial = p.getMaterial();
+            conteoPorMaterial.put(idMaterial, conteoPorMaterial.getOrDefault(idMaterial, 0) + 1);
+        }
+
+        // Ordenar por cantidad descendente
+        java.util.List<java.util.Map.Entry<Integer, Integer>> listaOrdenada = new java.util.ArrayList<>(
+                conteoPorMaterial.entrySet());
+        listaOrdenada.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+        int indice = 1;
+        for (java.util.Map.Entry<Integer, Integer> entry : listaOrdenada) {
+            model.addRow(new Object[] { indice++, entry.getKey(), entry.getValue() });
+        }
+
+        JTable table = new JTable(model);
+        JScrollPane scroll = new JScrollPane(table);
+        frame.add(scroll, BorderLayout.CENTER);
+
+        desktop.add(frame);
+        frame.setVisible(true);
+    }
+
+    class ButtonEditor extends DefaultCellEditor {
         private JButton button;
         private String label;
         private boolean isPushed;
@@ -479,8 +603,72 @@ class ButtonEditor extends DefaultCellEditor {
             isPushed = false;
             return label;
         }
-}
-        
+    }
+
+    public void abrirListadoPrestamosActivosLector() {
+        JInternalFrame frame = new JInternalFrame("Préstamos Activos del Lector", true, true, true, true);
+        frame.setSize(750, 450);
+        frame.setLayout(new BorderLayout());
+
+        JPanel panelForm = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelForm.add(new JLabel("Correo del lector:"));
+        JTextField txtCorreo = new JTextField(25);
+        panelForm.add(txtCorreo);
+
+        JButton btnBuscar = new JButton("Buscar");
+        panelForm.add(btnBuscar);
+
+        frame.add(panelForm, BorderLayout.NORTH);
+
+        String[] columnas = { "ID", "Fecha Solicitud", "Fecha Devolución", "Estado", "Material", "Bibliotecario" };
+        Object[][] data = new Object[0][columnas.length];
+
+        DefaultTableModel model = new DefaultTableModel(data, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        JTable table = new JTable(model);
+        JScrollPane scroll = new JScrollPane(table);
+        frame.add(scroll, BorderLayout.CENTER);
+
+        btnBuscar.addActionListener(e -> {
+            try {
+                String correo = txtCorreo.getText().trim();
+                if (correo.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "Por favor ingrese un correo válido.");
+                    return;
+                }
+
+                PrestamoController pC = new PrestamoController();
+                List<DtPrestamo> prestamos = pC.obtenerPrestamosActivosLector(correo);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                Object[][] nuevaData = new Object[prestamos.size()][columnas.length];
+
+                for (int i = 0; i < prestamos.size(); i++) {
+                    DtPrestamo p = prestamos.get(i);
+                    nuevaData[i][0] = p.getIdPrestamo();
+                    nuevaData[i][1] = sdf.format(p.getFechaSoli());
+                    nuevaData[i][2] = sdf.format(p.getFechaDev());
+                    nuevaData[i][3] = p.getEstadoPres().toString();
+                    nuevaData[i][4] = p.getMaterial();
+                    nuevaData[i][5] = p.getBibliotecario();
+                }
+
+                model.setDataVector(nuevaData, columnas);
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error al buscar préstamos: " + ex.getMessage());
+            }
+        });
+
+        desktop.add(frame);
+        frame.setVisible(true);
+
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(BibliotecaGUI::new);
