@@ -3,14 +3,14 @@ package presentacion;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Date;
-import java.util.Map;
+// import java.util.Map;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.function.IntConsumer;
 
 /* import java.util.ArrayList; */
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
+// import javax.swing.table.TableCellRenderer;
 
 import logica.clases.*;
 import logica.manejadores.UsuarioHandler;
@@ -29,6 +29,12 @@ public class BibliotecaGUI extends JFrame {
         // Desktop para manejar internal frames
         desktop = new JDesktopPane();
         add(desktop);
+
+        // Mensaje de bienvenida
+        JLabel welcomeLabel = new JLabel("Bienvenido a la Biblioteca Comunitaria", SwingConstants.CENTER);
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        welcomeLabel.setBounds(0, 0, getWidth(), 60);
+        desktop.add(welcomeLabel, JLayeredPane.DEFAULT_LAYER);
 
         // Menú principal
         JMenuBar menuBar = new JMenuBar();
