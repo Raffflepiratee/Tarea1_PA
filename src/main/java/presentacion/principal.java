@@ -22,6 +22,7 @@ public class Principal {
 
     private RegistarMaterial registarMaterialInternalFrame;
     private ListadoMateriales listadoMaterialesInternalFrame;
+    private ListarMaterialPorRango listarMaterialPorRangoInternalFrame;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -58,6 +59,13 @@ public class Principal {
             (desktopSize.height- jInternalFrameSize.height)/2);
         listadoMaterialesInternalFrame.setVisible(false);
         frame.getContentPane().add(listadoMaterialesInternalFrame);
+
+        listarMaterialPorRangoInternalFrame = new ListarMaterialPorRango(matCont);
+        jInternalFrameSize = listarMaterialPorRangoInternalFrame.getSize();
+        listarMaterialPorRangoInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+            (desktopSize.height- jInternalFrameSize.height)/2);
+        listarMaterialPorRangoInternalFrame.setVisible(false);
+        frame.getContentPane().add(listarMaterialPorRangoInternalFrame);
     }
 
     private void initialize(){
@@ -80,5 +88,9 @@ public class Principal {
         JMenuItem mntmListadoMateriales = new JMenuItem("Listado de Materiales");
         mntmListadoMateriales.addActionListener(e -> listadoMaterialesInternalFrame.setVisible(true));    
         mnMaterial.add(mntmListadoMateriales);
+
+        JMenuItem mntmListarMaterialPor = new JMenuItem("Listar Material por Rango de Fechas");
+        mntmListarMaterialPor.addActionListener(e -> listarMaterialPorRangoInternalFrame.setVisible(true));
+        mnMaterial.add(mntmListarMaterialPor);
     }
 }
