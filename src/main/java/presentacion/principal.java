@@ -21,6 +21,7 @@ public class Principal {
     private JFrame frame;
 
     private RegistarMaterial registarMaterialInternalFrame;
+    private ListadoMateriales listadoMaterialesInternalFrame;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -50,6 +51,13 @@ public class Principal {
             (desktopSize.height- jInternalFrameSize.height)/2);
         registarMaterialInternalFrame.setVisible(false);
         frame.getContentPane().add(registarMaterialInternalFrame);
+
+        listadoMaterialesInternalFrame = new ListadoMateriales(matCont);
+        jInternalFrameSize = listadoMaterialesInternalFrame.getSize();
+        listadoMaterialesInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+            (desktopSize.height- jInternalFrameSize.height)/2);
+        listadoMaterialesInternalFrame.setVisible(false);
+        frame.getContentPane().add(listadoMaterialesInternalFrame);
     }
 
     private void initialize(){
@@ -68,5 +76,9 @@ public class Principal {
         JMenuItem mntmRegistrarMaterial = new JMenuItem("Registrar Material");
         mntmRegistrarMaterial.addActionListener(e -> registarMaterialInternalFrame.setVisible(true));
         mnMaterial.add(mntmRegistrarMaterial);
+
+        JMenuItem mntmListadoMateriales = new JMenuItem("Listado de Materiales");
+        mntmListadoMateriales.addActionListener(e -> listadoMaterialesInternalFrame.setVisible(true));    
+        mnMaterial.add(mntmListadoMateriales);
     }
 }
