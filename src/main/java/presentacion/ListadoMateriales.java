@@ -67,9 +67,7 @@ public class ListadoMateriales extends JInternalFrame {
                 data[i][2] = "Libro";
             } else if (m instanceof DtArticuloEspecial) {
                 data[i][2] = "Artículo Especial";
-            } else {
-                data[i][2] = "Desconocido";
-            }
+            } 
             data[i][3] = "Más info";
         }
         return data;
