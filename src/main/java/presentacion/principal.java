@@ -20,6 +20,7 @@ public class Principal {
     private JFrame frame;
 
     private RegistrarUsuario registrarUsuarioInternalFrame;
+    private ListadoUsuarios listarUsuariosInternalFrame;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -50,6 +51,13 @@ public class Principal {
                 (desktopSize.height - jInternalFrameSize.height) / 2);
         registrarUsuarioInternalFrame.setVisible(false);
         frame.getContentPane().add(registrarUsuarioInternalFrame);
+
+        listarUsuariosInternalFrame = new ListadoUsuarios(usuarioCont);
+        jInternalFrameSize = listarUsuariosInternalFrame.getSize();
+        listarUsuariosInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width) / 2,
+                (desktopSize.height - jInternalFrameSize.height) / 2);
+        listarUsuariosInternalFrame.setVisible(false);
+        frame.getContentPane().add(listarUsuariosInternalFrame);
     }
 
     private void initialize() {
@@ -68,5 +76,9 @@ public class Principal {
         JMenuItem mntmRegistrarUsuario = new JMenuItem("Registrar Usuario");
         mntmRegistrarUsuario.addActionListener(e -> registrarUsuarioInternalFrame.setVisible(true));
         mnUsuario.add(mntmRegistrarUsuario);
+
+        JMenuItem mntmListarUsuarios = new JMenuItem("Listar Usuarios");
+        mntmListarUsuarios.addActionListener(e -> listarUsuariosInternalFrame.setVisible(true));
+        mnUsuario.add(mntmListarUsuarios);
     }
 }
