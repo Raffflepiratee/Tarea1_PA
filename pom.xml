@@ -65,7 +65,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>presentacion.BibliotecaGUI</mainClass>
+                    <mainClass>presentacion.Principal</mainClass>
                 </configuration>
             </plugin>
             <plugin>

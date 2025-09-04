@@ -1,59 +1,77 @@
 package presentacion;
 
-import logica.clases.Lector;
-import logica.clases.Bibliotecario;
-import logica.clases.Libro;
-import logica.clases.ArticuloEspecial;
-import logica.clases.Prestamo;
-import datatypes.EstadosP;
-import datatypes.EstadosU;
-import datatypes.Zonas;
+import java.awt.Dimension;
+import java.awt.EventQueue;
 
-import logica.manejadores.UsuarioHandler;
-import logica.manejadores.MaterialHandler;
-import logica.manejadores.PrestamoHandler;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
-import java.util.Date;
+import interfaces.IMaterialController;
+import interfaces.IPrestamoController;
+import interfaces.IUsuarioController;
+import interfaces.Fabrica;
 
-public class principal {
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class Principal {
+    
+    private JFrame frame;
+
+    private RegistrarPrestamo registrarPrestamoInternalFrame;
+
     public static void main(String[] args) {
-        /* Crear un bibliotecario por defecto */
-        // String nombre = "lecotr01";
-        // String correo = "lector01@lector.com";
+        EventQueue.invokeLater(() -> {
+            try {
+                Principal window = new Principal();
+                window.frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
-        // Lector lec = new Lector(nombre, correo, new Date(),
-        // EstadosU.ACTIVO,Zonas.ARCHIVO_GENERAL,"Calle Falsa 123");
+    public Principal(){
+        initialize();
 
-        // Bibliotecario bib = new Bibliotecario("biblio01", "biblio01@biblio.com");
+        Fabrica fabrica = Fabrica.getInstancia();
+        IMaterialController ImatCont = fabrica.getIControladorMaterial();
+        IPrestamoController IprestamoCont = fabrica.getIControladorPrestamo();
+        IUsuarioController IusuarioCont = fabrica.getIControladorUsuario();
 
-        // Guardar el usuario usando UsuarioHandler
-        // UsuarioHandler handler = UsuarioHandler.getInstancia();
-        // handler.agregarUsuarioH(lec);
-        // handler.agregarUsuarioH(bib);
+        Dimension desktopSize = frame.getSize();
+		Dimension jInternalFrameSize;
 
-        // System.out.println("Usuarios agregados: " + lec.getNombre() + ", " +
-        // bib.getNombre());
+        //Funciones de Usuario
 
-        // Crear y guardar materiales, en este caso un libro
-        /*
-         * Libro libro = new Libro(new Date(), "martin gay", 5);
-         * MaterialHandler mh = MaterialHandler.getInstancia();
-         * mh.agregarMaterialH(libro);
-         * 
-         * System.out.println("Libro agregado: " + libro.getIdMaterial());
-         */
+        //Funciones de Material
 
-        // Crear y guardar un Prestamo
+        //Funciones de Prestamo
+        registrarPrestamoInternalFrame = new RegistrarPrestamo(IprestamoCont, IusuarioCont);
+        jInternalFrameSize = registrarPrestamoInternalFrame.getSize();
+        registrarPrestamoInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+            (desktopSize.height- jInternalFrameSize.height)/2);
+        registrarPrestamoInternalFrame.setVisible(false);
+        frame.getContentPane().add(registrarPrestamoInternalFrame);
+    }
 
-        // Prestamo p = new Prestamo(new Date(), EstadosP.PENDIENTE, null, lec, bib,
-        // articuloEspecial);
+    private void initialize(){
+        frame = new JFrame();
+        frame.setBounds(100, 100, 800, 600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().setLayout(null);
 
-        // p.setLector(lec);
-        // p.setBibliotecario(bib);
-        // p.setMaterial(articuloEspecial);
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.setBounds(0, 0, 800, 21);
+        frame.getContentPane().add(menuBar);
 
-        // PrestamoHandler ph = PrestamoHandler.getInstancia();
-        // ph.agregarPrestamoH(p);
-        // System.out.println("Prestamo agregado con ID: " + p.getIdPrestamo());
+        JMenu mnPrestamo = new JMenu("Préstamo");
+        menuBar.add(mnPrestamo);
+
+        JMenuItem mntmRegistrarPrestamo = new JMenuItem("Registrar Préstamo");
+        mntmRegistrarPrestamo.addActionListener(e-> registrarPrestamoInternalFrame.setVisible(true));
+        mnPrestamo.add(mntmRegistrarPrestamo);
     }
 }
