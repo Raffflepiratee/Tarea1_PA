@@ -8,10 +8,12 @@ import java.util.List;
 import javax.swing.table.*;
 
 import datatypes.*;
-import interfaces.IMaterialController;
 import interfaces.IUsuarioController;
 import presentacion.BibliotecaGUI.ButtonEditor;
 import presentacion.BibliotecaGUI.ButtonRenderer;
+
+import presentacion.CambiarZonaUsuario;
+import presentacion.ModificarEstadoUsuario;
 
 public class ListadoUsuarios extends JInternalFrame {
     private static final long serialVersionUID = 1L;
@@ -20,6 +22,10 @@ public class ListadoUsuarios extends JInternalFrame {
     private DefaultTableModel model;
     private String[] columnas = { "Nombre", "Correo", "Tipo", "Mas Info" };
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+    private JPanel panelDetalle;
+    private JTextField txtNombre, txtCorreo, txtZona, txtDireccion, txtEstado;
+    private JButton btnZona, btnEstado;
 
     public ListadoUsuarios(IUsuarioController usuarioCont) {
         this.usuarioCont = usuarioCont;
@@ -109,7 +115,7 @@ public class ListadoUsuarios extends JInternalFrame {
         }
 
         private void masInfo() {
-            String correo = (String) model.getValueAt(selectedRow, 0);
+            String correo = (String) model.getValueAt(selectedRow, 1);
             DtUsuario usuario = null;
             for (DtUsuario u : usuarioCont.obtenerUsuarios()) {
                 if (u.getCorreo() == correo) {
@@ -124,52 +130,146 @@ public class ListadoUsuarios extends JInternalFrame {
                 return;
             }
 
-            if (usuario instanceof DtLector) {
-                DtLector lector = (DtLector) usuario;
-                JPanel panel = new JPanel(new BorderLayout());
-                JTextArea infoArea = new JTextArea(
-                        "Nombre: " + lector.getNombre() + "\n" +
-                                "Correo: " + lector.getCorreo() + "\n" +
-                                "Fecha de Ingreso: " + dateFormat.format(lector.getFechaIngreso()) + "\n" +
-                                "Zona: " + lector.getZona() + "\n" +
-                                "Dirección: " + lector.getDireccion() + "\n" +
-                                "Estado: " + lector.getEstadoUsuario().toString());
-                infoArea.setEditable(false);
-                panel.add(new JScrollPane(infoArea), BorderLayout.CENTER);
+            /*
+             * if (usuario instanceof DtLector) {
+             * DtLector lector = (DtLector) usuario;
+             * InfoUsuario detalleLector = new
+             * InfoUsuario(SwingUtilities.getWindowAncestor(parentFrame), lector);
+             * detalleLector.setVisible(true);
+             * } else if (usuario instanceof DtBibliotecario) {
+             * DtBibliotecario bibliotecario = (DtBibliotecario) usuario;
+             * JPanel panelDatos = new JPanel(new GridLayout(6, 2, 5, 5));
+             * panelDatos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+             * panelDatos.add(new JLabel("Nombre:"));
+             * panelDatos.add(new JLabel(bibliotecario.getNombre()));
+             * panelDatos.add(new JLabel("Correo:"));
+             * panelDatos.add(new JLabel(bibliotecario.getCorreo()));
+             * panelDatos.add(new JLabel("ID Empleado:"));
+             * panelDatos.add(new JLabel(String.valueOf(bibliotecario.getIdEmp())));
+             * JPanel panelBotones = new JPanel();
+             * JButton btnSalir = new JButton("Salir");
+             * 
+             * btnSalir.addActionListener(e ->
+             * SwingUtilities.getWindowAncestor(panelDatos).dispose());
+             * panelBotones.add(btnSalir);
+             * 
+             * add(panelDatos, BorderLayout.CENTER);
+             * add(panelBotones, BorderLayout.SOUTH);
+             * }
+             */
 
-                JPanel botonesPanel = new JPanel();
+            InfoUsuario detalleUsuario = new InfoUsuario(SwingUtilities.getWindowAncestor(parentFrame), usuario);
+            detalleUsuario.setVisible(true);
+
+            fireEditingStopped();
+        }
+    }
+
+    /*
+     * class InfoLector extends JDialog {
+     * public InfoLector(Window parent, DtLector lector) {
+     * setTitle("Detalle del Lector");
+     * setSize(400, 300);
+     * setLocationRelativeTo(parent);
+     * setLayout(new BorderLayout());
+     * 
+     * JPanel panelDatos = new JPanel(new GridLayout(6, 2, 5, 5));
+     * panelDatos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+     * panelDatos.add(new JLabel("Nombre:"));
+     * panelDatos.add(new JLabel(lector.getNombre()));
+     * panelDatos.add(new JLabel("Correo:"));
+     * panelDatos.add(new JLabel(lector.getCorreo()));
+     * panelDatos.add(new JLabel("Fecha de Ingreso:"));
+     * panelDatos.add(new JLabel(dateFormat.format(lector.getFechaIngreso())));
+     * panelDatos.add(new JLabel("Zona:"));
+     * panelDatos.add(new JLabel(lector.getZona().toString()));
+     * panelDatos.add(new JLabel("Dirección:"));
+     * panelDatos.add(new JLabel(lector.getDireccion()));
+     * panelDatos.add(new JLabel("Estado:"));
+     * panelDatos.add(new JLabel(lector.getEstadoUsuario().toString()));
+     * 
+     * JPanel panelBotones = new JPanel();
+     * JButton btnZona = new JButton("Cambiar Zona");
+     * JButton btnEstado = new JButton("Modificar Estado");
+     * 
+     * btnZona.addActionListener(e -> {
+     * CambiarZonaUsuario cambiarZona = new CambiarZonaUsuario(this, lector,
+     * usuarioCont);
+     * cambiarZona.setVisible(true);
+     * });
+     * 
+     * btnEstado.addActionListener(e -> {
+     * Window parentWindow = SwingUtilities.getWindowAncestor(this);
+     * ModificarEstadoUsuario modificarEstado = new
+     * ModificarEstadoUsuario(parentWindow, lector, usuarioCont);
+     * modificarEstado.setVisible(true);
+     * });
+     * 
+     * panelBotones.add(btnZona);
+     * panelBotones.add(btnEstado);
+     * 
+     * add(panelDatos, BorderLayout.CENTER);
+     * add(panelBotones, BorderLayout.SOUTH);
+     * }
+     * }
+     */
+
+    class InfoUsuario extends JDialog {
+        public InfoUsuario(Window parent, DtUsuario usuario) {
+            setTitle("Detalle del Usuario");
+            setSize(400, 300);
+            setLocationRelativeTo(parent);
+            setLayout(new BorderLayout());
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+            JPanel panelDatos = new JPanel(new GridLayout(0, 2, 5, 5));
+            panelDatos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            panelDatos.add(new JLabel("Nombre:"));
+            panelDatos.add(new JLabel(usuario.getNombre()));
+            panelDatos.add(new JLabel("Correo:"));
+            panelDatos.add(new JLabel(usuario.getCorreo()));
+
+            JPanel panelBotones = new JPanel();
+
+            if (usuario instanceof DtBibliotecario bibliotecario) {
+                panelDatos.add(new JLabel("ID Empleado:"));
+                panelDatos.add(new JLabel(String.valueOf(bibliotecario.getIdEmp())));
+            } else {
+                DtLector lector = (DtLector) usuario;
+                panelDatos.add(new JLabel("Fecha de Ingreso:"));
+                panelDatos.add(new JLabel(dateFormat.format(lector.getFechaIngreso())));
+                panelDatos.add(new JLabel("Zona:"));
+                panelDatos.add(new JLabel(lector.getZona().toString()));
+                panelDatos.add(new JLabel("Dirección:"));
+                panelDatos.add(new JLabel(lector.getDireccion()));
+                panelDatos.add(new JLabel("Estado:"));
+                panelDatos.add(new JLabel(lector.getEstadoUsuario().toString()));
+
                 JButton btnZona = new JButton("Cambiar Zona");
                 JButton btnEstado = new JButton("Modificar Estado");
 
                 btnZona.addActionListener(e -> {
-                    // ir al archivo CambiarZonaUsuario
-                    CambiarZonaUsuario cambiarZona = new CambiarZonaUsuario(lector, usuarioCont);
-                    parentFrame.getParent().add(cambiarZona);
+                    CambiarZonaUsuario cambiarZona = new CambiarZonaUsuario(this, lector, usuarioCont);
                     cambiarZona.setVisible(true);
                 });
 
                 btnEstado.addActionListener(e -> {
-                    // ir al archivo ModificarEstadoUsuario
-                    ModificarEstadoUsuario modificarEstado = new ModificarEstadoUsuario(lector, usuarioCont);
-                    parentFrame.getParent().add(modificarEstado);
+                    ModificarEstadoUsuario modificarEstado = new ModificarEstadoUsuario(this, lector,
+                            usuarioCont);
                     modificarEstado.setVisible(true);
                 });
 
-                botonesPanel.add(btnZona);
-                botonesPanel.add(btnEstado);
-                panel.add(botonesPanel, BorderLayout.SOUTH);
-
-                JOptionPane.showMessageDialog(parentFrame, panel, "Detalle del Lector",
-                        JOptionPane.INFORMATION_MESSAGE);
-            } else if (usuario instanceof DtBibliotecario) {
-                DtBibliotecario bibliotecario = (DtBibliotecario) usuario;
-                String info = "Nombre: " + bibliotecario.getNombre() + "\n" +
-                        "Correo: " + bibliotecario.getCorreo() + "\n" +
-                        "Numero de Empleado: " + bibliotecario.getIdEmp();
-                JOptionPane.showMessageDialog(parentFrame, info, "Detalle del Bibliotecario",
-                        JOptionPane.INFORMATION_MESSAGE);
+                panelBotones.add(btnZona);
+                panelBotones.add(btnEstado);
             }
-            fireEditingStopped();
+
+            JButton btnSalir = new JButton("Salir");
+            btnSalir.addActionListener(e -> dispose());
+            panelBotones.add(btnSalir);
+
+            add(panelDatos, BorderLayout.CENTER);
+            add(panelBotones, BorderLayout.SOUTH);
         }
     }
 }
