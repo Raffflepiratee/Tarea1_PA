@@ -26,8 +26,6 @@ public class RegistrarPrestamo extends JInternalFrame {
     private JTextField textFieldIdMaterial;
     private JTextField textFieldCorreoLector;
     private JTextField textFieldCorreoBiblio;
-    private JTextField textFieldFechaSoli;
-    private JTextField textFieldFechaDev;
     private JComboBox<Integer> comboDiaInicio, comboAnioInicio, comboDiaFin, comboAnioFin;
     private JComboBox<String> comboMesInicio, comboMesFin;
     private JComboBox<String> comboBoxEstado;

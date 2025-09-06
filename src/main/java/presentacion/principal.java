@@ -25,6 +25,8 @@ public class Principal {
 
     private RegistrarPrestamo registrarPrestamoInternalFrame;
     private ListarPrestamos listarPrestamosInternalFrame;
+    private ReporteZonal reporteZonalInternalFrame;
+    private PrestamosPorBiblio prestamosPorBiblioInternalFrame;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -42,6 +44,8 @@ public class Principal {
 
         Fabrica fabrica = Fabrica.getInstancia();
         IMaterialController ImatCont = fabrica.getIControladorMaterial();
+
+
         IPrestamoController IprestamoCont = fabrica.getIControladorPrestamo();
         IUsuarioController IusuarioCont = fabrica.getIControladorUsuario();
 
@@ -66,6 +70,20 @@ public class Principal {
             (desktopSize.height- jInternalFrameSize.height)/2);
         listarPrestamosInternalFrame.setVisible(false);
         frame.getContentPane().add(listarPrestamosInternalFrame);
+
+        reporteZonalInternalFrame = new ReporteZonal(IprestamoCont);
+        jInternalFrameSize = reporteZonalInternalFrame.getSize();
+        reporteZonalInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+            (desktopSize.height- jInternalFrameSize.height)/2);
+        reporteZonalInternalFrame.setVisible(false);
+        frame.getContentPane().add(reporteZonalInternalFrame);
+
+        prestamosPorBiblioInternalFrame = new PrestamosPorBiblio(IprestamoCont);
+        jInternalFrameSize = prestamosPorBiblioInternalFrame.getSize();
+        prestamosPorBiblioInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+            (desktopSize.height- jInternalFrameSize.height)/2);
+        prestamosPorBiblioInternalFrame.setVisible(false);
+        frame.getContentPane().add(prestamosPorBiblioInternalFrame);
     }
 
     private void initialize(){
@@ -104,6 +122,11 @@ public class Principal {
 
         //Items de menu 'Control'
         JMenuItem mntmReporteZonal = new JMenuItem("Reporte zonal");
+        mntmReporteZonal.addActionListener(e-> reporteZonalInternalFrame.setVisible(true));
         mnControl.add(mntmReporteZonal);
+
+        JMenuItem mntmPrestamosPorBiblio = new JMenuItem("Préstamos por Bibliotecario");
+        mntmPrestamosPorBiblio.addActionListener(e-> prestamosPorBiblioInternalFrame.setVisible(true));
+        mnControl.add(mntmPrestamosPorBiblio);
     }
 }
