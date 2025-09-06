@@ -17,7 +17,7 @@ import presentacion.ModificarEstadoUsuario;
 
 public class ListadoUsuarios extends JInternalFrame {
     private static final long serialVersionUID = 1L;
-    private IUsuarioController usuarioCont;
+    private IUsuarioController IusCont;
     private JTable table;
     private DefaultTableModel model;
     private String[] columnas = { "Nombre", "Correo", "Tipo", "Mas Info" };
@@ -27,8 +27,8 @@ public class ListadoUsuarios extends JInternalFrame {
     private JTextField txtNombre, txtCorreo, txtZona, txtDireccion, txtEstado;
     private JButton btnZona, btnEstado;
 
-    public ListadoUsuarios(IUsuarioController usuarioCont) {
-        this.usuarioCont = usuarioCont;
+    public ListadoUsuarios(IUsuarioController IusCont) {
+        this.IusCont = IusCont;
         setResizable(true);
         setIconifiable(true);
         setMaximizable(true);
@@ -50,7 +50,7 @@ public class ListadoUsuarios extends JInternalFrame {
         table = new JTable(model);
         // table.setRowHeight(30);
         table.getColumn("Mas Info").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Mas Info").setCellEditor(new ButtonEditor(new JCheckBox(), usuarioCont, this));
+        table.getColumn("Mas Info").setCellEditor(new ButtonEditor(new JCheckBox(), IusCont, this));
 
         JScrollPane scroll = new JScrollPane(table);
         add(scroll, BorderLayout.CENTER);
@@ -63,7 +63,7 @@ public class ListadoUsuarios extends JInternalFrame {
     }
 
     private Object[][] cargarDatosUsuarios() {
-        List<DtUsuario> usuarios = usuarioCont.obtenerUsuarios();
+        List<DtUsuario> usuarios = IusCont.obtenerUsuarios();
         Object[][] data = new Object[usuarios.size()][4];
 
         for (int i = 0; i < usuarios.size(); i++) {
@@ -95,13 +95,13 @@ public class ListadoUsuarios extends JInternalFrame {
         private JButton button;
         private String label;
         private boolean isPushed;
-        private IUsuarioController usuarioCont;
+        private IUsuarioController IusCont;
         private JInternalFrame parentFrame;
         private int selectedRow;
 
-        public ButtonEditor(JCheckBox checkBox, IUsuarioController usuarioCont, ListadoUsuarios parentFrame) {
+        public ButtonEditor(JCheckBox checkBox, IUsuarioController IusCont, ListadoUsuarios parentFrame) {
             super(checkBox);
-            this.usuarioCont = usuarioCont;
+            this.IusCont = IusCont;
             this.parentFrame = parentFrame;
             button = new JButton();
             button.setOpaque(true);
@@ -117,7 +117,7 @@ public class ListadoUsuarios extends JInternalFrame {
         private void masInfo() {
             String correo = (String) model.getValueAt(selectedRow, 1);
             DtUsuario usuario = null;
-            for (DtUsuario u : usuarioCont.obtenerUsuarios()) {
+            for (DtUsuario u : IusCont.obtenerUsuarios()) {
                 if (u.getCorreo() == correo) {
                     usuario = u;
                     break;
@@ -130,89 +130,12 @@ public class ListadoUsuarios extends JInternalFrame {
                 return;
             }
 
-            /*
-             * if (usuario instanceof DtLector) {
-             * DtLector lector = (DtLector) usuario;
-             * InfoUsuario detalleLector = new
-             * InfoUsuario(SwingUtilities.getWindowAncestor(parentFrame), lector);
-             * detalleLector.setVisible(true);
-             * } else if (usuario instanceof DtBibliotecario) {
-             * DtBibliotecario bibliotecario = (DtBibliotecario) usuario;
-             * JPanel panelDatos = new JPanel(new GridLayout(6, 2, 5, 5));
-             * panelDatos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-             * panelDatos.add(new JLabel("Nombre:"));
-             * panelDatos.add(new JLabel(bibliotecario.getNombre()));
-             * panelDatos.add(new JLabel("Correo:"));
-             * panelDatos.add(new JLabel(bibliotecario.getCorreo()));
-             * panelDatos.add(new JLabel("ID Empleado:"));
-             * panelDatos.add(new JLabel(String.valueOf(bibliotecario.getIdEmp())));
-             * JPanel panelBotones = new JPanel();
-             * JButton btnSalir = new JButton("Salir");
-             * 
-             * btnSalir.addActionListener(e ->
-             * SwingUtilities.getWindowAncestor(panelDatos).dispose());
-             * panelBotones.add(btnSalir);
-             * 
-             * add(panelDatos, BorderLayout.CENTER);
-             * add(panelBotones, BorderLayout.SOUTH);
-             * }
-             */
-
             InfoUsuario detalleUsuario = new InfoUsuario(SwingUtilities.getWindowAncestor(parentFrame), usuario);
             detalleUsuario.setVisible(true);
 
             fireEditingStopped();
         }
     }
-
-    /*
-     * class InfoLector extends JDialog {
-     * public InfoLector(Window parent, DtLector lector) {
-     * setTitle("Detalle del Lector");
-     * setSize(400, 300);
-     * setLocationRelativeTo(parent);
-     * setLayout(new BorderLayout());
-     * 
-     * JPanel panelDatos = new JPanel(new GridLayout(6, 2, 5, 5));
-     * panelDatos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-     * panelDatos.add(new JLabel("Nombre:"));
-     * panelDatos.add(new JLabel(lector.getNombre()));
-     * panelDatos.add(new JLabel("Correo:"));
-     * panelDatos.add(new JLabel(lector.getCorreo()));
-     * panelDatos.add(new JLabel("Fecha de Ingreso:"));
-     * panelDatos.add(new JLabel(dateFormat.format(lector.getFechaIngreso())));
-     * panelDatos.add(new JLabel("Zona:"));
-     * panelDatos.add(new JLabel(lector.getZona().toString()));
-     * panelDatos.add(new JLabel("Dirección:"));
-     * panelDatos.add(new JLabel(lector.getDireccion()));
-     * panelDatos.add(new JLabel("Estado:"));
-     * panelDatos.add(new JLabel(lector.getEstadoUsuario().toString()));
-     * 
-     * JPanel panelBotones = new JPanel();
-     * JButton btnZona = new JButton("Cambiar Zona");
-     * JButton btnEstado = new JButton("Modificar Estado");
-     * 
-     * btnZona.addActionListener(e -> {
-     * CambiarZonaUsuario cambiarZona = new CambiarZonaUsuario(this, lector,
-     * usuarioCont);
-     * cambiarZona.setVisible(true);
-     * });
-     * 
-     * btnEstado.addActionListener(e -> {
-     * Window parentWindow = SwingUtilities.getWindowAncestor(this);
-     * ModificarEstadoUsuario modificarEstado = new
-     * ModificarEstadoUsuario(parentWindow, lector, usuarioCont);
-     * modificarEstado.setVisible(true);
-     * });
-     * 
-     * panelBotones.add(btnZona);
-     * panelBotones.add(btnEstado);
-     * 
-     * add(panelDatos, BorderLayout.CENTER);
-     * add(panelBotones, BorderLayout.SOUTH);
-     * }
-     * }
-     */
 
     class InfoUsuario extends JDialog {
         public InfoUsuario(Window parent, DtUsuario usuario) {
@@ -250,13 +173,13 @@ public class ListadoUsuarios extends JInternalFrame {
                 JButton btnEstado = new JButton("Modificar Estado");
 
                 btnZona.addActionListener(e -> {
-                    CambiarZonaUsuario cambiarZona = new CambiarZonaUsuario(this, lector, usuarioCont);
+                    CambiarZonaUsuario cambiarZona = new CambiarZonaUsuario(this, lector, IusCont);
                     cambiarZona.setVisible(true);
                 });
 
                 btnEstado.addActionListener(e -> {
                     ModificarEstadoUsuario modificarEstado = new ModificarEstadoUsuario(this, lector,
-                            usuarioCont);
+                            IusCont);
                     modificarEstado.setVisible(true);
                 });
 
@@ -270,6 +193,22 @@ public class ListadoUsuarios extends JInternalFrame {
 
             add(panelDatos, BorderLayout.CENTER);
             add(panelBotones, BorderLayout.SOUTH);
+        }
+    }
+
+    public void rerescarTabla() {
+        Object[][] data = cargarDatosUsuarios();
+        model.setRowCount(0);
+        for (Object[] row : data) {
+            model.addRow(row);
+        }
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        super.setVisible(b);
+        if (b) {
+            rerescarTabla();
         }
     }
 }

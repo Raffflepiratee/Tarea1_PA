@@ -17,4 +17,6 @@ public interface IUsuarioController {
     void cambiarEstadoLector(DtLector dtlector, EstadosU nuevoEstado);
 
     void cambiarZonaLector(DtLector dtlector, Zonas nuevaZona);
+
+    void actualizarUsuario(Usuario usuario);
 }

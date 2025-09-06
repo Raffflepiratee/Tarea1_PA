@@ -22,21 +22,19 @@ public class UsuarioController implements IUsuarioController {
         this.usuarios = new ArrayList<>();
     }
 
-    // ARREGLAR
     @Override
-    public void agregarUsuario(DtUsuario usuario) throws UsuarioRepetidoException{
+    public void agregarUsuario(DtUsuario usuario) throws UsuarioRepetidoException {
         UsuarioHandler uh = UsuarioHandler.getInstancia();
         Usuario nuevoUsuario = uh.buscarUsuarioPorCorreo(usuario.getCorreo());
         if (nuevoUsuario != null)
             throw new UsuarioRepetidoException(
-                "El usuario con correo " + usuario.getCorreo() + " ya existe en el sistema");
+                    "El usuario con correo " + usuario.getCorreo() + " ya existe en el sistema");
         if (usuario instanceof DtLector) {
             nuevoUsuario = new Lector(usuario.getNombre(), usuario.getCorreo(),
                     ((DtLector) usuario).getFechaIngreso(), ((DtLector) usuario).getEstadoUsuario(),
                     ((DtLector) usuario).getZona(), ((DtLector) usuario).getDireccion());
-        }
-        else if (usuario instanceof DtBibliotecario) {
-            nuevoUsuario = new Bibliotecario(usuario.getNombre(), usuario.getCorreo(),((DtBibliotecario) usuario).getIdEmp());
+        } else if (usuario instanceof DtBibliotecario) {
+            nuevoUsuario = new Bibliotecario(usuario.getNombre(), usuario.getCorreo());
         }
         uh.agregarUsuarioH(nuevoUsuario);
     }
@@ -68,45 +66,37 @@ public class UsuarioController implements IUsuarioController {
 
     @Override
     public Usuario buscarUsuarioPorCorreo(String correo) {
-        for (Usuario usuario : usuarios) {
-            if (usuario.getCorreo().equals(correo)) {
-                return usuario;
-            }
-        }
-        return null;
+        UsuarioHandler uh = UsuarioHandler.getInstancia();
+        return uh.buscarUsuarioPorCorreo(correo);
     }
 
-    //Cambiar el estado del lector
     @Override
-    public void cambiarEstadoLector(DtLector dtLector, EstadosU nuevoEstado){
+    public void cambiarEstadoLector(DtLector dtLector, EstadosU nuevoEstado) {
         UsuarioHandler uh = UsuarioHandler.getInstancia();
         Usuario existe = uh.buscarUsuarioPorCorreo(dtLector.getCorreo());
         if (existe != null && existe instanceof Lector) {
             Lector lector = (Lector) existe;
             lector.setEstadoUsuario(nuevoEstado);
-            actualizarUsuario(lector); 
-        }
-        else {
+            actualizarUsuario(lector);
+        } else {
             System.out.println("El usuario no existe o no es un lector.");
         }
     }
 
     @Override
-    //Cambiar la zona del lector
-    public void cambiarZonaLector(DtLector dtlector,Zonas nuevaZona){
+    public void cambiarZonaLector(DtLector dtlector, Zonas nuevaZona) {
         UsuarioHandler uh = UsuarioHandler.getInstancia();
         Usuario existe = uh.buscarUsuarioPorCorreo(dtlector.getCorreo());
         if (existe != null && existe instanceof Lector) {
             Lector lector = (Lector) existe;
             lector.setZona(nuevaZona);
             actualizarUsuario(lector);
-        }
-        else {
+        } else {
             System.out.println("El usuario no existe o no es un lector.");
         }
     }
 
-  
+    @Override
     public void actualizarUsuario(Usuario usuario) {
         UsuarioHandler uh = UsuarioHandler.getInstancia();
         uh.actualizarUsuario(usuario);

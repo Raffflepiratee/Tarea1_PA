@@ -16,15 +16,15 @@ public class CambiarZonaUsuario extends JFrame {
     private static final long serialVersionUID = 1L;
 
     private DtLector lector;
-    private IUsuarioController usuarioCont;
+    private IUsuarioController IusCont;
 
     private JComboBox<Zonas> comboZona;
     private JButton btnAceptar;
     private JButton btnCancelar;
 
-    public CambiarZonaUsuario(Window parent, DtLector lector, IUsuarioController usuarioCont) {
+    public CambiarZonaUsuario(Window parent, DtLector lector, IUsuarioController IusCont) {
         this.lector = lector;
-        this.usuarioCont = usuarioCont;
+        this.IusCont = IusCont;
 
         setTitle("Cambiar Zona de Usuario");
         setSize(400, 200);
@@ -60,7 +60,7 @@ public class CambiarZonaUsuario extends JFrame {
         try {
             Zonas nuevaZona = (Zonas) comboZona.getSelectedItem();
             if (nuevaZona != null && !nuevaZona.equals(lector.getZona())) {
-                usuarioCont.cambiarZonaLector(lector, nuevaZona);
+                IusCont.cambiarZonaLector(lector, nuevaZona);
                 JOptionPane.showMessageDialog(this,
                         "La zona del usuario ha sido actualizada a " + nuevaZona,
                         "Éxito", JOptionPane.INFORMATION_MESSAGE);

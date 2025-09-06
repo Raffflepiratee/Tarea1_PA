@@ -16,15 +16,15 @@ public class ModificarEstadoUsuario extends JFrame {
     private static final long serialVersionUID = 1L;
 
     private DtLector lector;
-    private IUsuarioController usuarioCont;
+    private IUsuarioController IusCont;
 
     private JComboBox<EstadosU> comboEstado;
     private JButton btnAceptar;
     private JButton btnCancelar;
 
-    public ModificarEstadoUsuario(Window parent, DtLector lector, IUsuarioController usuarioCont) {
+    public ModificarEstadoUsuario(Window parent, DtLector lector, IUsuarioController IusCont) {
         this.lector = lector;
-        this.usuarioCont = usuarioCont;
+        this.IusCont = IusCont;
 
         setTitle("Modificar Estado de Usuario");
         setSize(400, 200);
@@ -60,7 +60,7 @@ public class ModificarEstadoUsuario extends JFrame {
         EstadosU nuevoEstado = (EstadosU) comboEstado.getSelectedItem();
         if (nuevoEstado != null && !nuevoEstado.equals(lector.getEstadoUsuario())) {
             try {
-                usuarioCont.cambiarEstadoLector(lector, nuevoEstado);
+                IusCont.cambiarEstadoLector(lector, nuevoEstado);
                 JOptionPane.showMessageDialog(this, "Estado del usuario modificado correctamente.", "Éxito",
                         JOptionPane.INFORMATION_MESSAGE);
                 setVisible(false);

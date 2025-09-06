@@ -10,13 +10,16 @@ import javax.persistence.*;
 @PrimaryKeyJoinColumn(name = "correo")
 public class Bibliotecario extends Usuario {
     @Column(name = "idEmp", unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idEmp;
     @OneToMany(mappedBy = "bibliotecario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Prestamo> prestamos = new ArrayList<Prestamo>();
 
     public Bibliotecario() {
         super();
+    }
+
+    public Bibliotecario(String nombre, String correo) {
+        super(nombre, correo);
     }
 
     public Bibliotecario(String nombre, String correo, int idEmp) {

@@ -38,21 +38,21 @@ public class Principal {
     public Principal() {
         initialize();
         Fabrica fabrica = Fabrica.getInstancia();
-        IMaterialController matCont = fabrica.getIControladorMaterial();
-        IPrestamoController prestamoCont = fabrica.getIControladorPrestamo();
-        IUsuarioController usuarioCont = fabrica.getIControladorUsuario();
+        IMaterialController ImatCont = fabrica.getIControladorMaterial();
+        IPrestamoController IprestamoCont = fabrica.getIControladorPrestamo();
+        IUsuarioController IusCont = fabrica.getIControladorUsuario();
 
         Dimension desktopSize = frame.getSize();
         Dimension jInternalFrameSize;
 
-        registrarUsuarioInternalFrame = new RegistrarUsuario(usuarioCont);
+        registrarUsuarioInternalFrame = new RegistrarUsuario(IusCont);
         jInternalFrameSize = registrarUsuarioInternalFrame.getSize();
         registrarUsuarioInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width) / 2,
                 (desktopSize.height - jInternalFrameSize.height) / 2);
         registrarUsuarioInternalFrame.setVisible(false);
         frame.getContentPane().add(registrarUsuarioInternalFrame);
 
-        listarUsuariosInternalFrame = new ListadoUsuarios(usuarioCont);
+        listarUsuariosInternalFrame = new ListadoUsuarios(IusCont);
         jInternalFrameSize = listarUsuariosInternalFrame.getSize();
         listarUsuariosInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width) / 2,
                 (desktopSize.height - jInternalFrameSize.height) / 2);

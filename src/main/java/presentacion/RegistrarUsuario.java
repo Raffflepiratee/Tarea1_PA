@@ -9,7 +9,9 @@ import java.awt.*;
 
 import datatypes.*;
 import interfaces.IUsuarioController;
+import excepciones.CorreoInvalidoException;
 import excepciones.UsuarioRepetidoException;
+import excepciones.CorreoInvalidoException;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -31,8 +33,6 @@ public class RegistrarUsuario extends JInternalFrame {
     private JTextField txtDireccion;
     private JComboBox<Zonas> comboZona;
     private JComboBox<String> comboEstado;
-
-    private JTextField txtIdEmp;
 
     private JPanel panelDinamico;
     private JPanel panelLector;
@@ -88,10 +88,7 @@ public class RegistrarUsuario extends JInternalFrame {
         comboEstado = new JComboBox<>(new String[] { "ACTIVO", "SUSPENDIDO" });
         panelLector.add(comboEstado);
 
-        panelBibliotecario = new JPanel(new GridLayout(1, 2, 5, 5));
-        panelBibliotecario.add(new JLabel("ID Empleado:"));
-        txtIdEmp = new JTextField();
-        panelBibliotecario.add(txtIdEmp);
+        panelBibliotecario = new JPanel();
 
         gbc.gridx = 0;
         gbc.gridy++;
@@ -127,6 +124,8 @@ public class RegistrarUsuario extends JInternalFrame {
             String nombre = txtNombre.getText();
             String correo = txtCorreo.getText();
 
+            validarCorreo(correo);
+
             if (comboTipo.getSelectedItem().equals("Lector")) {
                 String direccion = txtDireccion.getText();
                 Zonas zona = (Zonas) comboZona.getSelectedItem();
@@ -136,15 +135,15 @@ public class RegistrarUsuario extends JInternalFrame {
                 IusCont.agregarUsuario(lector);
                 JOptionPane.showMessageDialog(this, "Lector registrado correctamente.");
             } else {
-                int idEmp = Integer.parseInt(txtIdEmp.getText());
-                DtBibliotecario bibliotecario = new DtBibliotecario(nombre, correo, idEmp);
+                DtBibliotecario bibliotecario = new DtBibliotecario(nombre, correo);
                 IusCont.agregarUsuario(bibliotecario);
                 JOptionPane.showMessageDialog(this, "Bibliotecario registrado correctamente.");
             }
 
             limpiarFormularioUsuario();
             setVisible(false);
-
+        } catch (CorreoInvalidoException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Registrar Usuario", JOptionPane.ERROR_MESSAGE);
         } catch (UsuarioRepetidoException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Registrar Usuario", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
@@ -158,6 +157,12 @@ public class RegistrarUsuario extends JInternalFrame {
         this.setVisible(false);
     }
 
+    private void validarCorreo(String correo) throws CorreoInvalidoException {
+        if (correo == null || !correo.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,5}$")) {
+            throw new CorreoInvalidoException("El correo \"" + correo + "\" no es válido.");
+        }
+    }
+
     private void limpiarFormularioUsuario() {
         txtNombre.setText("");
         txtCorreo.setText("");
@@ -165,6 +170,5 @@ public class RegistrarUsuario extends JInternalFrame {
         txtDireccion.setText("");
         comboZona.setSelectedIndex(0);
         comboEstado.setSelectedIndex(0);
-        txtIdEmp.setText("");
     }
 }

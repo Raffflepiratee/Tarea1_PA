@@ -22,6 +22,8 @@ public class UsuarioHandler {
         EntityManager em = c.getEntityManager();
         em.getTransaction().begin();
         em.persist(u);
+        em.flush();
+        em.refresh(u);
         em.getTransaction().commit();
     }
 
