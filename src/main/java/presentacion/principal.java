@@ -69,8 +69,9 @@ public class Principal {
     }
 
     private void initialize(){
+        int windowWidth = 1000;
         frame = new JFrame();
-        frame.setBounds(100, 100, 1000, 600);
+        frame.setBounds(100, 100, windowWidth, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
@@ -83,12 +84,14 @@ public class Principal {
 
         //Barra de menu
         JMenuBar menuBar = new JMenuBar();
-        menuBar.setBounds(0, 0, 800, 21);
+        menuBar.setBounds(0, 0, windowWidth, 21);
         frame.getContentPane().add(menuBar);
 
         //Opciones de menu
         JMenu mnPrestamo = new JMenu("Préstamo");
         menuBar.add(mnPrestamo);
+        JMenu mnControl = new JMenu("Control y Seguimiento");
+        menuBar.add(mnControl);
 
         //Items de menu 'Prestamo'
         JMenuItem mntmRegistrarPrestamo = new JMenuItem("Registrar Préstamo");
@@ -98,5 +101,9 @@ public class Principal {
         JMenuItem mntmListarPrestamos = new JMenuItem("Listar Préstamos");
         mntmListarPrestamos.addActionListener(e-> listarPrestamosInternalFrame.setVisible(true));
         mnPrestamo.add(mntmListarPrestamos);
+
+        //Items de menu 'Control'
+        JMenuItem mntmReporteZonal = new JMenuItem("Reporte zonal");
+        mnControl.add(mntmReporteZonal);
     }
 }
