@@ -25,6 +25,7 @@ public class Principal {
 
     private RegistrarPrestamo registrarPrestamoInternalFrame;
     private ListarPrestamos listarPrestamosInternalFrame;
+    private MaterialesConMasPrestamos materialesConMasPrestamosInternalFrame;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -66,6 +67,13 @@ public class Principal {
             (desktopSize.height- jInternalFrameSize.height)/2);
         listarPrestamosInternalFrame.setVisible(false);
         frame.getContentPane().add(listarPrestamosInternalFrame);
+
+        materialesConMasPrestamosInternalFrame = new MaterialesConMasPrestamos(IprestamoCont);
+        jInternalFrameSize = materialesConMasPrestamosInternalFrame.getSize();
+        materialesConMasPrestamosInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+            (desktopSize.height- jInternalFrameSize.height)/2);
+        materialesConMasPrestamosInternalFrame.setVisible(false);
+        frame.getContentPane().add(materialesConMasPrestamosInternalFrame);
     }
 
     private void initialize(){
@@ -105,5 +113,9 @@ public class Principal {
         //Items de menu 'Control'
         JMenuItem mntmReporteZonal = new JMenuItem("Reporte zonal");
         mnControl.add(mntmReporteZonal);
+
+        JMenuItem mntmMaterialesConMasPrestamos = new JMenuItem("Materiales con más Préstamos Pendientes");
+        mntmMaterialesConMasPrestamos.addActionListener(e-> materialesConMasPrestamosInternalFrame.setVisible(true));
+        mnControl.add(mntmMaterialesConMasPrestamos);
     }
 }

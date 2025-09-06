@@ -66,7 +66,7 @@
                 <version>3.1.0</version>
                 <configuration>
                     <mainClass>presentacion.Principal</mainClass>
-                    <!-- <mainClass>presentacion.BibliotecaGUI</mainClass> -->
+                    <!--<mainClass>presentacion.BibliotecaGUI</mainClass>-->
                 </configuration>
             </plugin>
             <plugin>
