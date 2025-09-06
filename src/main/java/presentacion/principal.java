@@ -2,6 +2,7 @@ package presentacion;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Font;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,8 +20,8 @@ import interfaces.Fabrica;
 // import java.awt.event.ActionListener;
 // import java.awt.event.ActionEvent;
 
-public class principal {
-    
+public class Principal {
+
     private JFrame frame;
 
     private RegistrarPrestamo registrarPrestamoInternalFrame;
@@ -33,7 +34,7 @@ public class principal {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                principal window = new principal();
+                Principal window = new Principal();
                 window.frame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -41,7 +42,7 @@ public class principal {
         });
     }
 
-    public principal(){
+    public Principal(){
         initialize();
 
         Fabrica fabrica = Fabrica.getInstancia();
@@ -113,7 +114,8 @@ public class principal {
         JLabel bienvenidaLabel = new JLabel("Bienvenido al Sistema de Gestión de Biblioteca");
         bienvenidaLabel.setHorizontalAlignment(SwingConstants.CENTER);
         bienvenidaLabel.setVerticalAlignment(SwingConstants.CENTER);
-        bienvenidaLabel.setBounds(0, 0, frame.getWidth(), 60);
+        bienvenidaLabel.setBounds(0, 0, frame.getWidth(), 100);
+        bienvenidaLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
         frame.getContentPane().add(bienvenidaLabel);
 
         //Barra de menu

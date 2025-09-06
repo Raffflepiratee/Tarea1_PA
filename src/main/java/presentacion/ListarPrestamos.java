@@ -36,7 +36,7 @@ public class ListarPrestamos extends JInternalFrame {
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setClosable(true);
         setTitle("Listado de Préstamos");
-        setBounds(100, 100, 800, 500);
+        setBounds(100, 100, 800, 450);
         setLayout(new BorderLayout());
         
         // Inicializar formato de fecha

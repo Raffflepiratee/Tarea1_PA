@@ -39,7 +39,7 @@ public class RegistrarPrestamo extends JInternalFrame {
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setClosable(true);
         setTitle("Registro de Préstamo");
-        setBounds(100, 100, 430, 520);
+        setBounds(100, 100, 430, 400);
         getContentPane().setLayout(null);
 
         JLabel lblIdMaterial = new JLabel("ID Material:");
@@ -121,7 +121,7 @@ public class RegistrarPrestamo extends JInternalFrame {
         getContentPane().add(comboBoxEstado);
 
         JButton btnAceptar = new JButton("Aceptar");
-        btnAceptar.setBounds(90, 340, 100, 30);
+        btnAceptar.setBounds(90, 320, 100, 30);
         btnAceptar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 agregarClaseAceptarActionPerformed(arg0);
@@ -130,7 +130,7 @@ public class RegistrarPrestamo extends JInternalFrame {
         getContentPane().add(btnAceptar);
 
         JButton btnCancelar = new JButton("Cancelar");
-        btnCancelar.setBounds(230, 340, 100, 30);
+        btnCancelar.setBounds(230, 320, 100, 30);
         btnCancelar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 agregarClaseCancelarActionPerformed(arg0);
