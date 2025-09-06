@@ -26,6 +26,7 @@ public class Principal {
     private RegistrarPrestamo registrarPrestamoInternalFrame;
     private ListarPrestamos listarPrestamosInternalFrame;
     private MaterialesConMasPrestamos materialesConMasPrestamosInternalFrame;
+    private PrestamosActivosDeLector prestamosActivosDeLectorInternalFrame;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -74,6 +75,13 @@ public class Principal {
             (desktopSize.height- jInternalFrameSize.height)/2);
         materialesConMasPrestamosInternalFrame.setVisible(false);
         frame.getContentPane().add(materialesConMasPrestamosInternalFrame);
+
+        prestamosActivosDeLectorInternalFrame = new PrestamosActivosDeLector(IprestamoCont);
+        jInternalFrameSize = prestamosActivosDeLectorInternalFrame.getSize();
+        prestamosActivosDeLectorInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+            (desktopSize.height- jInternalFrameSize.height)/2);
+        prestamosActivosDeLectorInternalFrame.setVisible(false);
+        frame.getContentPane().add(prestamosActivosDeLectorInternalFrame);
     }
 
     private void initialize(){
@@ -117,5 +125,9 @@ public class Principal {
         JMenuItem mntmMaterialesConMasPrestamos = new JMenuItem("Materiales con más Préstamos Pendientes");
         mntmMaterialesConMasPrestamos.addActionListener(e-> materialesConMasPrestamosInternalFrame.setVisible(true));
         mnControl.add(mntmMaterialesConMasPrestamos);
+
+        JMenuItem mntmPrestamosActivosDeLector = new JMenuItem("Préstamos Activos de Lector");
+        mntmPrestamosActivosDeLector.addActionListener(e-> prestamosActivosDeLectorInternalFrame.setVisible(true));
+        mnControl.add(mntmPrestamosActivosDeLector);
     }
 }
