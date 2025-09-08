@@ -9,8 +9,8 @@ import javax.swing.table.*;
 
 import datatypes.*;
 import interfaces.IUsuarioController;
-import presentacion.BibliotecaGUI.ButtonEditor;
-import presentacion.BibliotecaGUI.ButtonRenderer;
+// import presentacion.BibliotecaGUI.ButtonEditor;
+// import presentacion.BibliotecaGUI.ButtonRenderer;
 
 import presentacion.CambiarZonaUsuario;
 import presentacion.ModificarEstadoUsuario;

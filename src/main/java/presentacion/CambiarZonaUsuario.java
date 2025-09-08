@@ -9,8 +9,8 @@ import javax.swing.table.*;
 
 import datatypes.*;
 import interfaces.IUsuarioController;
-import presentacion.BibliotecaGUI.ButtonEditor;
-import presentacion.BibliotecaGUI.ButtonRenderer;
+// import presentacion.BibliotecaGUI.ButtonEditor;
+// import presentacion.BibliotecaGUI.ButtonRenderer;
 
 public class CambiarZonaUsuario extends JFrame {
     private static final long serialVersionUID = 1L;

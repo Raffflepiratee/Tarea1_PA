@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-public class RegistarMaterial extends JInternalFrame {
+public class RegistrarMaterial extends JInternalFrame {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,7 +37,7 @@ public class RegistarMaterial extends JInternalFrame {
     private JPanel panelLibro;
     private JPanel panelArticulo;
 
-    public RegistarMaterial(IMaterialController ImatCont) {
+    public RegistrarMaterial(IMaterialController ImatCont) {
         this.ImatCont = ImatCont;
         setResizable(true);
         setIconifiable(true);
@@ -140,7 +140,7 @@ public class RegistarMaterial extends JInternalFrame {
             limpiarFormularioMaterial();
             setVisible(false);
         } catch (MaterialRepetidoException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Registar Material", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Registrar Material", JOptionPane.ERROR_MESSAGE);
         }
     }
 
