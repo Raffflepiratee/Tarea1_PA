@@ -3,12 +3,18 @@ package logica.controladores;
 import interfaces.IMaterialController;
 
 import java.util.List;
+
+import datatypes.EstadosP;
+
 import java.util.ArrayList;
 
 import logica.clases.Material;
+import logica.clases.Prestamo;
 import logica.clases.Libro;
 import logica.clases.ArticuloEspecial;
 import logica.manejadores.MaterialHandler;
+import logica.manejadores.PrestamoHandler;
+
 import java.util.Date;
 
 import excepciones.MaterialRepetidoException;

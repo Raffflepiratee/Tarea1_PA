@@ -67,4 +67,11 @@ public class Lector extends Usuario {
         this.direccion = direccion;
     }
 
+    public void setPrestamos(List<Prestamo> prestamos) {
+        this.prestamos = prestamos;
+    }
+
+    public List<Prestamo> getPrestamos() {
+        return prestamos;
+    }
 }
