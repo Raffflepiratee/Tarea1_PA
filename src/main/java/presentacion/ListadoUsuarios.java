@@ -57,7 +57,14 @@ public class ListadoUsuarios extends JInternalFrame {
 
         JButton btnCerrar = new JButton("Cerrar");
         btnCerrar.addActionListener(e -> setVisible(false));
+
+        JButton btnRefrescar = new JButton("Refrescar");
+        btnRefrescar.addActionListener(e -> refrescarUsuarios());
+        
+
+
         JPanel panelBotones = new JPanel();
+        panelBotones.add(btnRefrescar);
         panelBotones.add(btnCerrar);
         add(panelBotones, BorderLayout.SOUTH);
     }
@@ -196,7 +203,7 @@ public class ListadoUsuarios extends JInternalFrame {
         }
     }
 
-    public void rerescarTabla() {
+    public void refrescarUsuarios() {
         Object[][] data = cargarDatosUsuarios();
         model.setRowCount(0);
         for (Object[] row : data) {
@@ -208,7 +215,7 @@ public class ListadoUsuarios extends JInternalFrame {
     public void setVisible(boolean b) {
         super.setVisible(b);
         if (b) {
-            rerescarTabla();
+            refrescarUsuarios();
         }
     }
 }

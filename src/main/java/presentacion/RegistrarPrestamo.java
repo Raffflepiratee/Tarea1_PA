@@ -80,7 +80,8 @@ public class RegistrarPrestamo extends JInternalFrame {
                 "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
         }) comboMesInicio.addItem(mes);
         int anioActual = Calendar.getInstance().get(Calendar.YEAR);
-        for (int i = anioActual; i >= 1900; i--) comboAnioInicio.addItem(i);
+        for (int i = anioActual+1; i >= 2000; i--) comboAnioInicio.addItem(i);
+        comboAnioInicio.setSelectedItem(anioActual);
 
         comboDiaInicio.setBounds(180, 160, 50, 25);
         comboMesInicio.setBounds(240, 160, 90, 25);
@@ -102,7 +103,8 @@ public class RegistrarPrestamo extends JInternalFrame {
                 "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                 "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
         }) comboMesFin.addItem(mes);
-        for (int i = anioActual; i >= 1900; i--) comboAnioFin.addItem(i);
+        for (int i = anioActual+1; i >= 2000; i--) comboAnioFin.addItem(i);
+        comboAnioFin.setSelectedItem(anioActual);
 
         comboDiaFin.setBounds(180, 210, 50, 25);
         comboMesFin.setBounds(240, 210, 90, 25);

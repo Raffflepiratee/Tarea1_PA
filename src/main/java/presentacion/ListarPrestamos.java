@@ -29,34 +29,41 @@ public class ListarPrestamos extends JInternalFrame {
 
     public ListarPrestamos(IPrestamoController IpreCont) {
         this.IpreCont = IpreCont;
-        
         setResizable(true);
         setIconifiable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setClosable(true);
         setTitle("Listado de Préstamos");
-        setBounds(100, 100, 800, 450);
+        setBounds(100, 100, 800, 500);
         setLayout(new BorderLayout());
-        
+
         // Inicializar formato de fecha
         sdf = new SimpleDateFormat("dd/MM/yyyy");
-        
+
         // Panel superior para filtros (opcional)
         JPanel panelFiltros = crearPanelFiltros();
         add(panelFiltros, BorderLayout.NORTH);
-        
+
         // Crear tabla
         crearTabla();
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
-        
+
         // Panel inferior para botones
         JPanel panelBotones = crearPanelBotones();
         add(panelBotones, BorderLayout.SOUTH);
-        
+
         // Cargar datos
         cargarPrestamos();
+
+        // Actualizar datos cada vez que se muestra la ventana
+        addInternalFrameListener(new javax.swing.event.InternalFrameAdapter() {
+            @Override
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent e) {
+                cargarPrestamos();
+            }
+        });
     }
     
     private JPanel crearPanelFiltros() {
@@ -211,7 +218,7 @@ public class ListarPrestamos extends JInternalFrame {
         
         Calendar cal = Calendar.getInstance();
         int anioActual = cal.get(Calendar.YEAR);
-        for (int i = anioActual; i >= 1900; i--) comboAnioInicio.addItem(i);
+        for (int i = anioActual; i >= 2000; i--) comboAnioInicio.addItem(i);
         
         // Establecer valores actuales del préstamo
         cal.setTime(prestamo.getFechaSoli());
@@ -239,7 +246,7 @@ public class ListarPrestamos extends JInternalFrame {
                 "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                 "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
         }) comboMesFin.addItem(mes);
-        for (int i = anioActual; i >= 1900; i--) comboAnioFin.addItem(i);
+        for (int i = anioActual; i >= 2000; i--) comboAnioFin.addItem(i);
         
         // Establecer valores actuales del préstamo
         cal.setTime(prestamo.getFechaDev());

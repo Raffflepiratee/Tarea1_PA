@@ -45,7 +45,7 @@ public class RegistrarUsuario extends JInternalFrame {
         setMaximizable(true);
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setClosable(true);
-        setTitle("Registro de Material");
+        setTitle("Registro de Usuario");
         setBounds(100, 100, 500, 300);
         setLayout(new BorderLayout());
 

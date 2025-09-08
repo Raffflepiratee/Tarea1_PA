@@ -49,8 +49,17 @@ public class ListadoMateriales extends JInternalFrame {
         add(scroll, BorderLayout.CENTER);
 
         JButton btnCerrar = new JButton("Cerrar");
+        JButton btnRefrescar = new JButton("Refrescar");
         btnCerrar.addActionListener(e -> setVisible(false));
+        btnRefrescar.addActionListener(e -> {
+            model.setRowCount(0); // Limpiar la tabla
+            Object[][] nuevosDatos = cargarDatosMateriales();
+            for (Object[] fila : nuevosDatos) {
+                model.addRow(fila);
+            }
+        });
         JPanel panelBotones = new JPanel();
+        panelBotones.add(btnRefrescar);
         panelBotones.add(btnCerrar);
         add(panelBotones, BorderLayout.SOUTH);
     }
