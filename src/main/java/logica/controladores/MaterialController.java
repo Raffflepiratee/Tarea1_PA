@@ -11,6 +11,9 @@ import logica.clases.ArticuloEspecial;
 import logica.manejadores.MaterialHandler;
 import java.util.Date;
 
+import excepciones.MaterialRepetidoException;
+import datatypes.*;
+
 public class MaterialController implements IMaterialController {
 
     private List<Material> materiales;
@@ -21,24 +24,30 @@ public class MaterialController implements IMaterialController {
     }
 
     @Override
-    public void agregarMaterial(int idMaterial, Date fechaRegistro) {
-        /* MaterialHandler mh = MaterialHandler.getInstancia();
-        Material existente = mh.buscarMaterialPorId(idMaterial);
-        if (existente != null) {
-            System.out.println("El material con ID " + idMaterial + " ya existe en el sistema");
-            return;
+    public void agregarMaterial(DtMaterial material) throws MaterialRepetidoException {
+        MaterialHandler mh = MaterialHandler.getInstancia();
+        Material nuevoMaterial = mh.buscarMaterialPorId(material.getIdMaterial());
+        if (nuevoMaterial != null) {
+            throw new MaterialRepetidoException(
+                    "El material con ID " + material.getIdMaterial() + " ya existe en el sistema");
         }
-        if (existente instanceof Libro) {
-            existente = new Libro(idMaterial, fechaRegistro, ((Libro) existente).getTitulo(),
-                    ((Libro) existente).getAutor(), ((Libro) existente).getEditorial(), ((Libro) existente).getIsbn());
-        } else if (existente instanceof ArticuloEspecial) {
-            existente = new ArticuloEspecial(idMaterial, fechaRegistro, ((ArticuloEspecial) existente).getDescripcion(),
-                    ((ArticuloEspecial) existente).getPeso(), ((ArticuloEspecial) existente).getDimFisicas());
+        if (material instanceof DtLibro) {
+            nuevoMaterial = new Libro(
+                    /* material.getIdMaterial(), */
+                    material.getFechaRegistro(),
+                    ((DtLibro) material).getTitulo(),
+                    ((DtLibro) material).getCantPag());
+        } else if (material instanceof DtArticuloEspecial) {
+            nuevoMaterial = new ArticuloEspecial(
+                    material.getFechaRegistro(),
+                    ((DtArticuloEspecial) material).getDescripcion(),
+                    ((DtArticuloEspecial) material).getPeso(),
+                    ((DtArticuloEspecial) material).getDimFisica());
         } else {
             System.out.println("Tipo de material no reconocido.");
             return;
         }
-        mh.agregarMaterialH(nuevoMaterial); */
+        mh.agregarMaterialH(nuevoMaterial);
     }
 
     @Override
@@ -47,8 +56,30 @@ public class MaterialController implements IMaterialController {
     }
 
     @Override
-    public List<Material> obtenerMateriales() {
-        return new ArrayList<>(materiales);
+    public List<DtMaterial> obtenerMateriales() {
+        List<Material> materiales = MaterialHandler.getInstancia().obtenerTodosLosMateriales();
+        List<DtMaterial> dtMateriales = new ArrayList<>();
+        for (Material m : materiales) {
+            if (m instanceof Libro) {
+                Libro libro = (Libro) m;
+                DtLibro dtLibro = new DtLibro(
+                        libro.getIdMaterial(),
+                        libro.getFechaRegistro(),
+                        libro.getTitulo(),
+                        libro.getCantPag());
+                dtMateriales.add(dtLibro);
+            } else if (m instanceof ArticuloEspecial) {
+                ArticuloEspecial art = (ArticuloEspecial) m;
+                DtArticuloEspecial dtArt = new DtArticuloEspecial(
+                        art.getIdMaterial(),
+                        art.getFechaRegistro(),
+                        art.getDescripcion(),
+                        art.getPeso(),
+                        art.getDimFisica());
+                dtMateriales.add(dtArt);
+            }
+        }
+        return dtMateriales;
     }
 
     @Override
@@ -59,6 +90,33 @@ public class MaterialController implements IMaterialController {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<DtMaterial> obtenerMaterialesPorRango(Date fechaInicio, Date fechaFin) {
+        List<Material> materiales = MaterialHandler.getInstancia().obtenerMaterialesPorRango(fechaInicio, fechaFin);
+        List<DtMaterial> dtMateriales = new ArrayList<>();
+        for (Material m : materiales) {
+            if (m instanceof Libro) {
+                Libro libro = (Libro) m;
+                DtLibro dtLibro = new DtLibro(
+                        libro.getIdMaterial(),
+                        libro.getFechaRegistro(),
+                        libro.getTitulo(),
+                        libro.getCantPag());
+                dtMateriales.add(dtLibro);
+            } else if (m instanceof ArticuloEspecial) {
+                ArticuloEspecial art = (ArticuloEspecial) m;
+                DtArticuloEspecial dtArt = new DtArticuloEspecial(
+                        art.getIdMaterial(),
+                        art.getFechaRegistro(),
+                        art.getDescripcion(),
+                        art.getPeso(),
+                        art.getDimFisica());
+                dtMateriales.add(dtArt);
+            }
+        }
+        return dtMateriales;
     }
 
     // libros
