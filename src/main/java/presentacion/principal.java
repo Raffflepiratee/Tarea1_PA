@@ -14,6 +14,7 @@ import javax.swing.SwingConstants;
 import interfaces.IMaterialController;
 import interfaces.IPrestamoController;
 import interfaces.IUsuarioController;
+import publicadores.*;
 import interfaces.Fabrica;
 
 
@@ -49,6 +50,15 @@ public class Principal {
 
     public Principal(){
         initialize();
+
+        MaterialPublishController mpc = new MaterialPublishController();
+        mpc.publicar();
+
+        PrestamoPublishController ppc = new PrestamoPublishController();
+        ppc.publicar();
+
+        UsuarioPublishController upc = new UsuarioPublishController();
+        upc.publicar();
 
         Fabrica fabrica = Fabrica.getInstancia();
         IMaterialController ImatCont = fabrica.getIControladorMaterial();
