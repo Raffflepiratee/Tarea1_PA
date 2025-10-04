@@ -8,8 +8,8 @@ public class DtLector extends DtUsuario {
     private Zonas zona;
     private String direccion;
 
-    public DtLector(String nombre, String email, Date fechaIngreso, EstadosU estadoUsuario, Zonas zona, String direccion) {
-        super(nombre, email);
+    public DtLector(String nombre, String email, String password, Date fechaIngreso, EstadosU estadoUsuario, Zonas zona, String direccion) {
+        super(nombre, email, password);
         this.fechaIngreso = fechaIngreso;
         this.estadoUsuario = estadoUsuario;
         this.zona = zona;

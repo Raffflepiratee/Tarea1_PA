@@ -30,11 +30,11 @@ public class UsuarioController implements IUsuarioController {
             throw new UsuarioRepetidoException(
                     "El usuario con correo " + usuario.getCorreo() + " ya existe en el sistema");
         if (usuario instanceof DtLector) {
-            nuevoUsuario = new Lector(usuario.getNombre(), usuario.getCorreo(),
+            nuevoUsuario = new Lector(usuario.getNombre(), usuario.getCorreo(), usuario.getPassword(), 
                     ((DtLector) usuario).getFechaIngreso(), ((DtLector) usuario).getEstadoUsuario(),
                     ((DtLector) usuario).getZona(), ((DtLector) usuario).getDireccion());
         } else if (usuario instanceof DtBibliotecario) {
-            nuevoUsuario = new Bibliotecario(usuario.getNombre(), usuario.getCorreo());
+            nuevoUsuario = new Bibliotecario(usuario.getNombre(), usuario.getCorreo(), usuario.getPassword());
         }
         uh.agregarUsuarioH(nuevoUsuario);
     }
@@ -51,13 +51,13 @@ public class UsuarioController implements IUsuarioController {
         for (Usuario usuario : listaUsuarios) {
             if (usuario instanceof Lector) {
                 Lector lector = (Lector) usuario;
-                DtLector dtLector = new DtLector(lector.getNombre(), lector.getCorreo(), lector.getFechaIngreso(),
+                DtLector dtLector = new DtLector(lector.getNombre(), lector.getCorreo(), lector.getPassword(), lector.getFechaIngreso(),
                         lector.getEstadoUsuario(), lector.getZona(), lector.getDireccion());
                 dtUsuarios.add(dtLector);
             } else if (usuario instanceof Bibliotecario) {
                 Bibliotecario bibliotecario = (Bibliotecario) usuario;
                 DtBibliotecario dtBibliotecario = new DtBibliotecario(bibliotecario.getNombre(),
-                        bibliotecario.getCorreo(), bibliotecario.getIdEmp());
+                        bibliotecario.getCorreo(), bibliotecario.getPassword(), bibliotecario.getIdEmp());
                 dtUsuarios.add(dtBibliotecario);
             }
         }
@@ -100,6 +100,12 @@ public class UsuarioController implements IUsuarioController {
     public void actualizarUsuario(Usuario usuario) {
         UsuarioHandler uh = UsuarioHandler.getInstancia();
         uh.actualizarUsuario(usuario);
+    }
+
+    @Override
+    public boolean validarLogin(String correo, String password) {
+        UsuarioHandler uh = UsuarioHandler.getInstancia();
+        return uh.validLogin(correo, password);
     }
 
 }

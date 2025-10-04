@@ -19,6 +19,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 
 public class RegistrarUsuario extends JInternalFrame {
@@ -28,6 +29,7 @@ public class RegistrarUsuario extends JInternalFrame {
 
     private JTextField txtNombre;
     private JTextField txtCorreo;
+    private JPasswordField txtPassword;
     private JComboBox<String> comboTipo;
 
     private JTextField txtDireccion;
@@ -67,6 +69,13 @@ public class RegistrarUsuario extends JInternalFrame {
         gbc.gridx = 1;
         txtCorreo = new JTextField();
         panelForm.add(txtCorreo, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        panelForm.add(new JLabel("Contraseña:"), gbc);
+        gbc.gridx = 1;
+        txtPassword = new JPasswordField();
+        panelForm.add(txtPassword, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
@@ -123,6 +132,8 @@ public class RegistrarUsuario extends JInternalFrame {
         try {
             String nombre = txtNombre.getText();
             String correo = txtCorreo.getText();
+            String password = new String(txtPassword.getPassword());
+
 
             validarCorreo(correo);
 
@@ -131,11 +142,11 @@ public class RegistrarUsuario extends JInternalFrame {
                 Zonas zona = (Zonas) comboZona.getSelectedItem();
                 EstadosU estado = EstadosU.valueOf((String) comboEstado.getSelectedItem());
 
-                DtLector lector = new DtLector(nombre, correo, new Date(), estado, zona, direccion);
+                DtLector lector = new DtLector(nombre, correo, password, new Date(), estado, zona, direccion);
                 IusCont.agregarUsuario(lector);
                 JOptionPane.showMessageDialog(this, "Lector registrado correctamente.");
             } else {
-                DtBibliotecario bibliotecario = new DtBibliotecario(nombre, correo);
+                DtBibliotecario bibliotecario = new DtBibliotecario(nombre, correo, password);
                 IusCont.agregarUsuario(bibliotecario);
                 JOptionPane.showMessageDialog(this, "Bibliotecario registrado correctamente.");
             }

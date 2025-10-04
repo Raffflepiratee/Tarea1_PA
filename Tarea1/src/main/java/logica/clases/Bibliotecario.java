@@ -18,12 +18,12 @@ public class Bibliotecario extends Usuario {
         super();
     }
 
-    public Bibliotecario(String nombre, String correo) {
-        super(nombre, correo);
+    public Bibliotecario(String nombre, String correo, String password) {
+        super(nombre, correo, password);
     }
 
-    public Bibliotecario(String nombre, String correo, int idEmp) {
-        super(nombre, correo);
+    public Bibliotecario(String nombre, String correo, String password, int idEmp) {
+        super(nombre, correo, password);
         this.idEmp = idEmp;
     }
 

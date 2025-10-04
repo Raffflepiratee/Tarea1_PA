@@ -47,4 +47,18 @@ public class UsuarioHandler {
         em.getTransaction().commit();
     }
 
+    public boolean validLogin(String correo, String password){
+        Conexion c = Conexion.getInstancia();
+        EntityManager em = c.getEntityManager();
+        return em.createQuery("""
+                SELECT u FROM Usuario u
+                WHERE u.correo = :email AND
+                u.password = :password
+                """, Usuario.class)
+                .setParameter("email", correo)
+                .setParameter("password", password)
+                .getResultList()
+                .size() > 0;
+    }
+
 }

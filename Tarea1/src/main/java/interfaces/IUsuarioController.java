@@ -19,4 +19,6 @@ public interface IUsuarioController {
     void cambiarZonaLector(DtLector dtlector, Zonas nuevaZona);
 
     void actualizarUsuario(Usuario usuario);
+
+    boolean validarLogin(String correo, String password);
 }
