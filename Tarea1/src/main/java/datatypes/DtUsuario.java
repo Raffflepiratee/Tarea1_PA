@@ -1,5 +1,14 @@
 package datatypes;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlSeeAlso;
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "dtUsuario", propOrder = { "nombre", "correo", "password" })
+@XmlSeeAlso({DtLector.class, DtBibliotecario.class})
+
 public class DtUsuario {
     private String nombre;
     private String correo;

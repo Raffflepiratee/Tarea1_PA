@@ -28,19 +28,6 @@ public interface PrestamoPublishController {
     /**
      * 
      * @param arg0
-     * @return
-     *     returns prestamos.DtPrestamoArray
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    @Action(input = "http://publicadores/PrestamoPublishController/obtenerPrestamosActivosLectorRequest", output = "http://publicadores/PrestamoPublishController/obtenerPrestamosActivosLectorResponse")
-    public DtPrestamoArray obtenerPrestamosActivosLector(
-        @WebParam(name = "arg0", partName = "arg0")
-        String arg0);
-
-    /**
-     * 
-     * @param arg0
      * @param arg1
      * @param arg2
      * @param arg3
@@ -71,20 +58,23 @@ public interface PrestamoPublishController {
      */
     @WebMethod
     @WebResult(partName = "return")
-    @Action(input = "http://publicadores/PrestamoPublishController/obtenerPrestamosPorZonaRequest", output = "http://publicadores/PrestamoPublishController/obtenerPrestamosPorZonaResponse")
-    public DtPrestamoArray obtenerPrestamosPorZona(
+    @Action(input = "http://publicadores/PrestamoPublishController/obtenerPrestamosActivosLectorRequest", output = "http://publicadores/PrestamoPublishController/obtenerPrestamosActivosLectorResponse")
+    public DtPrestamoArray obtenerPrestamosActivosLector(
         @WebParam(name = "arg0", partName = "arg0")
-        Zonas arg0);
+        String arg0);
 
     /**
      * 
+     * @param arg0
      * @return
      *     returns prestamos.DtPrestamoArray
      */
     @WebMethod
     @WebResult(partName = "return")
-    @Action(input = "http://publicadores/PrestamoPublishController/obtenerPrestamosPendientesRequest", output = "http://publicadores/PrestamoPublishController/obtenerPrestamosPendientesResponse")
-    public DtPrestamoArray obtenerPrestamosPendientes();
+    @Action(input = "http://publicadores/PrestamoPublishController/obtenerPrestamosPorBibliotecarioRequest", output = "http://publicadores/PrestamoPublishController/obtenerPrestamosPorBibliotecarioResponse")
+    public DtPrestamoArray obtenerPrestamosPorBibliotecario(
+        @WebParam(name = "arg0", partName = "arg0")
+        int arg0);
 
     /**
      * 
@@ -104,9 +94,19 @@ public interface PrestamoPublishController {
      */
     @WebMethod
     @WebResult(partName = "return")
-    @Action(input = "http://publicadores/PrestamoPublishController/obtenerPrestamosPorBibliotecarioRequest", output = "http://publicadores/PrestamoPublishController/obtenerPrestamosPorBibliotecarioResponse")
-    public DtPrestamoArray obtenerPrestamosPorBibliotecario(
+    @Action(input = "http://publicadores/PrestamoPublishController/obtenerPrestamosPorZonaRequest", output = "http://publicadores/PrestamoPublishController/obtenerPrestamosPorZonaResponse")
+    public DtPrestamoArray obtenerPrestamosPorZona(
         @WebParam(name = "arg0", partName = "arg0")
-        int arg0);
+        Zonas arg0);
+
+    /**
+     * 
+     * @return
+     *     returns prestamos.DtPrestamoArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://publicadores/PrestamoPublishController/obtenerPrestamosPendientesRequest", output = "http://publicadores/PrestamoPublishController/obtenerPrestamosPendientesResponse")
+    public DtPrestamoArray obtenerPrestamosPendientes();
 
 }

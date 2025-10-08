@@ -5,7 +5,14 @@ import java.util.Date;
 import javax.persistence.OneToMany;
 
 import logica.clases.*;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlType;
 
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "dtPrestamo", propOrder = { "idPrestamo", "fechaSoli", "estadoPres", "fechaDev", "lector", "bibliotecario",
+        "material" })
 public class DtPrestamo {
     private int idPrestamo;
     private Date fechaSoli;

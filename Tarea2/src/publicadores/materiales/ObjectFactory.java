@@ -40,6 +40,26 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link DtLibro }
+     * 
+     * @return
+     *     the new instance of {@link DtLibro }
+     */
+    public DtLibro createDtLibro() {
+        return new DtLibro();
+    }
+
+    /**
+     * Create an instance of {@link DtArticuloEspecial }
+     * 
+     * @return
+     *     the new instance of {@link DtArticuloEspecial }
+     */
+    public DtArticuloEspecial createDtArticuloEspecial() {
+        return new DtArticuloEspecial();
+    }
+
+    /**
      * Create an instance of {@link DtMaterialArray }
      * 
      * @return

@@ -37,16 +37,6 @@ public interface MaterialPublishController {
 
     /**
      * 
-     * @return
-     *     returns materiales.DtMaterialArray
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    @Action(input = "http://publicadores/MaterialPublishController/obtenerMaterialesRequest", output = "http://publicadores/MaterialPublishController/obtenerMaterialesResponse")
-    public DtMaterialArray obtenerMateriales();
-
-    /**
-     * 
      * @param arg0
      * @param arg1
      * @return
@@ -60,5 +50,15 @@ public interface MaterialPublishController {
         XMLGregorianCalendar arg0,
         @WebParam(name = "arg1", partName = "arg1")
         XMLGregorianCalendar arg1);
+
+    /**
+     * 
+     * @return
+     *     returns materiales.DtMaterialArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://publicadores/MaterialPublishController/obtenerMaterialesRequest", output = "http://publicadores/MaterialPublishController/obtenerMaterialesResponse")
+    public DtMaterialArray obtenerMateriales();
 
 }

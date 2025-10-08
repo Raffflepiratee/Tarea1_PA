@@ -2,6 +2,14 @@ package datatypes;
 
 import java.util.Date;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlSeeAlso;
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "dtMaterial", propOrder = { "idMaterial", "fechaRegistro" })
+@XmlSeeAlso({DtLibro.class,DtArticuloEspecial.class })
 public class DtMaterial {
 
     private int idMaterial;

@@ -26,16 +26,6 @@ public interface UsuarioPublishController {
 
     /**
      * 
-     * @param arg0
-     */
-    @WebMethod
-    @Action(input = "http://publicadores/UsuarioPublishController/agregarUsuarioRequest", output = "http://publicadores/UsuarioPublishController/agregarUsuarioResponse")
-    public void agregarUsuario(
-        @WebParam(name = "arg0", partName = "arg0")
-        DtUsuario arg0);
-
-    /**
-     * 
      * @return
      *     returns usuarios.DtUsuarioArray
      */
@@ -43,5 +33,15 @@ public interface UsuarioPublishController {
     @WebResult(partName = "return")
     @Action(input = "http://publicadores/UsuarioPublishController/obtenerUsuariosRequest", output = "http://publicadores/UsuarioPublishController/obtenerUsuariosResponse")
     public DtUsuarioArray obtenerUsuarios();
+
+    /**
+     * 
+     * @param arg0
+     */
+    @WebMethod
+    @Action(input = "http://publicadores/UsuarioPublishController/agregarUsuarioRequest", output = "http://publicadores/UsuarioPublishController/agregarUsuarioResponse")
+    public void agregarUsuario(
+        @WebParam(name = "arg0", partName = "arg0")
+        DtUsuario arg0);
 
 }
