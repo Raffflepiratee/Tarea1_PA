@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Usuario</title>
+    <link rel="stylesheet" href="./css/login.css">
+</head>
+<body>
+    
+    <header>
+        <nav class="nav-container">
+            <ol>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="./listarUsuario.html">Usuarios</a></li>
+                <li><a href="#">Materiales</a></li>
+                <li><a href="#">Prestamos</a></li>
+            </ol>
+        </nav>
+    </header>
+
+    <h1 id="titulo" class="titulos">Iniciar sesión</h1>
+
+    <main class="main-container">
+        <form class="formulario-container" action="/Tarea2/AgregarUsuarioServlet" method="post">
+            <label for="email">Email:</label>
+            <input class="campos" type="email" id="email" name="email" required placeholder="juanperez@example.com"><br><br>
+
+            <label for="contrasena">Contraseña:</label>
+            <input class="campos" type="tel" id="contrasena" name="contrasena" required placeholder="contraseña"><br><br>
+
+            <button class="boton-nuestro" type="submit">Iniciar sesión</button>
+        </form>
+    </main>
+
+
+    <script src="./js/agregarUsuario.js"></script>
+</body>
+</html>
