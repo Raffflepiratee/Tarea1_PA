@@ -106,6 +106,7 @@ public class UsuarioController implements IUsuarioController {
             System.out.println("El usuario no existe o no es un lector.");
         }
     }
+    
 
     @Override
     public void actualizarUsuario(Usuario usuario) {

@@ -14,6 +14,7 @@ import interfaces.Fabrica;
 import interfaces.IUsuarioController;
 import datatypes.DtLector;
 import datatypes.DtUsuario;
+import datatypes.EstadosU;
 import datatypes.Zonas;
 
 @WebService
@@ -69,6 +70,22 @@ public class UsuarioPublishController {
         } else {
             System.out.println("Usuario no encontrado o no es un lector: " + correo);
         }
-    
     }
+
+    @WebMethod
+    public void cambiarEstadoLector(String correo, EstadosU nuevoEstado) {
+        Usuario usuario = usuarioController.buscarUsuarioPorCorreo(correo);
+        if (usuario != null && usuario instanceof Lector) {
+            Lector existe = (Lector) usuario;
+            try {
+                DtLector dtLector = new DtLector(existe.getNombre(), existe.getCorreo(), existe.getPassword(), existe.getFechaIngreso(), nuevoEstado, existe.getZona(), existe.getDireccion());
+                
+                usuarioController.cambiarEstadoLector(dtLector, nuevoEstado);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Estado inválido: " + nuevoEstado);
+            }
+        } else {
+            System.out.println("Usuario no encontrado o no es un lector: " + correo);
+        }
+    }    
 }
