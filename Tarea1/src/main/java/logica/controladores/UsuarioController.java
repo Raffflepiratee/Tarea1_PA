@@ -70,6 +70,17 @@ public class UsuarioController implements IUsuarioController {
         return uh.buscarUsuarioPorCorreo(correo);
     }
 
+    // @Override
+    // public DtLector buscarDtLectorPorCorreo(String correo) {
+    //     UsuarioHandler uh = UsuarioHandler.getInstancia();
+    //     Usuario existe = uh.buscarUsuarioPorCorreo(correo);
+    //     if (existe != null && existe instanceof Lector) {
+    //         Lector lector = (Lector) existe;
+    //         return new DtLector(lector.getNombre(), lector.getCorreo(), lector.getPassword(), lector.getFechaIngreso(),
+    //                 lector.getEstadoUsuario(), lector.getZona(), lector.getDireccion());
+    //     } 
+    // }
+
     @Override
     public void cambiarEstadoLector(DtLector dtLector, EstadosU nuevoEstado) {
         UsuarioHandler uh = UsuarioHandler.getInstancia();

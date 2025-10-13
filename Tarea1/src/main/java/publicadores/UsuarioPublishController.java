@@ -8,10 +8,13 @@ import jakarta.jws.soap.SOAPBinding;
 import jakarta.jws.soap.SOAPBinding.ParameterStyle;
 import jakarta.jws.soap.SOAPBinding.Style;
 import jakarta.xml.ws.Endpoint;
-
+import logica.clases.Lector;
+import logica.clases.Usuario;
 import interfaces.Fabrica;
 import interfaces.IUsuarioController;
+import datatypes.DtLector;
 import datatypes.DtUsuario;
+import datatypes.Zonas;
 
 @WebService
 @SOAPBinding(style = Style.RPC, parameterStyle = ParameterStyle.WRAPPED)
@@ -49,5 +52,23 @@ public class UsuarioPublishController {
     public DtUsuario[] obtenerUsuarios() {
         List<DtUsuario> usuarios = usuarioController.obtenerUsuarios();
         return usuarios.toArray(new DtUsuario[0]);
+    }
+
+    @WebMethod
+    public void cambiarZonaLector(String correo, String nuevaZona) {
+        Usuario usuario = usuarioController.buscarUsuarioPorCorreo(correo);
+        if (usuario != null && usuario instanceof Lector) {
+            Lector existe = (Lector) usuario;
+            try {
+                Zonas zonaEnum = Zonas.valueOf(nuevaZona);
+                DtLector dtLector = new DtLector(existe.getNombre(), existe.getCorreo(), existe.getPassword(), existe.getFechaIngreso(), existe.getEstadoUsuario(), zonaEnum, existe.getDireccion());
+                usuarioController.cambiarZonaLector(dtLector, zonaEnum);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Zona inválida: " + nuevaZona);
+            }
+        } else {
+            System.out.println("Usuario no encontrado o no es un lector: " + correo);
+        }
+    
     }
 }
