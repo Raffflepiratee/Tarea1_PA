@@ -15,7 +15,7 @@ import interfaces.IMaterialController;
 import datatypes.DtMaterial;
 
 @WebService
-@SOAPBinding(style = Style.RPC, parameterStyle = ParameterStyle.WRAPPED)
+@SOAPBinding(style = Style.DOCUMENT, parameterStyle = ParameterStyle.WRAPPED)
 public class MaterialPublishController {
     private final Fabrica fabrica;
     private final IMaterialController materialController;
@@ -40,7 +40,9 @@ public class MaterialPublishController {
     @WebMethod
     public void agregarMaterial(DtMaterial material) {
         try {
+            System.out.println("43materialcontroler t1");
             materialController.agregarMaterial(material);
+            System.out.println("45materialcontroler t1");
         } catch (Exception e) {
             // Manejo de excepciones
         }
