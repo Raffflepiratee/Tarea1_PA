@@ -31,7 +31,7 @@ SET time_zone = "+00:00";
 CREATE TABLE usuario (
   correo VARCHAR(100) NOT NULL PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
-  pass_word VARCHAR(100) NOT NULL
+  password VARCHAR(100) NOT NULL
 ) ;
 
 -- Tabla hija: Lector
