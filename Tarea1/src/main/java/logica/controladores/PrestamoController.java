@@ -171,7 +171,7 @@ public class PrestamoController implements IPrestamoController {
         List<Prestamo> prestamos = pH.obtenerPrestamos();
         for (Prestamo p : prestamos) {
             if (p.getMaterial().getIdMaterial() == idMaterial
-                    && (p.getEstadoPres() == EstadosP.PENDIENTE || p.getEstadoPres() == EstadosP.EN_CURSO)) {
+                    && (p.getEstadoPres() == EstadosP.EN_CURSO)) {
                 return true;
             }
         }
