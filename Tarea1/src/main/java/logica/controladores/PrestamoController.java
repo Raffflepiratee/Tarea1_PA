@@ -23,28 +23,41 @@ public class PrestamoController implements IPrestamoController {
     }
 
     @Override
-    public void agregarPrestamo(Date fechaSoli, Date fechaDev, EstadosP estadoP, String correoLector,
-            String correoBiblio, int idMaterial) throws PrestamoRepetidoException {
+    public void agregarPrestamo(DtPrestamo prestamo) throws PrestamoRepetidoException {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
 
         MaterialHandler mH = MaterialHandler.getInstancia();
-        Material m = mH.buscarMaterialPorId(idMaterial);
+        Material m = mH.buscarMaterialPorId(prestamo.getMaterial());
 
         UsuarioHandler uH = UsuarioHandler.getInstancia();
-        Lector uLector = (Lector) uH.buscarUsuarioPorCorreo(correoLector);
-        // Convertir de usario a lector
 
-        UsuarioHandler uH2 = UsuarioHandler.getInstancia();
-        Bibliotecario uBibliotecario = (Bibliotecario) uH2.buscarUsuarioPorCorreo(correoBiblio);
+        Usuario usuarioLector = uH.buscarUsuarioPorCorreo(prestamo.getLector());
+        if (usuarioLector == null) {
+            throw new RuntimeException("No se encontró ningún usuario con el correo: " + prestamo.getLector());
+        }
+        if (!(usuarioLector instanceof Lector)) {
+            throw new RuntimeException("El usuario con correo " + prestamo.getLector() + " no es un lector válido.");
+        }
+        Lector uLector = (Lector) usuarioLector;
 
-        if (existePrestamoActivo(idMaterial)) {
+        Usuario usuarioBiblio = uH.buscarUsuarioPorCorreo(prestamo.getBibliotecario());
+        if (usuarioBiblio == null) {
+            throw new RuntimeException("No se encontró ningún usuario con el correo: " + prestamo.getBibliotecario());
+        }
+        if (!(usuarioBiblio instanceof Bibliotecario)) {
+            throw new RuntimeException(
+                    "El usuario con correo " + prestamo.getBibliotecario() + " no es un bibliotecario válido.");
+        }
+        Bibliotecario uBibliotecario = (Bibliotecario) usuarioBiblio;
+
+        if (existePrestamoActivo(prestamo.getMaterial())) {
             throw new PrestamoRepetidoException(
                     "Ya existe un prestamo activo para este material");
         } else { // Si el prestamo no existe
             Prestamo nuevoPrestamo = new Prestamo(
-                    fechaSoli,
-                    estadoP,
-                    fechaDev,
+                    prestamo.getFechaSoli(),
+                    prestamo.getEstadoPres(),
+                    prestamo.getFechaDev(),
                     uLector,
                     uBibliotecario,
                     m);
@@ -232,6 +245,8 @@ public class PrestamoController implements IPrestamoController {
                     p.getMaterial().getIdMaterial());
             dtPrestamos.add(dtPrestamo);
         }
+        System.out.println("DT PRESTAMOS PENDIENTES: " + dtPrestamos);
+        System.out.println("Material" + listaPrestamos.get(0).getMaterial().getIdMaterial());
         return dtPrestamos;
     }
 

@@ -32,7 +32,7 @@ public class RegistrarMaterial extends JInternalFrame {
     private JTextField txtDescripcion;
     private JTextField txtPeso;
     private JTextField txtDimensiones;
-	private JComboBox<String> comboTipo;
+    private JComboBox<String> comboTipo;
     private JPanel panelDinamico;
     private JPanel panelLibro;
     private JPanel panelArticulo;
@@ -157,4 +157,3 @@ public class RegistrarMaterial extends JInternalFrame {
         txtDimensiones.setText("");
     }
 }
-

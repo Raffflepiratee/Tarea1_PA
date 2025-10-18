@@ -74,13 +74,16 @@ public class RegistrarPrestamo extends JInternalFrame {
         comboDiaInicio = new JComboBox<>();
         comboMesInicio = new JComboBox<>();
         comboAnioInicio = new JComboBox<>();
-        for (int i = 1; i <= 31; i++) comboDiaInicio.addItem(i);
+        for (int i = 1; i <= 31; i++)
+            comboDiaInicio.addItem(i);
         for (String mes : new String[] {
                 "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                 "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-        }) comboMesInicio.addItem(mes);
+        })
+            comboMesInicio.addItem(mes);
         int anioActual = Calendar.getInstance().get(Calendar.YEAR);
-        for (int i = anioActual+1; i >= 2000; i--) comboAnioInicio.addItem(i);
+        for (int i = anioActual + 1; i >= 2000; i--)
+            comboAnioInicio.addItem(i);
         comboAnioInicio.setSelectedItem(anioActual);
 
         comboDiaInicio.setBounds(180, 160, 50, 25);
@@ -98,12 +101,15 @@ public class RegistrarPrestamo extends JInternalFrame {
         comboDiaFin = new JComboBox<>();
         comboMesFin = new JComboBox<>();
         comboAnioFin = new JComboBox<>();
-        for (int i = 1; i <= 31; i++) comboDiaFin.addItem(i);
+        for (int i = 1; i <= 31; i++)
+            comboDiaFin.addItem(i);
         for (String mes : new String[] {
                 "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                 "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-        }) comboMesFin.addItem(mes);
-        for (int i = anioActual+1; i >= 2000; i--) comboAnioFin.addItem(i);
+        })
+            comboMesFin.addItem(mes);
+        for (int i = anioActual + 1; i >= 2000; i--)
+            comboAnioFin.addItem(i);
         comboAnioFin.setSelectedItem(anioActual);
 
         comboDiaFin.setBounds(180, 210, 50, 25);
@@ -174,21 +180,26 @@ public class RegistrarPrestamo extends JInternalFrame {
             Date fechaDev = calFin.getTime();
 
             if (fechaDev.before(fechaSoli)) {
-                JOptionPane.showMessageDialog(this, "La fecha de devolución no puede ser anterior a la fecha de solicitud", "Registro de Préstamo", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "La fecha de devolución no puede ser anterior a la fecha de solicitud", "Registro de Préstamo",
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            DtPrestamo prestamo = new DtPrestamo(fechaSoli, estado, fechaDev, correoLector, correoBiblio, idMaterial);
+            IpreCont.agregarPrestamo(prestamo);
 
-            IpreCont.agregarPrestamo(fechaSoli, fechaDev, estado, correoLector, correoBiblio, idMaterial);
-
-            JOptionPane.showMessageDialog(this, "El préstamo se ha registrado con éxito", "Registro de Préstamo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El préstamo se ha registrado con éxito", "Registro de Préstamo",
+                    JOptionPane.INFORMATION_MESSAGE);
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "El ID Material debe ser un número", "Registro de Préstamo", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El ID Material debe ser un número", "Registro de Préstamo",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         } catch (PrestamoRepetidoException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Registro de Préstamo", JOptionPane.ERROR_MESSAGE);
             return;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al registrar el préstamo: " + e.getMessage(), "Registro de Préstamo", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error al registrar el préstamo: " + e.getMessage(),
+                    "Registro de Préstamo", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -209,4 +220,3 @@ public class RegistrarPrestamo extends JInternalFrame {
         comboBoxEstado.setSelectedItem("PENDIENTE");
     }
 }
-

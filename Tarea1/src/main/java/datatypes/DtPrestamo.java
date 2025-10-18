@@ -9,9 +9,9 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
 
-
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "dtPrestamo", propOrder = { "idPrestamo", "fechaSoli", "estadoPres", "fechaDev", "lector", "bibliotecario",
+@XmlType(name = "dtPrestamo", propOrder = { "idPrestamo", "fechaSoli", "estadoPres", "fechaDev", "lector",
+        "bibliotecario",
         "material" })
 public class DtPrestamo {
     private int idPrestamo;
@@ -23,6 +23,9 @@ public class DtPrestamo {
     private String lector;
     private String bibliotecario;
     private int material;
+
+    public DtPrestamo() {
+    }
 
     // ni lo usamos
     public DtPrestamo(Date fechaSoli, EstadosP estadoPres, Date fechaDev, String correoLector,
@@ -78,6 +81,7 @@ public class DtPrestamo {
     @Override
     public String toString() {
         return "DtPrestamo [idPrestamo=" + idPrestamo + ", fechaSoli=" + fechaSoli + ", estadoPres=" + estadoPres
-                + ", fechaDev=" + fechaDev + "]";
+                + ", fechaDev=" + fechaDev + ", lector=" + lector + ", bibliotecario=" + bibliotecario + ", material="
+                + material + "]";
     }
 }

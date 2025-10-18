@@ -40,10 +40,9 @@ public class PrestamoPublishController {
     }
 
     @WebMethod
-    public void agregarPrestamo(Date fechaSoli, Date fechaDev, EstadosP estadoP,
-            String correoLector, String correoBiblio, int idMaterial) {
+    public void agregarPrestamo(DtPrestamo prestamo) {
         try {
-            prestamoController.agregarPrestamo(fechaSoli, fechaDev, estadoP, correoLector, correoBiblio, idMaterial);
+            prestamoController.agregarPrestamo(prestamo);
         } catch (Exception e) {
             // Manejo de excepciones
         }
