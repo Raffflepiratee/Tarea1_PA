@@ -44,7 +44,7 @@ public class PrestamoPublishController {
         try {
             prestamoController.agregarPrestamo(prestamo);
         } catch (Exception e) {
-            // Manejo de excepciones
+            System.out.println("Error:" + e);
         }
     }
 
@@ -57,6 +57,24 @@ public class PrestamoPublishController {
     @WebMethod
     public DtPrestamo[] obtenerPrestamosPendientes() {
         List<DtPrestamo> prestamos = prestamoController.obtenerDtPrestamosPendientes();
+        int size = (prestamos == null) ? 0 : prestamos.size();
+        System.out.println("---> linea 60 t1: prestamos.size() = " + size);
+
+        if (prestamos != null) {
+            for (int i = 0; i < prestamos.size(); i++) {
+                DtPrestamo p = prestamos.get(i);
+                System.out.println("Prestamo[" + i + "] toString(): " + p);
+                try {
+                    System.out.println("Prestamo[" + i + "] material=" + p.getMaterial()
+                                    + " estado=" + p.getEstadoPres()
+                                    + " correoLector=" + p.getLector());
+                } catch (Exception ex) {
+                    // ignora si algún getter no existe
+                }
+            }
+        } else {
+        System.out.println("PrestamoPublishController.obtenerPrestamosPendientes: prestamos == null");
+        }
         return prestamos.toArray(new DtPrestamo[0]);
     }
 
