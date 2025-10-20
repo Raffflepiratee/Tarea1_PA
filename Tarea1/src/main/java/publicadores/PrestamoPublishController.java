@@ -51,6 +51,21 @@ public class PrestamoPublishController {
     @WebMethod
     public DtPrestamo[] obtenerPrestamos() {
         List<DtPrestamo> prestamos = prestamoController.obtenerDtPrestamos();
+        if (prestamos != null) {
+            for (int i = 0; i < prestamos.size(); i++) {
+                DtPrestamo p = prestamos.get(i);
+                System.out.println("Prestamo[" + i + "] toString(): " + p);
+                try {
+                    System.out.println("Prestamo[" + i + "] material=" + p.getMaterial()
+                            + " estado=" + p.getEstadoPres()
+                            + " correoLector=" + p.getLector());
+                } catch (Exception ex) {
+                    // ignora si algún getter no existe
+                }
+            }
+        } else {
+            System.out.println("PrestamoPublishController.obtenerPrestamos: prestamos == null");
+        }
         return prestamos.toArray(new DtPrestamo[0]);
     }
 
@@ -66,14 +81,14 @@ public class PrestamoPublishController {
                 System.out.println("Prestamo[" + i + "] toString(): " + p);
                 try {
                     System.out.println("Prestamo[" + i + "] material=" + p.getMaterial()
-                                    + " estado=" + p.getEstadoPres()
-                                    + " correoLector=" + p.getLector());
+                            + " estado=" + p.getEstadoPres()
+                            + " correoLector=" + p.getLector());
                 } catch (Exception ex) {
                     // ignora si algún getter no existe
                 }
             }
         } else {
-        System.out.println("PrestamoPublishController.obtenerPrestamosPendientes: prestamos == null");
+            System.out.println("PrestamoPublishController.obtenerPrestamosPendientes: prestamos == null");
         }
         return prestamos.toArray(new DtPrestamo[0]);
     }
@@ -94,5 +109,35 @@ public class PrestamoPublishController {
     public DtPrestamo[] obtenerPrestamosActivosLector(String correoLector) {
         List<DtPrestamo> prestamos = prestamoController.obtenerPrestamosActivosLector(correoLector);
         return prestamos.toArray(new DtPrestamo[0]);
+    }
+
+    @WebMethod
+    public void cambiarEstadoPrestamo(DtPrestamo prestamo, EstadosP nuevoEstado) {
+        prestamoController.cambiarEstadoPrestamo(prestamo, nuevoEstado);
+    }
+
+    @WebMethod
+    public void cambiarMaterialPrestamo(DtPrestamo prestamo, int nuevoMaterialID) {
+        prestamoController.cambiarMaterialPrestamo(prestamo, nuevoMaterialID);
+    }
+
+    @WebMethod
+    public void cambiarCorreoLectorPrestamo(DtPrestamo prestamo, String nuevoCorreo) {
+        prestamoController.cambiarCorreoLectorPrestamo(prestamo, nuevoCorreo);
+    }
+
+    @WebMethod
+    public void cambiarCorreoBibliotecarioPrestamo(DtPrestamo prestamo, String nuevoCorreo) {
+        prestamoController.cambiarCorreoBibliotecarioPrestamo(prestamo, nuevoCorreo);
+    }
+
+    @WebMethod
+    public void cambiarFechaDevolucionPrestamo(DtPrestamo prestamo, Date nuevaFecha) {
+        prestamoController.cambiarFechaDevolucionPrestamo(prestamo, nuevaFecha);
+    }
+
+    @WebMethod
+    public void cambiarFechaSolicitudPrestamo(DtPrestamo prestamo, Date nuevaFecha) {
+        prestamoController.cambiarFechaSolicitudPrestamo(prestamo, nuevaFecha);
     }
 }
