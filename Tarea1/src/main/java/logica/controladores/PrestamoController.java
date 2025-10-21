@@ -115,41 +115,66 @@ public class PrestamoController implements IPrestamoController {
     public void cambiarMaterialPrestamo(DtPrestamo Prestamo, int nuevoMaterialID) {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
+        if (prestamo == null) {
+            throw new RuntimeException("No existe el préstamo con id: " + Prestamo.getIdPrestamo());
+        }
+
         MaterialHandler mH = MaterialHandler.getInstancia();
         Material nuevoMaterial = mH.buscarMaterialPorId(nuevoMaterialID);
-        if (nuevoMaterial != null) {
-            if (prestamo != null) {
-                prestamo.setMaterial(nuevoMaterial);
-                actualizarPrestamo(prestamo);
-            }
+        if (nuevoMaterial == null) {
+            throw new RuntimeException("No existe material con id: " + nuevoMaterialID);
         }
+
+        //Chequear si el nuevo material ya tiene un préstamo activo
+        if (nuevoMaterial.getIdMaterial() != prestamo.getMaterial().getIdMaterial()
+                && existePrestamoActivo(nuevoMaterialID)) {
+            throw new RuntimeException("El material " + nuevoMaterialID + " ya tiene un préstamo activo");
+        }
+
+        prestamo.setMaterial(nuevoMaterial);
+        actualizarPrestamo(prestamo);
     }
 
     @Override
     public void cambiarCorreoLectorPrestamo(DtPrestamo Prestamo, String nuevoCorreo) {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
-        if (prestamo != null) {
-            Lector nuevoLector = (Lector) UsuarioHandler.getInstancia().buscarUsuarioPorCorreo(nuevoCorreo);
-            if (nuevoLector != null) {
-                prestamo.setLector(nuevoLector);
-                actualizarPrestamo(prestamo);
-            }
+        if (prestamo == null) {
+            throw new RuntimeException("No existe el préstamo con id: " + Prestamo.getIdPrestamo());
         }
+
+        Usuario usuario = UsuarioHandler.getInstancia().buscarUsuarioPorCorreo(nuevoCorreo);
+        if (usuario == null) {
+            throw new RuntimeException("No existe usuario con correo: " + nuevoCorreo);
+        }
+        if (!(usuario instanceof Lector)) {
+            throw new RuntimeException("El usuario con correo " + nuevoCorreo + " no es un lector válido.");
+        }
+
+        Lector nuevoLector = (Lector) usuario;
+        prestamo.setLector(nuevoLector);
+        actualizarPrestamo(prestamo);
     }
 
     @Override
     public void cambiarCorreoBibliotecarioPrestamo(DtPrestamo Prestamo, String nuevoCorreo) {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
-        if (prestamo != null) {
-            Bibliotecario nuevoBiblio = (Bibliotecario) UsuarioHandler.getInstancia()
-                    .buscarUsuarioPorCorreo(nuevoCorreo);
-            if (nuevoBiblio != null) {
-                prestamo.setBibliotecario(nuevoBiblio);
-                actualizarPrestamo(prestamo);
-            }
+        if (prestamo == null) {
+            throw new RuntimeException("No existe el préstamo con id: " + Prestamo.getIdPrestamo());
         }
+
+        Usuario usuario = UsuarioHandler.getInstancia().buscarUsuarioPorCorreo(nuevoCorreo);
+        if (usuario == null) {
+            throw new RuntimeException("No existe usuario con correo: " + nuevoCorreo);
+        }
+        if (!(usuario instanceof Bibliotecario)) {
+            throw new RuntimeException("El usuario con correo " + nuevoCorreo + " no es un bibliotecario válido.");
+        }
+
+        Bibliotecario nuevoBiblio = (Bibliotecario) usuario;
+        prestamo.setBibliotecario(nuevoBiblio);
+        actualizarPrestamo(prestamo);
     }
 
     @Override
@@ -175,6 +200,7 @@ public class PrestamoController implements IPrestamoController {
     @Override
     public void actualizarPrestamo(Prestamo prestamo) {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
+        //No verifica q exista un prestamo exacatamente igual
         pH.actualizarPrestamoH(prestamo);
     }
 
