@@ -40,9 +40,7 @@ public class MaterialPublishController {
     @WebMethod
     public void agregarMaterial(DtMaterial material) {
         try {
-            System.out.println("43materialcontroler t1");
             materialController.agregarMaterial(material);
-            System.out.println("45materialcontroler t1");
         } catch (Exception e) {
             // Manejo de excepciones
         }
