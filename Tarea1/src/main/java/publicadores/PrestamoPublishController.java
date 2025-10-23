@@ -106,6 +106,15 @@ public class PrestamoPublishController {
     }
 
     @WebMethod
+    public DtPrestamo[] obtenerPrestamosPorLector(String correoLector) {
+        if (correoLector == null || correoLector.trim().isEmpty()) {
+            return new DtPrestamo[0];
+        }
+        List<DtPrestamo> prestamos = prestamoController.obtenerDtPrestamoLector(correoLector);
+        return prestamos.toArray(new DtPrestamo[0]);
+    }
+
+    @WebMethod
     public DtPrestamo[] obtenerPrestamosActivosLector(String correoLector) {
         List<DtPrestamo> prestamos = prestamoController.obtenerPrestamosActivosLector(correoLector);
         return prestamos.toArray(new DtPrestamo[0]);

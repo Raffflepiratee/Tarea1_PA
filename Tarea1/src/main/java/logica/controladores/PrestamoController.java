@@ -125,7 +125,7 @@ public class PrestamoController implements IPrestamoController {
             throw new RuntimeException("No existe material con id: " + nuevoMaterialID);
         }
 
-        //Chequear si el nuevo material ya tiene un préstamo activo
+        // Chequear si el nuevo material ya tiene un préstamo activo
         if (nuevoMaterial.getIdMaterial() != prestamo.getMaterial().getIdMaterial()
                 && existePrestamoActivo(nuevoMaterialID)) {
             throw new RuntimeException("El material " + nuevoMaterialID + " ya tiene un préstamo activo");
@@ -200,7 +200,7 @@ public class PrestamoController implements IPrestamoController {
     @Override
     public void actualizarPrestamo(Prestamo prestamo) {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
-        //No verifica q exista un prestamo exacatamente igual
+        // No verifica q exista un prestamo exacatamente igual
         pH.actualizarPrestamoH(prestamo);
     }
 
@@ -234,6 +234,26 @@ public class PrestamoController implements IPrestamoController {
             dtPrestamosBiblio.add(dtPrestamo);
         }
         return dtPrestamosBiblio;
+    }
+
+    @Override
+    public List<DtPrestamo> obtenerDtPrestamoLector(String correoLector) {
+        List<Prestamo> listaPrestamosLector = PrestamoHandler.getInstancia().obtenerPrestamosPorLector(correoLector);
+        List<DtPrestamo> dtPrestamosLector = new ArrayList<>();
+        System.out.println("Préstamos encontrados para el lector " + correoLector + ":");
+
+        for (Prestamo p : listaPrestamosLector) {
+            DtPrestamo dtPrestamo = new DtPrestamo(
+                    p.getIdPrestamo(),
+                    p.getFechaSoli(),
+                    p.getEstadoPres(),
+                    p.getFechaDev(),
+                    p.getLector().getCorreo(),
+                    p.getBibliotecario().getCorreo(),
+                    p.getMaterial().getIdMaterial());
+            dtPrestamosLector.add(dtPrestamo);
+        }
+        return dtPrestamosLector;
     }
 
     @Override

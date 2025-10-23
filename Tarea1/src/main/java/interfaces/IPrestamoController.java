@@ -33,6 +33,8 @@ public interface IPrestamoController {
 
     List<DtPrestamo> obtenerDtPrestamoBibliotecario(int idEmp);
 
+    List<DtPrestamo> obtenerDtPrestamoLector(String correoLector);
+
     List<DtPrestamo> obtenerDtPrestamosPorZona(Zonas zona);
 
     List<DtPrestamo> obtenerDtPrestamosPendientes();

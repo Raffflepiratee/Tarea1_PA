@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "dtPrestamo", propOrder = { "idPrestamo", "fechaSoli", "estadoPres", "fechaDev", "lector",
+@XmlType(name = "DtPrestamo", propOrder = { "idPrestamo", "fechaSoli", "estadoPres", "fechaDev", "lector",
         "bibliotecario",
         "material" })
 public class DtPrestamo {

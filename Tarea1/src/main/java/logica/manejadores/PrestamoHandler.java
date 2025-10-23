@@ -61,6 +61,16 @@ public class PrestamoHandler {
         return new ArrayList<>(prestamosPorBibliotecatrio);
     }
 
+    public List<Prestamo> obtenerPrestamosPorLector(String correoLector) {
+        Conexion c = Conexion.getInstancia();
+        EntityManager em = c.getEntityManager();
+        List<Prestamo> prestamosPorLector = em.createQuery(
+                "SELECT p FROM Prestamo p WHERE p.lector.correo = :correoLector", Prestamo.class)
+                .setParameter("correoLector", correoLector)
+                .getResultList();
+        return new ArrayList<>(prestamosPorLector);
+    }
+
     public List<Prestamo> obtenerPrestamosPorZona(Zonas zona) {
         Conexion c = Conexion.getInstancia();
         EntityManager em = c.getEntityManager();
