@@ -121,6 +121,11 @@ public class PrestamoPublishController {
     }
 
     @WebMethod
+    public boolean existePrestamoActivo(int idMaterial) {
+        return prestamoController.existePrestamoActivo(idMaterial);
+    }
+
+    @WebMethod
     public void cambiarEstadoPrestamo(DtPrestamo prestamo, EstadosP nuevoEstado) {
         prestamoController.cambiarEstadoPrestamo(prestamo, nuevoEstado);
     }

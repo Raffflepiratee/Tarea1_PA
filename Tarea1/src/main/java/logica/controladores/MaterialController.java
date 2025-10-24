@@ -66,6 +66,7 @@ public class MaterialController implements IMaterialController {
         List<Material> materiales = MaterialHandler.getInstancia().obtenerTodosLosMateriales();
         List<DtMaterial> dtMateriales = new ArrayList<>();
         for (Material m : materiales) {
+            System.out.println("Material ID: " + m.getIdMaterial());
             if (m instanceof Libro) {
                 Libro libro = (Libro) m;
                 DtLibro dtLibro = new DtLibro(

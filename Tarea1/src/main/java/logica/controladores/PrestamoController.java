@@ -115,6 +115,7 @@ public class PrestamoController implements IPrestamoController {
     public void cambiarMaterialPrestamo(DtPrestamo Prestamo, int nuevoMaterialID) {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
+        EstadosP estado = prestamo.getEstadoPres();
         if (prestamo == null) {
             throw new RuntimeException("No existe el préstamo con id: " + Prestamo.getIdPrestamo());
         }
@@ -127,7 +128,8 @@ public class PrestamoController implements IPrestamoController {
 
         // Chequear si el nuevo material ya tiene un préstamo activo
         if (nuevoMaterial.getIdMaterial() != prestamo.getMaterial().getIdMaterial()
-                && existePrestamoActivo(nuevoMaterialID)) {
+                && existePrestamoActivo(nuevoMaterialID)
+                && estado != EstadosP.PENDIENTE) {
             throw new RuntimeException("El material " + nuevoMaterialID + " ya tiene un préstamo activo");
         }
 

@@ -9,11 +9,14 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "dtMaterial", propOrder = { "idMaterial", "fechaRegistro" })
-@XmlSeeAlso({DtLibro.class,DtArticuloEspecial.class })
+@XmlSeeAlso({ DtLibro.class, DtArticuloEspecial.class })
 public class DtMaterial {
 
     private int idMaterial;
     private Date fechaRegistro;
+
+    public DtMaterial() {
+    }
 
     // Mostrar informacion
     public DtMaterial(int idMaterial, Date fechaRegistro) {

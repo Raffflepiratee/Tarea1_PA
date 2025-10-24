@@ -6,6 +6,10 @@ public class DtLibro extends DtMaterial {
     private String titulo;
     private int cantPag;
 
+    public DtLibro() {
+        super();
+    }
+
     // Mostrar informacion
     public DtLibro(int idMaterial, Date fechaRegistro, String titulo, int cantPag) {
         super(idMaterial, fechaRegistro);

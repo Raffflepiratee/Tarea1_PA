@@ -49,6 +49,8 @@ public class MaterialPublishController {
     @WebMethod
     public DtMaterial[] obtenerMateriales() {
         List<DtMaterial> materiales = materialController.obtenerMateriales();
+        System.out.println("Cantidad de materiales obtenidos: " + materiales.size());
+        System.out.println("Materiales: " + materiales);
         return materiales.toArray(new DtMaterial[0]);
     }
 
