@@ -152,6 +152,7 @@ public class PrestamoPublishController {
 
     @WebMethod
     public void cambiarFechaSolicitudPrestamo(DtPrestamo prestamo, Date nuevaFecha) {
+        System.out.println("PrestamoPublishController.cambiarFechaSolicitudPrestamo: nuevaFecha = " + nuevaFecha);
         prestamoController.cambiarFechaSolicitudPrestamo(prestamo, nuevaFecha);
     }
 }

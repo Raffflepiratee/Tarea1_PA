@@ -13,6 +13,9 @@ import logica.manejadores.PrestamoHandler;
 import logica.manejadores.MaterialHandler;
 import logica.manejadores.UsuarioHandler;
 
+import java.util.Calendar;
+import java.util.TimeZone;
+
 public class PrestamoController implements IPrestamoController {
 
     private List<Prestamo> prestamos;
@@ -181,10 +184,17 @@ public class PrestamoController implements IPrestamoController {
 
     @Override
     public void cambiarFechaSolicitudPrestamo(DtPrestamo Prestamo, Date nuevaFecha) {
+        System.out.println("Fecha nueva recibida: " + nuevaFecha);
+
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
-        if (prestamo != null) {
-            prestamo.setFechaSoli(nuevaFecha);
+
+        if (prestamo != null && nuevaFecha != null) {
+            // Sumar 1 día (en milisegundos)
+            long unDia = 24L * 60 * 60 * 1000;
+            Date corregida = new Date(nuevaFecha.getTime() + unDia);
+
+            prestamo.setFechaSoli(corregida);
             actualizarPrestamo(prestamo);
         }
     }
@@ -193,8 +203,12 @@ public class PrestamoController implements IPrestamoController {
     public void cambiarFechaDevolucionPrestamo(DtPrestamo Prestamo, Date nuevaFecha) {
         PrestamoHandler pH = PrestamoHandler.getInstancia();
         Prestamo prestamo = pH.buscarPrestamoPorId(Prestamo.getIdPrestamo());
-        if (prestamo != null) {
-            prestamo.setFechaDev(nuevaFecha);
+
+        if (prestamo != null && nuevaFecha != null) {
+            long unDia = 24L * 60 * 60 * 1000;
+            Date corregida = new Date(nuevaFecha.getTime() + unDia);
+
+            prestamo.setFechaDev(corregida);
             actualizarPrestamo(prestamo);
         }
     }
