@@ -15,7 +15,7 @@ import interfaces.IMaterialController;
 import datatypes.DtMaterial;
 
 @WebService
-@SOAPBinding(style = Style.RPC, parameterStyle = ParameterStyle.WRAPPED)
+@SOAPBinding(style = Style.DOCUMENT, parameterStyle = ParameterStyle.WRAPPED)
 public class MaterialPublishController {
     private final Fabrica fabrica;
     private final IMaterialController materialController;
